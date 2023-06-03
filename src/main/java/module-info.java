@@ -5,7 +5,8 @@ module com.project.airquality {
         requires org.controlsfx.controls;
             requires com.dlsc.formsfx;
                     requires org.kordamp.bootstrapfx.core;
-            
+    requires java.sql;
+
     opens com.project.airquality to javafx.fxml;
     exports com.project.airquality;
 }
