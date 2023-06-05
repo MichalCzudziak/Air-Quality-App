@@ -18,25 +18,29 @@ public class HelloController implements Initializable {
 
     @FXML
     protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+        XYChart.Series temperatureFrankfurt = new XYChart.Series();
+        XYChart.Series temperatureWiesbaden = new XYChart.Series();
+        temperatureFrankfurt.setName("Frankfurt");
+        temperatureWiesbaden.setName("Wiesbaden");
+        temperatureWiesbaden.getData().add(new XYChart.Data("20:00", 16));
+        temperatureWiesbaden.getData().add(new XYChart.Data("21:00", 20));
+        temperatureWiesbaden.getData().add(new XYChart.Data("22:00", 21));
+        temperatureWiesbaden.getData().add(new XYChart.Data("23:00", 31));
+        temperatureWiesbaden.getData().add(new XYChart.Data("24:00", 12));
+
+        temperatureFrankfurt.getData().add(new XYChart.Data("20:00", 15));
+        temperatureFrankfurt.getData().add(new XYChart.Data("21:00", 16));
+        temperatureFrankfurt.getData().add(new XYChart.Data("22:00", 17));
+        temperatureFrankfurt.getData().add(new XYChart.Data("23:00", 19));
+        temperatureFrankfurt.getData().add(new XYChart.Data("24:00", 21));
+        lineChart.getData().add(temperatureWiesbaden);
+        lineChart.getData().add(temperatureFrankfurt);
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        XYChart.Series series = new XYChart.Series();
-        series.getData().add(new XYChart.Data("10:00", 25));
-        series.getData().add(new XYChart.Data("12:00", 27));
-        series.getData().add(new XYChart.Data("14:00", 30));
-        series.getData().add(new XYChart.Data("16:00", 25));
 
-        lineChart.getData().add(series);
 
-        XYChart.Series series2 = new XYChart.Series();
-        series2.getData().add(new XYChart.Data("10:00", 13));
-        series2.getData().add(new XYChart.Data("12:00", 17));
-        series2.getData().add(new XYChart.Data("14:00", 24));
-        series2.getData().add(new XYChart.Data("16:00", 35));
-
-        lineChart.getData().add(series2);
     }
 }

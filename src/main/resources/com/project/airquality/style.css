@@ -1,0 +1,19 @@
+.parent{
+    -fx-background-color: #2B2D30;
+}
+
+.sidebar{
+    -fx-background-color: #1E1F22;
+}
+
+.btn{
+    -fx-background-color: transparent;
+}
+
+.btn:hover{
+    -fx-background-color: #202332;
+}
+
+.bar-chart .chart-content .chart-plot-background {
+    -fx-background-color: transparent;
+}

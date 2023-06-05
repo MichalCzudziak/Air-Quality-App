@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="831.0" prefWidth="1198.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.project.airquality.HelloController">
+<VBox alignment="CENTER" prefHeight="831.0" prefWidth="1198.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.HelloController">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
@@ -23,4 +23,5 @@
 
   <Label fx:id="welcomeText" />
   <Button onAction="#onHelloButtonClick" text="Hello!" />
+   <Button fx:id="addButton" mnemonicParsing="false" text="Add" />
 </VBox>
