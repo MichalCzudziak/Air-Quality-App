@@ -5,8 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -44,6 +47,53 @@ public class SceneController {
 
     @FXML
     private Label wetAvg;
+
+    @FXML
+    private Button testButton;
+
+    @FXML
+    private AreaChart areaChart;
+    @FXML
+    void getTestFunction(ActionEvent event) {
+        XYChart.Series temperatureFrankfurt = new XYChart.Series();
+        temperatureFrankfurt.setName("Temperature");
+        temperatureFrankfurt.getData().add(new XYChart.Data("20:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("21:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("22:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("23:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("24:00", 10.0));
+
+        XYChart.Series pressureFrankfurt = new XYChart.Series();
+        pressureFrankfurt.getData().add(new XYChart.Data("20:00", 995));
+        pressureFrankfurt.getData().add(new XYChart.Data("21:00", 995.02));
+        pressureFrankfurt.getData().add(new XYChart.Data("22:00", 996.10));
+        pressureFrankfurt.getData().add(new XYChart.Data("23:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("24:00", 1000.003));
+
+
+
+        XYChart.Series series1 = new XYChart.Series();
+        series1.setName("John");
+        series1.getData().add(new XYChart.Data("Monday", 3));
+        series1.getData().add(new XYChart.Data("Tuesday", 4));
+        series1.getData().add(new XYChart.Data("Wednesday", 3));
+        series1.getData().add(new XYChart.Data("Thursday", 5));
+        series1.getData().add(new XYChart.Data("Friday", 4));
+        series1.getData().add(new XYChart.Data("Saturday", 10));
+        series1.getData().add(new XYChart.Data("Sunday", 12));
+
+        XYChart.Series series2 = new XYChart.Series();
+        series2.setName("Jane");
+        series2.getData().add(new XYChart.Data("Monday", 1));
+        series2.getData().add(new XYChart.Data("Tuesday", 3));
+        series2.getData().add(new XYChart.Data("Wednesday", 4));
+
+        series2.getData().add(new XYChart.Data("Thursday", 3));
+        series2.getData().add(new XYChart.Data("Friday", 3));
+        series2.getData().add(new XYChart.Data("Saturday", 5));
+        series2.getData().add(new XYChart.Data("Sunday", 4));
+        areaChart.getData().addAll(pressureFrankfurt);
+    }
 
     @FXML
     void getDataFunction(ActionEvent event) {
@@ -100,7 +150,7 @@ public class SceneController {
             double randomBrightness = 70;
             double randomWetness = 300;
             double randomAirquality = 600;
-            double randomPressure = 200;
+            double randomPressure = 100;
             returnMap.put(Integer.toString(hour), new Measurment(Integer.toString(hour), randomTemperature+i, randomCO2+i, randomFineDust+i, randomBrightness+i, randomPressure+i, randomWetness+i, randomAirquality+i));
             hour +=1;
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -44,83 +44,28 @@
                         <Font name="Nirmala UI" size="30.0" />
                     </font>
                 </Button>
+            <Button fx:id="testButton" mnemonicParsing="false" onAction="#getTestFunction" text="Test" />
             </children>
         </VBox>
         <VBox layoutX="300.0" prefHeight="900.0" prefWidth="1300.0" styleClass="parent">
             <children>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1300.0">
                     <children>
-                        <LineChart layoutX="28.0" layoutY="28.0" prefHeight="400.0" prefWidth="1239.0" styleClass="bar-chart">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" />
-                            </yAxis>
-                        </LineChart>
-                        <VBox layoutX="139.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="Air Quality" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="39.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="472.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="Temperature" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="39.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="774.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="CO2" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="45.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="1045.0" layoutY="442.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="FineD" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="45.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="139.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="Brightness" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="45.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="472.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="Pressure" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="45.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox layoutX="774.0" layoutY="672.0" prefHeight="222.0" prefWidth="222.0">
-                            <children>
-                                <Label text="Wetness" textFill="#dfe1e5">
-                                    <font>
-                                        <Font name="Nirmala UI" size="45.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
+                        <VBox layoutX="139.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="472.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="774.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="1045.0" layoutY="442.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="139.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="472.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0" />
+                        <VBox layoutX="774.0" layoutY="672.0" prefHeight="222.0" prefWidth="222.0" />
+                  <AreaChart fx:id="areaChart" layoutY="8.0" prefHeight="900.0" prefWidth="1300.0">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </AreaChart>
                     </children></Pane>
             </children>
         </VBox>
