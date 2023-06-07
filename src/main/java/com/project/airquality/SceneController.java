@@ -152,7 +152,7 @@ public class SceneController {
             count++;
         }
         double average = sum / count;
-        average = Math.round(average * 100.0) / 10.0;
+        average = Math.round(average * 100.0) / 100.0;
         return average;
     }
 
