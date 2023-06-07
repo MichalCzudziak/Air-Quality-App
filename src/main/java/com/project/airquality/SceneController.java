@@ -152,11 +152,13 @@ public class SceneController {
             count++;
         }
         double average = sum / count;
-        average = Math.round(average * 100.0) / 100.0;
+        average = Math.round(average * 10.0) / 10.0;
         return average;
     }
 
     // TEST DATA
+
+    // TODO Create realistic sample data
     @FXML
     void getTestFunction(ActionEvent event) {
         temperatureFrankfurt.setName("Temperature");
@@ -168,7 +170,7 @@ public class SceneController {
         temperatureFrankfurt.getData().add(new XYChart.Data("05:00", 19.0));
         temperatureFrankfurt.getData().add(new XYChart.Data("06:00", 18.2));
         temperatureFrankfurt.getData().add(new XYChart.Data("07:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("08:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("08:00", 21.0));
         temperatureFrankfurt.getData().add(new XYChart.Data("09:00", 19.0));
         temperatureFrankfurt.getData().add(new XYChart.Data("10:00", 18.2));
         temperatureFrankfurt.getData().add(new XYChart.Data("11:00", 14.1));
@@ -203,7 +205,7 @@ public class SceneController {
         pressureFrankfurt.getData().add(new XYChart.Data("07:00", 1005));
         pressureFrankfurt.getData().add(new XYChart.Data("08:00", 1001));
         pressureFrankfurt.getData().add(new XYChart.Data("09:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("10:00", 1004));
+        pressureFrankfurt.getData().add(new XYChart.Data("10:00", 1050));
         pressureFrankfurt.getData().add(new XYChart.Data("11:00", 1005));
         pressureFrankfurt.getData().add(new XYChart.Data("12:00", 999));
         pressureFrankfurt.getData().add(new XYChart.Data("13:00", 998));
@@ -226,6 +228,8 @@ public class SceneController {
         }
     }
 
+
+    // TODO Fill the hashmaps with data from database
     private Map<String, Measurment> measurmentMapFrankfurt = new HashMap<>();
     private Map<String, Measurment> measurmentMapKelsterbach = new HashMap<>();
     private Map<String, Measurment> measurmentMapUAS = new HashMap<>();
