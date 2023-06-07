@@ -50,7 +50,7 @@
             <children>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1300.0">
                <children>
-                  <LineChart fx:id="lineChart" layoutX="28.0" layoutY="28.0" prefHeight="400.0" prefWidth="1239.0" styleClass="bar-chart">
+                  <LineChart fx:id="lineChart" layoutX="28.0" layoutY="28.0" prefHeight="573.0" prefWidth="1239.0" styleClass="bar-chart">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -58,105 +58,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <VBox layoutX="139.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="Air Quality" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="39.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="arqAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="472.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="Temperature" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="39.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="tempAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="774.0" layoutY="450.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="CO2" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="45.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="co2Avg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="1045.0" layoutY="442.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="FineD" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="45.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="fineAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="139.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="Brightness" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="45.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="brigAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="472.0" layoutY="664.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="Pressure" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="45.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="pressAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="774.0" layoutY="672.0" prefHeight="222.0" prefWidth="222.0">
-                     <children>
-                        <Label text="Wetness" textFill="#dfe1e5">
-                           <font>
-                              <Font name="Nirmala UI" size="45.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="wetAvg" prefHeight="105.0" prefWidth="173.0" text="0.0" textFill="#06ff1b">
-                           <font>
-                              <Font size="69.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <Button layoutX="28.0" layoutY="438.0" mnemonicParsing="false" onAction="#getDataFunction" text="GetData" />
+                  <Button layoutX="14.0" layoutY="846.0" mnemonicParsing="false" onAction="#getDataFunction" text="GetData" />
                </children></Pane>
             </children>
         </VBox>
