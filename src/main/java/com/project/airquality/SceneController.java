@@ -5,12 +5,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,8 +50,7 @@ public class SceneController {
     @FXML
     public Label avgTemperature;
     @FXML
-    private LineChart lineChart;
-
+    private LineChart<String, Number> lineChart;
 
     @FXML
     private Button testButton;
@@ -70,7 +77,6 @@ public class SceneController {
     @FXML
     private RadioButton tempCheckbox;
 
-    public XYChart.Series temperatureFrankfurt = new XYChart.Series();
     public XYChart.Series pressureFrankfurt = new XYChart.Series();
     public XYChart.Series fineDustFrankfurt = new XYChart.Series();
     public XYChart.Series humidityFrankfurt = new XYChart.Series();
@@ -78,22 +84,50 @@ public class SceneController {
     public XYChart.Series brightnessFrankfurt = new XYChart.Series();
     public XYChart.Series airQualityFrankfurt = new XYChart.Series();
 
+    public XYChart.Series temperatureFrankfurt = new XYChart.Series();
+
+    private Tooltip tooltip = new Tooltip();
 
     @FXML
     public void showTemperature(ActionEvent event) {
-        if(tempCheckbox.isSelected()){
-            lineChart.getData().addAll(temperatureFrankfurt);
-        }
-        if(!tempCheckbox.isSelected()){
+        if (tempCheckbox.isSelected()) {
+            lineChart.getData().add(temperatureFrankfurt);
+            enableDataPointHover(temperatureFrankfurt);
+        } else {
             lineChart.getData().removeAll(temperatureFrankfurt);
-        }}
+            disableDataPointHover(temperatureFrankfurt);
+        }
+    }
+    private void enableDataPointHover(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Node node = data.getNode();
+            Tooltip tooltip = new Tooltip();
+            tooltip.setShowDelay(Duration.ZERO);
+            tooltip.setText(String.format("Uhr: %s\nWert: %s", data.getXValue(), data.getYValue()));
+            tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
+            Tooltip.install(node, tooltip);
+            node.setOnMouseEntered(e -> tooltip.show(node, e.getScreenX(), e.getScreenY() + 10));
+            node.setOnMouseExited(e -> tooltip.hide());
+        }
+    }
+
+    private void disableDataPointHover(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Node node = data.getNode();
+            Tooltip.uninstall(node, tooltip);
+            node.setOnMouseEntered(null);
+            node.setOnMouseExited(null);
+        }
+    }
     @FXML
     public void showPressure(ActionEvent event) {
         if(pressCheckbox.isSelected()){
             lineChart.getData().addAll(pressureFrankfurt);
+            enableDataPointHover(pressureFrankfurt);
         }
         if(!pressCheckbox.isSelected()){
             lineChart.getData().removeAll(pressureFrankfurt);
+            disableDataPointHover(pressureFrankfurt);
         }
     }
     @FXML
@@ -385,5 +419,6 @@ public class SceneController {
         stage.setScene(scene);
         stage.show();
     }
+
 
 }
