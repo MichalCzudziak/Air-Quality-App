@@ -16,7 +16,7 @@
                   <Font name="Nirmala UI" size="30.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#switchToHome" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Home" textFill="#dfe1e5">
+            <Button mnemonicParsing="false" onAction="#switchToHome" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Home" textFill="#dfe1e5">
                <font>
                   <Font name="Nirmala UI" size="30.0" />
                </font>

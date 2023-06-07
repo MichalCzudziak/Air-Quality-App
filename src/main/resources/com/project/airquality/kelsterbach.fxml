@@ -39,7 +39,7 @@
                         <Font name="Nirmala UI" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
+                <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
                     <font>
                         <Font name="Nirmala UI" size="30.0" />
                     </font>

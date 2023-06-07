@@ -7,7 +7,7 @@ public class Measurment {
     private double fineDustLevel;
     private double brightnessLevel;
     private double pressureLevel;
-    private double wetLevel;
+    private double humidityLevel;
     private double airIndex;
 
     public double getTemperature() {
@@ -50,12 +50,12 @@ public class Measurment {
         this.pressureLevel = pressureLevel;
     }
 
-    public double getWetLevel() {
-        return wetLevel;
+    public double getHumidityLevel() {
+        return humidityLevel;
     }
 
-    public void setWetLevel(double wetLevel) {
-        this.wetLevel = wetLevel;
+    public void setHumidityLevel(double humidityLevel) {
+        this.humidityLevel = humidityLevel;
     }
 
     public double getAirIndex() {
@@ -74,14 +74,14 @@ public class Measurment {
         this.timestamp = timestamp;
     }
 
-    public Measurment(String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double wetLevel, double airIndex) {
+    public Measurment(String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel, double airIndex) {
         this.timestamp = timestamp;
         this.temperature = temperature;
         this.co2Level = co2Level;
         this.fineDustLevel = fineDustLevel;
         this.brightnessLevel = brightnessLevel;
         this.pressureLevel = pressureLevel;
-        this.wetLevel = wetLevel;
+        this.humidityLevel = humidityLevel;
         this.airIndex = airIndex;
     }
 

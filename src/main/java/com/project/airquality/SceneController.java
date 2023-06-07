@@ -5,19 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class SceneController {
     private Stage stage;
@@ -25,137 +22,214 @@ public class SceneController {
     private Parent root;
 
     @FXML
-    private Label arqAvg;
+    private Label avgArq;
 
     @FXML
-    private Label brigAvg;
+    private Label avgBrigthness;
 
     @FXML
-    private Label co2Avg;
+    private Label avgCO2;
 
     @FXML
-    private Label fineAvg;
+    private Label avgFinedust;
 
+    @FXML
+    private Label avgHumidity;
+
+    @FXML
+    private Label avgPressure;
+
+    @FXML
+    public Label avgTemperature;
     @FXML
     private LineChart lineChart;
 
-    @FXML
-    private Label pressAvg;
-
-    @FXML
-    private Label tempAvg;
-
-    @FXML
-    private Label wetAvg;
 
     @FXML
     private Button testButton;
 
+
     @FXML
-    private AreaChart areaChart;
+    private RadioButton arqCheckbox;
+
     @FXML
-    void getTestFunction(ActionEvent event) {
-        XYChart.Series temperatureFrankfurt = new XYChart.Series();
-        temperatureFrankfurt.setName("Temperature");
-        temperatureFrankfurt.getData().add(new XYChart.Data("20:00", 20.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("21:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("22:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("23:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("24:00", 10.0));
+    private RadioButton brighCheckbox;
 
-        XYChart.Series pressureFrankfurt = new XYChart.Series();
-        pressureFrankfurt.getData().add(new XYChart.Data("20:00", 995));
-        pressureFrankfurt.getData().add(new XYChart.Data("21:00", 995.02));
-        pressureFrankfurt.getData().add(new XYChart.Data("22:00", 996.10));
-        pressureFrankfurt.getData().add(new XYChart.Data("23:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("24:00", 1000.003));
+    @FXML
+    private RadioButton co2Checkbox;
+
+    @FXML
+    private RadioButton fineCheckBox;
+
+    @FXML
+    private RadioButton humCheckbox;
+
+    @FXML
+    private RadioButton pressCheckbox;
+
+    @FXML
+    private RadioButton tempCheckbox;
+
+    public XYChart.Series temperatureFrankfurt = new XYChart.Series();
+    public XYChart.Series pressureFrankfurt = new XYChart.Series();
+    public XYChart.Series fineDustFrankfurt = new XYChart.Series();
+    public XYChart.Series humidityFrankfurt = new XYChart.Series();
+    public XYChart.Series co2Frankfurt = new XYChart.Series();
+    public XYChart.Series brightnessFrankfurt = new XYChart.Series();
+    public XYChart.Series airQualityFrankfurt = new XYChart.Series();
 
 
-
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("John");
-        series1.getData().add(new XYChart.Data("Monday", 3));
-        series1.getData().add(new XYChart.Data("Tuesday", 4));
-        series1.getData().add(new XYChart.Data("Wednesday", 3));
-        series1.getData().add(new XYChart.Data("Thursday", 5));
-        series1.getData().add(new XYChart.Data("Friday", 4));
-        series1.getData().add(new XYChart.Data("Saturday", 10));
-        series1.getData().add(new XYChart.Data("Sunday", 12));
-
-        XYChart.Series series2 = new XYChart.Series();
-        series2.setName("Jane");
-        series2.getData().add(new XYChart.Data("Monday", 1));
-        series2.getData().add(new XYChart.Data("Tuesday", 3));
-        series2.getData().add(new XYChart.Data("Wednesday", 4));
-
-        series2.getData().add(new XYChart.Data("Thursday", 3));
-        series2.getData().add(new XYChart.Data("Friday", 3));
-        series2.getData().add(new XYChart.Data("Saturday", 5));
-        series2.getData().add(new XYChart.Data("Sunday", 4));
-        areaChart.getData().addAll(pressureFrankfurt);
+    @FXML
+    public void showTemperature(ActionEvent event) {
+        if(tempCheckbox.isSelected()){
+            lineChart.getData().addAll(temperatureFrankfurt);
+        }
+        if(!tempCheckbox.isSelected()){
+            lineChart.getData().removeAll(temperatureFrankfurt);
+        }}
+    @FXML
+    public void showPressure(ActionEvent event) {
+        if(pressCheckbox.isSelected()){
+            lineChart.getData().addAll(pressureFrankfurt);
+        }
+        if(!pressCheckbox.isSelected()){
+            lineChart.getData().removeAll(pressureFrankfurt);
+        }
+    }
+    @FXML
+    public void showFineDust(ActionEvent event) {
+        if(fineCheckBox.isSelected()){
+            lineChart.getData().addAll(fineDustFrankfurt);
+        }
+        if(!fineCheckBox.isSelected()){
+            lineChart.getData().removeAll(fineDustFrankfurt);
+        }
+    }
+    @FXML
+    public void showHumidity(ActionEvent event) {
+        if (humCheckbox.isSelected()) {
+            lineChart.getData().addAll(humidityFrankfurt);
+        }
+        if (!humCheckbox.isSelected()) {
+            lineChart.getData().removeAll(humidityFrankfurt);
+        }
+    }
+    @FXML
+    public void showCO2(ActionEvent event) {
+        if (co2Checkbox.isSelected()) {
+            lineChart.getData().addAll(co2Frankfurt);
+        }
+        if (!co2Checkbox.isSelected()) {
+            lineChart.getData().removeAll(co2Frankfurt);
+        }
+    }
+    @FXML
+    public void showBrightness(ActionEvent event) {
+        if (brighCheckbox.isSelected()) {
+            lineChart.getData().addAll(brightnessFrankfurt);
+        }
+        if (!brighCheckbox.isSelected()) {
+            lineChart.getData().removeAll(brightnessFrankfurt);
+        }
+    }
+    @FXML
+    public void showAirquality(ActionEvent event) {
+        if(arqCheckbox.isSelected()){
+            lineChart.getData().addAll(airQualityFrankfurt);
+        }
+        if(!arqCheckbox.isSelected()){
+            lineChart.getData().removeAll(airQualityFrankfurt);
+        }
     }
 
+    public double calculateAverage(XYChart.Series<String, Number> chart) {
+        double sum = 0.0;
+        int count = 0;
+
+        for (XYChart.Data<String, Number> data : chart.getData()) {
+            double value = data.getYValue().doubleValue();
+            sum += value;
+            count++;
+        }
+        double average = sum / count;
+        average = Math.round(average * 100.0) / 10.0;
+        return average;
+    }
+
+    // TEST DATA
     @FXML
-    void getDataFunction(ActionEvent event) {
-        measurmentMapFrankfurt = initializeRandomData();
-        XYChart.Series temperatureFrankfurt = createChart(measurmentMapFrankfurt, "Temperature");
+    void getTestFunction(ActionEvent event) {
         temperatureFrankfurt.setName("Temperature");
+        temperatureFrankfurt.getData().add(new XYChart.Data("00:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("01:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("02:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("03:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("04:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("05:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("06:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("07:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("08:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("09:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("10:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("11:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("12:00", 10.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("13:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("14:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("15:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("16:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("17:00", 20.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("18:00", 19.0));
+        temperatureFrankfurt.getData().add(new XYChart.Data("19:00", 18.2));
+        temperatureFrankfurt.getData().add(new XYChart.Data("20:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("21:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("22:00", 14.1));
+        temperatureFrankfurt.getData().add(new XYChart.Data("23:00", 14.1));
 
-        XYChart.Series co2Frankfurt = createChart(measurmentMapFrankfurt, "CO2");
-        co2Frankfurt.setName("CO2");
-        XYChart.Series fineDustFrankfurt = createChart(measurmentMapFrankfurt, "Fine dust");
-        fineDustFrankfurt.setName("PM");
-        XYChart.Series pressureFrankfurt = createChart(measurmentMapFrankfurt, "Pressure");
+        if(!temperatureFrankfurt.getData().isEmpty()){
+            tempCheckbox.setDisable(false);
+            double average = calculateAverage(temperatureFrankfurt);
+            avgTemperature.setDisable(false);
+            avgTemperature.setText(Double.toString(average));
+        }
+
         pressureFrankfurt.setName("Pressure");
-        XYChart.Series wetnessFrankfurt = createChart(measurmentMapFrankfurt, "Wetness");
-        wetnessFrankfurt.setName("Wetness");
-        XYChart.Series brightnessFrankfurt = createChart(measurmentMapFrankfurt, "Wetness");
-        brightnessFrankfurt.setName("Brightness");
-        XYChart.Series airqualityFrankfurt = createChart(measurmentMapFrankfurt, "Airquality");
-        airqualityFrankfurt.setName("ARQ Index");
+        pressureFrankfurt.getData().add(new XYChart.Data("00:00", 995));
+        pressureFrankfurt.getData().add(new XYChart.Data("01:00", 996));
+        pressureFrankfurt.getData().add(new XYChart.Data("02:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("03:00", 970));
+        pressureFrankfurt.getData().add(new XYChart.Data("04:00", 1003));
+        pressureFrankfurt.getData().add(new XYChart.Data("05:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("06:00", 1001));
+        pressureFrankfurt.getData().add(new XYChart.Data("07:00", 1005));
+        pressureFrankfurt.getData().add(new XYChart.Data("08:00", 1001));
+        pressureFrankfurt.getData().add(new XYChart.Data("09:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("10:00", 1004));
+        pressureFrankfurt.getData().add(new XYChart.Data("11:00", 1005));
+        pressureFrankfurt.getData().add(new XYChart.Data("12:00", 999));
+        pressureFrankfurt.getData().add(new XYChart.Data("13:00", 998));
+        pressureFrankfurt.getData().add(new XYChart.Data("14:00", 996));
+        pressureFrankfurt.getData().add(new XYChart.Data("15:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("16:00", 1002));
+        pressureFrankfurt.getData().add(new XYChart.Data("17:00", 1001));
+        pressureFrankfurt.getData().add(new XYChart.Data("18:00", 996));
+        pressureFrankfurt.getData().add(new XYChart.Data("19:00", 997));
+        pressureFrankfurt.getData().add(new XYChart.Data("20:00", 998));
+        pressureFrankfurt.getData().add(new XYChart.Data("21:00", 999));
+        pressureFrankfurt.getData().add(new XYChart.Data("22:00", 1001));
+        pressureFrankfurt.getData().add(new XYChart.Data("23:00", 1002));
 
-        lineChart.getData().add(temperatureFrankfurt);
-        lineChart.getData().add(co2Frankfurt);
-        lineChart.getData().add(fineDustFrankfurt);
-        lineChart.getData().add(pressureFrankfurt);
-        lineChart.getData().add(wetnessFrankfurt);
-        lineChart.getData().add(brightnessFrankfurt);
-        lineChart.getData().add(airqualityFrankfurt);
-
-        arqAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Airquality")));
-        brigAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Brightness")));
-        co2Avg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "CO2")));
-        wetAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Wetness")));
-        tempAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Temperature")));
-        fineAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Fine Dust")));
-        pressAvg.setText(Double.toString(calculateAverage(measurmentMapFrankfurt, "Pressure")));
-
+        if(!pressureFrankfurt.getData().isEmpty()){
+            pressCheckbox.setDisable(false);
+            double average = calculateAverage(pressureFrankfurt);
+            avgPressure.setDisable(false);
+            avgPressure.setText(Double.toString(average));
+        }
     }
 
     private Map<String, Measurment> measurmentMapFrankfurt = new HashMap<>();
     private Map<String, Measurment> measurmentMapKelsterbach = new HashMap<>();
     private Map<String, Measurment> measurmentMapUAS = new HashMap<>();
     private Map<String, Measurment> measurmentMapMaintal = new HashMap<>();
-    private static final DecimalFormat df = new DecimalFormat("0.00");
-    public static double nextDoubleBetween2(double min, double max) {
-        return (new Random().nextDouble() * (max - min)) + min;
-    }
-    public Map<String,Measurment> initializeRandomData(){
-        Map<String,Measurment> returnMap = new HashMap<>();
-        int hour = 0;
-        for (int i = 1; i <= 24; i++){
-            double randomTemperature = 30.0;
-            double randomCO2 = 20;
-            double randomFineDust = 60;
-            double randomBrightness = 70;
-            double randomWetness = 300;
-            double randomAirquality = 600;
-            double randomPressure = 100;
-            returnMap.put(Integer.toString(hour), new Measurment(Integer.toString(hour), randomTemperature+i, randomCO2+i, randomFineDust+i, randomBrightness+i, randomPressure+i, randomWetness+i, randomAirquality+i));
-            hour +=1;
-        }
-        return returnMap;
-    }
 
     public XYChart.Series createChart(Map<String, Measurment> map, String choice){
         XYChart.Series chart = new XYChart.Series();
@@ -201,10 +275,10 @@ public class SceneController {
                 chart.getData().add(new XYChart.Data(key, value));
             }
         }
-        if(choice.equals("Wetness")){
+        if(choice.equals("Humidity")){
             for(Map.Entry<String, Measurment> entry : map.entrySet()) {
                 String key = entry.getKey();
-                Double value = entry.getValue().getWetLevel();
+                Double value = entry.getValue().getHumidityLevel();
                 chart.getData().add(new XYChart.Data(key, value));
             }
         }
@@ -261,10 +335,10 @@ public class SceneController {
             }
             average = average / map.size();
         }
-        if(choice.equals("Wetness")){
+        if(choice.equals("Humidity")){
             for(Map.Entry<String, Measurment> entry : map.entrySet()) {
                 String key = entry.getKey();
-                Double value = entry.getValue().getWetLevel();
+                Double value = entry.getValue().getHumidityLevel();
                 average = average + value;
             }
             average = average / map.size();
