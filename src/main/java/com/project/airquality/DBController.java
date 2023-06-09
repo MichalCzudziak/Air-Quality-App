@@ -4,21 +4,22 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 public class                                                                                                                                                                                                                            DBController {
-    public static Connection getConnection() throws SQLException {
-
+    public static Connection getConnection() {
+        DBConfigManager dbConfigManager = new DBConfigManager();
         //  Database credentials
-        String url = "jdbc:mysql://172.104.152.221:3306/Außenklima";
-        String user = "admin";
-        String pass = "FraUAS2023.";
+        String url = "jdbc:mysql://"+ dbConfigManager.getHost() + ":3306/" + dbConfigManager.getDatabase();
+        String user = dbConfigManager.getUsername();
+        String pass = dbConfigManager.getPassword();
 
         // JDBC driver name and database URL
         Connection con = null;
         try {
-            con = (Connection) DriverManager.getConnection(url, user, pass);
+            con = DriverManager.getConnection(url, user, pass);
 
 
         } catch (SQLException e) {
-            System.out.println("KEINE Verbindung");
+            System.out.println("KEINE Verbindung: ");
+            e.printStackTrace();
         }
         return con;
     }

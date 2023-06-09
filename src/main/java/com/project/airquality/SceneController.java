@@ -399,15 +399,19 @@ public class SceneController {
     }
 
     public void connectToDatabase(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        Rectangle2D mainScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((mainScreenBounds.getWidth() - stage.getWidth()) / 2);
-        stage.setY((mainScreenBounds.getHeight() - stage.getHeight()) / 2);
+        DBConfigManager configManager = new DBConfigManager(textDBURL.getText(), textUsername.getText(),
+                textPassword.getText(), textDBName.getText());
 
+        if (configManager.saveConfig()){
+            Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+            Rectangle2D mainScreenBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX((mainScreenBounds.getWidth() - stage.getWidth()) / 2);
+            stage.setY((mainScreenBounds.getHeight() - stage.getHeight()) / 2);
+        }
     }
 
 
