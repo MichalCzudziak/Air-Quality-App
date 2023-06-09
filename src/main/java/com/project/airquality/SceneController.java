@@ -2,6 +2,7 @@ package com.project.airquality;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,14 +10,13 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -55,6 +55,20 @@ public class SceneController {
     @FXML
     private Button testButton;
 
+    @FXML
+    private Button dbConnectButton;
+
+    @FXML
+    private TextField textDBName;
+
+    @FXML
+    private TextField textDBURL;
+
+    @FXML
+    private TextField textUsername;
+
+    @FXML
+    private PasswordField textPassword;
 
     @FXML
     private RadioButton arqCheckbox;
@@ -384,6 +398,19 @@ public class SceneController {
         return average;
     }
 
+    public void connectToDatabase(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        Rectangle2D mainScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((mainScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((mainScreenBounds.getHeight() - stage.getHeight()) / 2);
+
+    }
+
+
     public void switchToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -418,6 +445,18 @@ public class SceneController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void switchToConnectDB(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("connectDB.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        Rectangle2D connectDBScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((connectDBScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((connectDBScreenBounds.getHeight() - stage.getHeight()) / 2);
+
     }
 
 

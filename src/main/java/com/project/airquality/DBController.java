@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-public class DBController {
+public class                                                                                                                                                                                                                            DBController {
     public static Connection getConnection() throws SQLException {
 
         //  Database credentials
