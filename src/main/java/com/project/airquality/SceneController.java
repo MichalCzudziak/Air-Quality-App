@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -28,6 +29,9 @@ public class SceneController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    @FXML
+    private AnchorPane locMenu;
 
     @FXML
     private Label avgArq;
@@ -57,6 +61,9 @@ public class SceneController {
 
     @FXML
     private Button dbConnectButton;
+
+    @FXML
+    private Button settingsButton;
 
     @FXML
     private TextField textDBName;
@@ -452,15 +459,11 @@ public class SceneController {
     }
 
     public void switchToConnectDB(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("connectDB.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("settings.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        Rectangle2D connectDBScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((connectDBScreenBounds.getWidth() - stage.getWidth()) / 2);
-        stage.setY((connectDBScreenBounds.getHeight() - stage.getHeight()) / 2);
-
     }
 
 

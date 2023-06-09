@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+    <children>
+        <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
+            <children>
+                <Label prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #25324D;" text="Air Quality Dashboard" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Label>
+                <Button mnemonicParsing="false" onAction="#switchToHome" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Home" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+                <Button layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToFrankfurt" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Frankfurt" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+                <Button layoutX="10.0" layoutY="220.0" mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Maintal" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+                <Button layoutX="10.0" layoutY="325.0" mnemonicParsing="false" onAction="#switchToUAS" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="UAS" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+                <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#switchToConnectDB" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Settings" textFill="#dfe1e5">
+                    <font>
+                        <Font name="Nirmala UI" size="30.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+        <VBox layoutX="300.0" prefHeight="900.0" prefWidth="1300.0" styleClass="parent">
+            <children>
+                <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1300.0">
+               <children>
+                  <AnchorPane layoutX="425.0" layoutY="225.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="450.0" style="-fx-background-color: #161616;">
+                     <children>
+                        <AnchorPane layoutX="4.0" layoutY="108.0" prefHeight="341.0" prefWidth="443.0" style="-fx-background-color: #1c1c1c;">
+                           <children>
+                              <TextField fx:id="textDBName" layoutX="49.0" layoutY="45.0" prefHeight="25.0" prefWidth="345.0" style="-fx-background-color: #ababab;">
+                                 <font>
+                                    <Font name="Nirmala UI" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="49.0" layoutY="14.0" text="DB Name:" textFill="#dfe1e5">
+                                 <font>
+                                    <Font name="Nirmala UI" size="16.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="textDBURL" layoutX="48.0" layoutY="101.0" prefHeight="25.0" prefWidth="345.0" style="-fx-background-color: #ababab;" text="´">
+                                 <font>
+                                    <Font name="Nirmala UI" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="49.0" layoutY="70.0" text="DB URL:" textFill="#dfe1e5">
+                                 <font>
+                                    <Font name="Nirmala UI" size="16.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="textUsername" layoutX="49.0" layoutY="157.0" prefHeight="25.0" prefWidth="345.0" style="-fx-background-color: #ababab;">
+                                 <font>
+                                    <Font name="Nirmala UI" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="49.0" layoutY="126.0" text="Username:" textFill="#dfe1e5">
+                                 <font>
+                                    <Font name="Nirmala UI" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="49.0" layoutY="182.0" text="Password:" textFill="#dfe1e5">
+                                 <font>
+                                    <Font name="Nirmala UI" size="16.0" />
+                                 </font>
+                              </Label>
+                              <PasswordField fx:id="textPassword" layoutX="49.0" layoutY="207.0" prefHeight="25.0" prefWidth="345.0" style="-fx-background-color: #ababab;">
+                                 <font>
+                                    <Font name="Nirmala UI" size="12.0" />
+                                 </font>
+                              </PasswordField>
+                              <Button fx:id="dbConnectButton" layoutX="164.0" layoutY="264.0" mnemonicParsing="false" onAction="#connectToDatabase" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #ababab;" text="Connect to DB" textFill="#1c1c1c">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                        <Label alignment="CENTER" layoutX="92.0" layoutY="14.0" prefHeight="71.0" prefWidth="268.0" text="Database Connector" textFill="#ababab">
+                           <font>
+                              <Font name="Nirmala UI Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </children></Pane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
    <children>
       <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
          <children>
@@ -41,7 +41,7 @@
                   <Font name="Nirmala UI" size="30.0" />
                </font>
             </Button>
-            <Button  layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToConnectDB" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Settings" textFill="#dfe1e5">
+            <Button fx:id="settingsButton" layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToConnectDB" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Settings" textFill="#dfe1e5">
                <font>
                   <Font name="Nirmala UI" size="30.0" />
                </font>
@@ -50,7 +50,10 @@
       </VBox>
       <VBox layoutX="300.0" prefHeight="900.0" prefWidth="1300.0" styleClass="parent">
          <children>
-            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1300.0" />
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1300.0">
+               <children>
+                  <AnchorPane layoutX="-27.0" layoutY="14.0" prefHeight="900.0" prefWidth="1300.0" />
+               </children></Pane>
          </children>
       </VBox>
    </children>
