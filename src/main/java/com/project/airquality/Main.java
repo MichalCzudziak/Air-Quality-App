@@ -5,14 +5,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("connectDB.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Database Connection");
+        FXMLLoader fxmlLoader;
+        Scene scene;
+        if (!new File("config.properties").exists()){
+            fxmlLoader = new FXMLLoader(Main.class.getResource("connectDB.fxml"));
+            scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Database Connection");
+        } else {
+            fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
+            scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Dashboard App");
+        }
+
         stage.setScene(scene);
         stage.show();
     }
