@@ -1,6 +1,7 @@
-package com.project.airquality;
+package objects;
 
-public class Measurment {
+public class Measurement {
+    private int id;
     private String timestamp;
     private double temperature;
     private double co2Level;
@@ -9,6 +10,14 @@ public class Measurment {
     private double pressureLevel;
     private double humidityLevel;
     private double airIndex;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getTemperature() {
         return temperature;
@@ -74,7 +83,8 @@ public class Measurment {
         this.timestamp = timestamp;
     }
 
-    public Measurment(String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel, double airIndex) {
+    public Measurement(int id, String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel, double airIndex) {
+        this.id = id;
         this.timestamp = timestamp;
         this.temperature = temperature;
         this.co2Level = co2Level;
@@ -85,5 +95,6 @@ public class Measurment {
         this.airIndex = airIndex;
     }
 
+    public Measurement(){}
 
 }

@@ -1,4 +1,4 @@
-package com.project.airquality;
+package database;
 
 import java.io.*;
 import java.util.Properties;
@@ -56,7 +56,8 @@ public class DBConfigManager {
             properties.store(outputStream, null);
             return true;
         } catch (IOException e){
-            System.out.println("Fehler");
+            System.out.println("Error: ");
+            e.printStackTrace();
             return false;
         }
     }

@@ -9,4 +9,8 @@ module com.project.airquality {
 
     opens com.project.airquality to javafx.fxml;
     exports com.project.airquality;
+    exports database;
+    opens database to javafx.fxml;
+    exports objects;
+    opens objects to javafx.fxml;
 }
