@@ -28,6 +28,8 @@ public class SceneController {
     private Parent root;
 
     @FXML
+    private ProgressBar arqProgressbar;
+    @FXML
     private AnchorPane locMenu;
 
     @FXML
@@ -49,7 +51,7 @@ public class SceneController {
     private Label avgPressure;
 
     @FXML
-    public Label avgTemperature;
+    private Label avgTemperature;
     @FXML
     private LineChart<String, Number> lineChart;
 
@@ -94,6 +96,11 @@ public class SceneController {
 
     @FXML
     private RadioButton tempCheckbox;
+
+    private Map<String, Measurement> measurmentMapFrankfurt = new HashMap<>();
+    private Map<String, Measurement> measurmentMapKelsterbach = new HashMap<>();
+    private Map<String, Measurement> measurmentMapUAS = new HashMap<>();
+    private Map<String, Measurement> measurmentMapMaintal = new HashMap<>();
 
     public XYChart.Series pressureFrankfurt = new XYChart.Series();
     public XYChart.Series fineDustFrankfurt = new XYChart.Series();
@@ -282,125 +289,7 @@ public class SceneController {
 
 
     // TODO Fill the hashmaps with data from database
-    private Map<String, Measurement> measurmentMapFrankfurt = new HashMap<>();
-    private Map<String, Measurement> measurmentMapKelsterbach = new HashMap<>();
-    private Map<String, Measurement> measurmentMapUAS = new HashMap<>();
-    private Map<String, Measurement> measurmentMapMaintal = new HashMap<>();
 
-    public XYChart.Series createChart(Map<String, Measurement> map, String choice){
-        XYChart.Series chart = new XYChart.Series();
-        if(choice.equals("Temperature")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getTemperature();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("CO2")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getCo2Level();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("Fine dust")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getFineDustLevel();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("Brightness")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getBrightnessLevel();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("Airquality")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getAirIndex();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("Pressure")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getPressureLevel();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        if(choice.equals("Humidity")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getHumidityLevel();
-                chart.getData().add(new XYChart.Data(key, value));
-            }
-        }
-        return chart;
-    }
-
-    public double calculateAverage(Map<String, Measurement> map, String choice){
-        double average = 0;
-        if(choice.equals("Temperature")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getTemperature();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("CO2")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getCo2Level();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("Fine dust")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getFineDustLevel();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("Brightness")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getBrightnessLevel();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("Airquality")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getAirIndex();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("Pressure")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getPressureLevel();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        if(choice.equals("Humidity")){
-            for(Map.Entry<String, Measurement> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Double value = entry.getValue().getHumidityLevel();
-                average = average + value;
-            }
-            average = average / map.size();
-        }
-        return average;
-    }
 
     public void connectToDatabase(ActionEvent event) throws IOException, SQLException {
         DBConfigManager configManager = new DBConfigManager(textDBURL.getText(), textUsername.getText(),
@@ -465,5 +354,9 @@ public class SceneController {
         stage.show();
     }
 
+    @FXML
+    public void initialize(){
+
+    }
 
 }

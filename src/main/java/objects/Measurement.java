@@ -83,7 +83,11 @@ public class Measurement {
         this.timestamp = timestamp;
     }
 
-    public Measurement(int id, String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel, double airIndex) {
+    public double calculateArqIndex() {
+        return 20.0;
+    }
+
+    public Measurement(int id, String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel) {
         this.id = id;
         this.timestamp = timestamp;
         this.temperature = temperature;
@@ -92,7 +96,7 @@ public class Measurement {
         this.brightnessLevel = brightnessLevel;
         this.pressureLevel = pressureLevel;
         this.humidityLevel = humidityLevel;
-        this.airIndex = airIndex;
+        this.airIndex = calculateArqIndex();
     }
 
     public Measurement(){}
