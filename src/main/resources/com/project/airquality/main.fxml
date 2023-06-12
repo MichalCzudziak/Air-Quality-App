@@ -28,21 +28,6 @@
                   <Font name="Nirmala UI" size="30.0" />
                </font>
             </Button>
-            <Button layoutX="10.0" layoutY="220.0" mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Maintal" textFill="#dfe1e5">
-               <font>
-                  <Font name="Nirmala UI" size="30.0" />
-               </font>
-            </Button>
-            <Button layoutX="10.0" layoutY="325.0" mnemonicParsing="false" onAction="#switchToUAS" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="UAS" textFill="#dfe1e5">
-               <font>
-                  <Font name="Nirmala UI" size="30.0" />
-               </font>
-            </Button>
-            <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
-               <font>
-                  <Font name="Nirmala UI" size="30.0" />
-               </font>
-            </Button>
             <Button fx:id="settingsButton" layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToConnectDB" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Settings" textFill="#dfe1e5">
                <font>
                   <Font name="Nirmala UI" size="30.0" />

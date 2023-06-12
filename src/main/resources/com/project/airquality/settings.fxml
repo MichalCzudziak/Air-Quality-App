@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.settingsController">
     <children>
         <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -24,21 +24,6 @@
                     </font>
                 </Button>
                 <Button layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToFrankfurt" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Frankfurt" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="220.0" mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Maintal" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="325.0" mnemonicParsing="false" onAction="#switchToUAS" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="UAS" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
                     <font>
                         <Font name="Nirmala UI" size="30.0" />
                     </font>

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
     <children>
         <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -27,21 +27,6 @@
                     </font>
                 </Button>
                 <Button layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToFrankfurt" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Frankfurt" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="220.0" mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Maintal" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="325.0" mnemonicParsing="false" onAction="#switchToUAS" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="UAS" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
-                <Button layoutX="10.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
                     <font>
                         <Font name="Nirmala UI" size="30.0" />
                     </font>
@@ -104,7 +89,7 @@
                      <children>
                         <Label fx:id="avgTemperature" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -151,7 +136,7 @@
                      <children>
                         <Label fx:id="avgHumidity" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -163,7 +148,7 @@
                      <children>
                         <Label fx:id="avgFinedust" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -175,7 +160,7 @@
                      <children>
                         <Label fx:id="avgCO2" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -187,7 +172,7 @@
                      <children>
                         <Label fx:id="avgPressure" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -199,7 +184,7 @@
                      <children>
                         <Label fx:id="avgBrigthness" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -211,7 +196,7 @@
                      <children>
                         <Label fx:id="avgArq" alignment="CENTER" disable="true" prefHeight="170.0" prefWidth="280.0" text="0" textFill="#41bc5a">
                            <font>
-                              <Font size="55.0" />
+                              <Font size="30.0" />
                            </font>
                            <opaqueInsets>
                               <Insets />
@@ -219,7 +204,6 @@
                         </Label>
                      </children>
                   </VBox>
-                  <Button fx:id="testButton" layoutX="1006.0" layoutY="584.0" mnemonicParsing="false" onAction="#getTestFunction" prefHeight="49.0" prefWidth="140.0" text="GET SAMPLE DATA" />
                </children></Pane>
             </children>
         </VBox>
