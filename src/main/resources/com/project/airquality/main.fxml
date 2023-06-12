@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.mainController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.mainController">
    <children>
       <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
          <children>
@@ -42,11 +42,17 @@
                   <Label layoutX="21.0" layoutY="27.0" text="Label" />
                   <VBox layoutX="28.0" layoutY="27.0" prefHeight="213.0" prefWidth="439.0" style="-fx-background-color: #1E1F22;">
                      <children>
+                        <Label alignment="CENTER" prefHeight="48.0" prefWidth="439.0" text="Air Quality Index" textFill="#41bc5a">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
                         <ProgressBar fx:id="arqProgressbar" prefHeight="168.0" prefWidth="308.0" progress="0.0">
                            <VBox.margin>
                               <Insets left="70.0" top="60.0" />
                            </VBox.margin>
                         </ProgressBar>
+                        <Label prefHeight="17.0" prefWidth="439.0" text="                   0                                           50                                         100" textFill="WHITE" />
                         <Label fx:id="avgArq" alignment="BOTTOM_CENTER" disable="true" prefHeight="240.0" prefWidth="470.0" text="Frankfurt" textFill="#41bc5a">
                            <font>
                               <Font size="43.0" />
