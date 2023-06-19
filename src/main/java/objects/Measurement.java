@@ -1,5 +1,9 @@
 package objects;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class Measurement {
     private int id;
     private String timestamp;
@@ -10,6 +14,9 @@ public class Measurement {
     private double pressureLevel;
     private double humidityLevel;
     private double airIndex;
+
+    private LocalDateTime timestampDate;
+
 
     public int getId() {
         return id;
@@ -87,6 +94,19 @@ public class Measurement {
         return 20.0;
     }
 
+    public String getFormattedTimestamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd HH:mm", Locale.GERMAN);
+        return this.timestampDate.format(formatter);
+    }
+
+    public LocalDateTime getTimestampDate() {
+        return timestampDate;
+    }
+
+    public void setTimestampDate(LocalDateTime timestampDate) {
+        this.timestampDate = timestampDate;
+    }
+
     public Measurement(int id, String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel) {
         this.id = id;
         this.timestamp = timestamp;
@@ -97,6 +117,18 @@ public class Measurement {
         this.pressureLevel = pressureLevel;
         this.humidityLevel = humidityLevel;
         this.airIndex = calculateArqIndex();
+    }
+
+    public Measurement(int id, LocalDateTime timestamp, double temperature, double co2Level, double fineDustLevel,
+                       double brightnessLevel, double pressureLevel, double humidityLevel) {
+        this.id = id;
+        this.timestampDate = timestamp;
+        this.temperature = temperature;
+        this.co2Level = co2Level;
+        this.fineDustLevel = fineDustLevel;
+        this.brightnessLevel = brightnessLevel;
+        this.pressureLevel = pressureLevel;
+        this.humidityLevel = humidityLevel;
     }
 
     public Measurement(){}

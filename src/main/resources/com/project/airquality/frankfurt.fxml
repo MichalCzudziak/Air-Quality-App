@@ -182,7 +182,7 @@
                   </VBox>
                   <VBox layoutX="672.0" layoutY="744.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgBrigthness" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="avgBrightness" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>

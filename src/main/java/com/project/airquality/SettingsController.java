@@ -1,25 +1,57 @@
 package com.project.airquality;
+import database.DBConfigManager;
+import database.DBController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import objects.Measurement;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-public class mainController {
-    public Button settingsButton;
-    public Label avgArq;
+public class SettingsController {
     private Stage stage;
     private Scene scene;
-    private Parent root;
 
     @FXML
-    private ProgressBar arqProgressbar;
+    private Button dbConnectButton;
+
+    @FXML
+    private TextField textDBName;
+
+    @FXML
+    private TextField textDBURL;
+
+    @FXML
+    private PasswordField textPassword;
+
+    @FXML
+    private TextField textUsername;
+    @FXML
+    public void connectToDatabase(ActionEvent event) throws IOException, SQLException {
+        DBConfigManager configManager = new DBConfigManager(textDBURL.getText(), textUsername.getText(),
+                textPassword.getText(), textDBName.getText());
+
+        if (configManager.saveConfig()){
+            DBController dbController = new DBController();
+            Main.allLocations = dbController.getAllLocations();
+            Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+            Rectangle2D mainScreenBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX((mainScreenBounds.getWidth() - stage.getWidth()) / 2);
+            stage.setY((mainScreenBounds.getHeight() - stage.getHeight()) / 2);
+        }
+    }
 
     private Map<String, Measurement> measurmentMapFrankfurt = new HashMap<>();
 
@@ -46,22 +78,9 @@ public class mainController {
         stage.show();
     }
 
-    public void setBarColor(double average){
-        if (average < 50) {
-            arqProgressbar.setStyle("-fx-accent: green");
-        } else {
-            arqProgressbar.setStyle("-fx-accent: red");
-        }
-    }
-
     @FXML
     public void initialize(){
-        // SELECT * FROM db
-        Measurement m1 = new Measurement(1, "20:00", 24.1, 30, 40, 70, 1000, 80);
-        measurmentMapFrankfurt.put(m1.getTimestamp(), m1);
-        double average = measurmentMapFrankfurt.get("20:00").getAirIndex();
-        arqProgressbar.setProgress(average/100);
-        setBarColor(average+100);
+
     }
 
 }

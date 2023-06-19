@@ -32,7 +32,6 @@ public class Main extends Application {
             scene = new Scene(fxmlLoader.load());
             stage.setTitle("Dashboard App");
         }
-
         stage.setScene(scene);
         stage.show();
     }

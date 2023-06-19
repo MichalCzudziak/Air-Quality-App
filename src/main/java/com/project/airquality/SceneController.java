@@ -1,28 +1,27 @@
 package com.project.airquality;
-import database.DBConfigManager;
-import database.DBController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objects.Measurement;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class SceneController {
+
+
+    // FXML DECLARATIONS #################################################
+
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -36,7 +35,7 @@ public class SceneController {
     private Label avgArq;
 
     @FXML
-    private Label avgBrigthness;
+    private Label avgBrightness;
 
     @FXML
     private Label avgCO2;
@@ -94,131 +93,88 @@ public class SceneController {
     @FXML
     private RadioButton tempCheckbox;
 
-    private Map<String, Measurement> measurmentMapFrankfurt = new HashMap<>();
-    private Map<String, Measurement> measurmentMapKelsterbach = new HashMap<>();
-    private Map<String, Measurement> measurmentMapUAS = new HashMap<>();
-    private Map<String, Measurement> measurmentMapMaintal = new HashMap<>();
+    // ###########################################################
+    // DATA STRUCTURES
+    // ###########################################################
+    private ArrayList<Measurement> measurmentList = new ArrayList<>();
 
-    public XYChart.Series pressureFrankfurt = new XYChart.Series();
-    public XYChart.Series fineDustFrankfurt = new XYChart.Series();
-    public XYChart.Series humidityFrankfurt = new XYChart.Series();
-    public XYChart.Series co2Frankfurt = new XYChart.Series();
-    public XYChart.Series brightnessFrankfurt = new XYChart.Series();
-    public XYChart.Series airQualityFrankfurt = new XYChart.Series();
+    private Map<String, Double> tempList = new HashMap<>();
+    private Map<String, Double> co2List = new HashMap<>();
+    private Map<String, Double> fineDustList = new HashMap<>();
 
-    public XYChart.Series fineDustFrankfurtPM1 = new XYChart.Series();
-    public XYChart.Series fineDustFrankfurtPM2 = new XYChart.Series();
-    public XYChart.Series fineDustFrankfurtPM3 = new XYChart.Series();
+    private Map<String, Double> brightnessList = new HashMap<>();
+    private Map<String, Double> pressureList = new HashMap<>();
+    private Map<String, Double> humidityList = new HashMap<>();
+
+    public XYChart.Series temperatureChart = new XYChart.Series();
+    public XYChart.Series pressureChart = new XYChart.Series();
+    public XYChart.Series fineDustChart = new XYChart.Series();
+    public XYChart.Series humidityChart = new XYChart.Series();
+    public XYChart.Series co2Chart = new XYChart.Series();
+    public XYChart.Series brightnessChart = new XYChart.Series();
+    public XYChart.Series airQualityChart = new XYChart.Series();
 
     public XYChart.Series arqBoundary = new XYChart.Series();
 
-    public XYChart.Series temperatureFrankfurt = new XYChart.Series();
 
-    private Tooltip tooltip = new Tooltip();
+    // ###########################################################
 
-    @FXML
-    public void showTemperature(ActionEvent event) {
-        if (tempCheckbox.isSelected()) {
-            lineChart.getData().add(temperatureFrankfurt);
-            enableDataPointHover(temperatureFrankfurt);
-        } else {
-            lineChart.getData().removeAll(temperatureFrankfurt);
-            disableDataPointHover(temperatureFrankfurt);
-        }
-    }
-    private void enableDataPointHover(XYChart.Series<String, Number> series) {
-        for (XYChart.Data<String, Number> data : series.getData()) {
-            Node node = data.getNode();
-            Tooltip tooltip = new Tooltip();
-            tooltip.setShowDelay(Duration.ZERO);
-            tooltip.setText(String.format("Uhr: %s\nWert: %s", data.getXValue(), data.getYValue()));
-            tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
-            Tooltip.install(node, tooltip);
-            node.setOnMouseEntered(e -> tooltip.show(node, e.getScreenX(), e.getScreenY() + 10));
-            node.setOnMouseExited(e -> tooltip.hide());
+    // ###########################################################
+    // DATA IMPORT
+    // ###########################################################
+    public void generateRandomMeasurements() {
+        Random random = new Random();
+        LocalDateTime baseTimestamp = LocalDateTime.now();
+
+        for (int i = 0; i < 48; i++) {
+            // Generate random values for each measurement attribute
+            int id = i + 1;
+            LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
+            double temperature = random.nextDouble() * 100;
+            double co2Level = random.nextDouble() * 1000;
+            double fineDustLevel = random.nextDouble() * 100;
+            double brightnessLevel = random.nextDouble() * 1000;
+            double pressureLevel = random.nextDouble() * 2000;
+            double humidityLevel = random.nextDouble() * 100;
+
+            // Create a new Measurement object
+            Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, fineDustLevel,
+                    brightnessLevel, pressureLevel, humidityLevel);
+
+            // Add the measurement to the List
+            measurmentList.add(measurement);
         }
     }
 
-    private void disableDataPointHover(XYChart.Series<String, Number> series) {
-        for (XYChart.Data<String, Number> data : series.getData()) {
-            Node node = data.getNode();
-            Tooltip.uninstall(node, tooltip);
-            node.setOnMouseEntered(null);
-            node.setOnMouseExited(null);
-        }
-    }
-    @FXML
-    public void showPressure(ActionEvent event) {
-        if(pressCheckbox.isSelected()){
-            lineChart.getData().addAll(pressureFrankfurt);
-            enableDataPointHover(pressureFrankfurt);
-        }
-        if(!pressCheckbox.isSelected()){
-            lineChart.getData().removeAll(pressureFrankfurt);
-            disableDataPointHover(pressureFrankfurt);
-        }
-    }
-    @FXML
-    public void showFineDust(ActionEvent event) {
-        if (fineCheckBox.isSelected()) {
-            lineChart.getData().addAll(fineDustFrankfurtPM1);
-            lineChart.getData().addAll(fineDustFrankfurtPM2);
-            lineChart.getData().addAll(fineDustFrankfurtPM3);
-            enableDataPointHover(fineDustFrankfurtPM1);
-            enableDataPointHover(fineDustFrankfurtPM2);
-            enableDataPointHover(fineDustFrankfurtPM3);
-        }
-        if (!fineCheckBox.isSelected()) {
-            lineChart.getData().removeAll(fineDustFrankfurtPM1);
-            lineChart.getData().removeAll(fineDustFrankfurtPM2);
-            lineChart.getData().removeAll(fineDustFrankfurtPM3);
-            enableDataPointHover(fineDustFrankfurtPM1);
-            enableDataPointHover(fineDustFrankfurtPM2);
-            enableDataPointHover(fineDustFrankfurtPM3);
-        }
-    }
-    @FXML
-    public void showHumidity(ActionEvent event) {
-        if (humCheckbox.isSelected()) {
-            lineChart.getData().addAll(humidityFrankfurt);
-        }
-        if (!humCheckbox.isSelected()) {
-            lineChart.getData().removeAll(humidityFrankfurt);
-        }
-    }
-    @FXML
-    public void showCO2(ActionEvent event) {
-        if (co2Checkbox.isSelected()) {
-            lineChart.getData().addAll(co2Frankfurt);
-        }
-        if (!co2Checkbox.isSelected()) {
-            lineChart.getData().removeAll(co2Frankfurt);
-        }
-    }
-    @FXML
-    public void showBrightness(ActionEvent event) {
-        if (brighCheckbox.isSelected()) {
-            lineChart.getData().addAll(brightnessFrankfurt);
-        }
-        if (!brighCheckbox.isSelected()) {
-            lineChart.getData().removeAll(brightnessFrankfurt);
-        }
-    }
-    @FXML
-    public void showAirquality(ActionEvent event) {
-        if(arqCheckbox.isSelected()){
-            lineChart.getData().addAll(airQualityFrankfurt);
-            lineChart.getData().addAll(arqBoundary);
-            for (Object obj : arqBoundary.getData()) {
-                if (obj instanceof XYChart.Data) {
-                    XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
-                    data.getNode().setOpacity(0);
-                }
-            }
-        }
-        if(!arqCheckbox.isSelected()){
-            lineChart.getData().removeAll(airQualityFrankfurt);
-            lineChart.getData().removeAll(arqBoundary);
+    public void addMeasurementsToChart(List<Measurement> measurements) {
+        for (Measurement measurement : measurements) {
+            // Convert the timestamp to the desired format
+            String timestampString = measurement.getFormattedTimestamp();
+            // Add the temperature data to the series
+            tempList.put(timestampString, measurement.getTemperature());
+            temperatureChart.getData().add(new XYChart.Data<>(timestampString, measurement.getTemperature()));
+            temperatureChart.setName("Temperature");
+
+            pressureList.put(timestampString, measurement.getPressureLevel());
+            pressureChart.getData().add(new XYChart.Data<>(timestampString, measurement.getPressureLevel()));
+            pressureChart.setName("Pressure");
+
+
+            humidityList.put(timestampString, measurement.getHumidityLevel());
+            humidityChart.getData().add(new XYChart.Data<>(timestampString, measurement.getHumidityLevel()));
+            humidityChart.setName("Humidity");
+
+            fineDustList.put(timestampString, measurement.getFineDustLevel());
+            fineDustChart.getData().add(new XYChart.Data<>(timestampString, measurement.getFineDustLevel()));
+            fineDustChart.setName("FineDust");
+
+            co2List.put(timestampString, measurement.getCo2Level());
+            co2Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getCo2Level()));
+            co2Chart.setName("CO2");
+
+            brightnessList.put(timestampString, measurement.getBrightnessLevel());
+            brightnessChart.getData().add(new XYChart.Data<>(timestampString, measurement.getBrightnessLevel()));
+            brightnessChart.setName("Brightness");
         }
     }
 
@@ -236,23 +192,179 @@ public class SceneController {
         return average;
     }
 
-    // TEST DATA
+    public static void sortByAscendingTime(List<Measurement> measurements) {
+        measurements.sort(new Comparator<Measurement>() {
+            @Override
+            public int compare(Measurement m1, Measurement m2) {
+                LocalDateTime time1 = m1.getTimestampDate();
+                LocalDateTime time2 = m2.getTimestampDate();
+                return time1.compareTo(time2);
+            }
+        });
+    }
 
-    // TODO Create realistic sample data
 
-    // TODO Fill the hashmaps with data from database
 
+    // ###########################################################
+    // GRAPH OPTIONS
+    // ###########################################################
+    private Tooltip tooltip = new Tooltip();
+
+    private void enableDataPointHover(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Node node = data.getNode();
+            Tooltip tooltip = new Tooltip();
+            tooltip.setShowDelay(Duration.ZERO);
+            tooltip.setText(String.format("Time: %s\nWert: %s", data.getXValue(), data.getYValue()));
+            tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
+            Tooltip.install(node, tooltip);
+            node.setOnMouseEntered(e -> tooltip.show(node, e.getScreenX(), e.getScreenY() + 10));
+            node.setOnMouseExited(e -> tooltip.hide());
+        }
+    }
+
+    private void disableDataPointHover(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Node node = data.getNode();
+            Tooltip.uninstall(node, tooltip);
+            node.setOnMouseEntered(null);
+            node.setOnMouseExited(null);
+        }
+    }
+
+    public double findTemperatureValueByClick(String userInput) {
+        return tempList.get(userInput);
+    }
+
+    public double findCO2ValueByClick(String userInput) {
+        return co2List.get(userInput);
+    }
+
+    public double findHumidityValueByClick(String userInput) {
+        return humidityList.get(userInput);
+    }
+
+    public double findBrightnessValueByClick(String userInput) {
+        return brightnessList.get(userInput);
+    }
+
+    public double findFineDustValueByClick(String userInput) {
+        return fineDustList.get(userInput);
+    }
+
+    public double findPressureValueByClick(String userInput) {
+        return pressureList.get(userInput);
+    }
+
+
+    // ###########################################################
+    // SHOWING CONTROLS
+    // ###########################################################
+    @FXML
+    public void showTemperature(ActionEvent event) {
+        if (tempCheckbox.isSelected()) {
+            lineChart.getData().add(temperatureChart);
+            enableDataPointHover(temperatureChart);
+        } else {
+            lineChart.getData().removeAll(temperatureChart);
+            disableDataPointHover(temperatureChart);
+        }
+    }
+
+    @FXML
+    public void showPressure(ActionEvent event) {
+        if (pressCheckbox.isSelected()) {
+            lineChart.getData().addAll(pressureChart);
+            enableDataPointHover(pressureChart);
+        }
+        if (!pressCheckbox.isSelected()) {
+            lineChart.getData().removeAll(pressureChart);
+            disableDataPointHover(pressureChart);
+        }
+    }
+
+    @FXML
+    public void showFineDust(ActionEvent event) {
+        if (fineCheckBox.isSelected()) {
+            lineChart.getData().addAll(fineDustChart);
+            enableDataPointHover(fineDustChart);
+        }
+        if (!fineCheckBox.isSelected()) {
+            lineChart.getData().removeAll(fineDustChart);
+            disableDataPointHover(fineDustChart);
+        }
+    }
+
+    @FXML
+    public void showHumidity(ActionEvent event) {
+        if (humCheckbox.isSelected()) {
+            lineChart.getData().addAll(humidityChart);
+            enableDataPointHover(humidityChart);
+        }
+        if (!humCheckbox.isSelected()) {
+            lineChart.getData().removeAll(humidityChart);
+            disableDataPointHover(humidityChart);
+        }
+    }
+
+    @FXML
+    public void showCO2(ActionEvent event) {
+        if (co2Checkbox.isSelected()) {
+            lineChart.getData().addAll(co2Chart);
+            enableDataPointHover(co2Chart);
+        }
+        if (!co2Checkbox.isSelected()) {
+            lineChart.getData().removeAll(co2Chart);
+            disableDataPointHover(co2Chart);
+        }
+    }
+
+    @FXML
+    public void showBrightness(ActionEvent event) {
+        if (brighCheckbox.isSelected()) {
+            lineChart.getData().addAll(brightnessChart);
+            enableDataPointHover(brightnessChart);
+        }
+        if (!brighCheckbox.isSelected()) {
+            lineChart.getData().removeAll(brightnessChart);
+            disableDataPointHover(brightnessChart);
+        }
+    }
+
+    @FXML
+    public void showAirquality(ActionEvent event) {
+        if (arqCheckbox.isSelected()) {
+            lineChart.getData().addAll(airQualityChart);
+            lineChart.getData().addAll(arqBoundary);
+            for (Object obj : arqBoundary.getData()) {
+                if (obj instanceof XYChart.Data) {
+                    XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                    data.getNode().setOpacity(0);
+                }
+            }
+        }
+        if (!arqCheckbox.isSelected()) {
+            lineChart.getData().removeAll(airQualityChart);
+            lineChart.getData().removeAll(arqBoundary);
+        }
+    }
+
+
+    // ###########################################################
+    // SWITCHING CONTROLS
+    // ###########################################################
 
     public void switchToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
+
     public void switchToFrankfurt(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("frankfurt.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -260,221 +372,78 @@ public class SceneController {
 
     public void switchToConnectDB(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("settings.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
+
     @FXML
-    public void initialize(){
+    public void initialize() {
+        generateRandomMeasurements();
+        sortByAscendingTime(measurmentList);
+        addMeasurementsToChart(measurmentList);
 
-        temperatureFrankfurt.setName("Temperature");
-        temperatureFrankfurt.getData().add(new XYChart.Data("00:00", 20.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("01:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("02:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("03:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("04:00", 20.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("05:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("06:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("07:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("08:00", 21.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("09:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("10:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("11:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("12:00", 10.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("13:00", 20.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("14:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("15:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("16:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("17:00", 20.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("18:00", 19.0));
-        temperatureFrankfurt.getData().add(new XYChart.Data("19:00", 18.2));
-        temperatureFrankfurt.getData().add(new XYChart.Data("20:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("21:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("22:00", 14.1));
-        temperatureFrankfurt.getData().add(new XYChart.Data("23:00", 14.1));
+        CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
 
-        if(!temperatureFrankfurt.getData().isEmpty()){
+        // Add click functionality to the X axis
+        xAxisFromChart.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                double xPos = event.getX();
+                int clickedDataX = xAxisFromChart.getCategories().indexOf(xAxisFromChart.getValueForDisplay(xPos).toString());
+                if (clickedDataX >= 0) {
+                    String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
+                    avgTemperature.setText(Double.toString(findTemperatureValueByClick(clickedCategory)));
+                    avgBrightness.setText(Double.toString(findBrightnessValueByClick(clickedCategory)));
+                    avgPressure.setText(Double.toString(findPressureValueByClick(clickedCategory)));
+                    avgCO2.setText(Double.toString(findCO2ValueByClick(clickedCategory)));
+                    avgHumidity.setText(Double.toString(findHumidityValueByClick(clickedCategory)));
+                    avgFinedust.setText(Double.toString(findFineDustValueByClick(clickedCategory)));
+                }
+            }
+        });
+
+        if (!temperatureChart.getData().isEmpty()) {
             tempCheckbox.setDisable(false);
-            double average = calculateAverage(temperatureFrankfurt);
+            double average = calculateAverage(temperatureChart);
             avgTemperature.setDisable(false);
             avgTemperature.setText(Double.toString(average) + " C");
         }
 
-        pressureFrankfurt.setName("Pressure");
-        pressureFrankfurt.getData().add(new XYChart.Data("00:00", 995));
-        pressureFrankfurt.getData().add(new XYChart.Data("01:00", 996));
-        pressureFrankfurt.getData().add(new XYChart.Data("02:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("03:00", 970));
-        pressureFrankfurt.getData().add(new XYChart.Data("04:00", 1003));
-        pressureFrankfurt.getData().add(new XYChart.Data("05:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("06:00", 1001));
-        pressureFrankfurt.getData().add(new XYChart.Data("07:00", 1005));
-        pressureFrankfurt.getData().add(new XYChart.Data("08:00", 1001));
-        pressureFrankfurt.getData().add(new XYChart.Data("09:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("10:00", 1050));
-        pressureFrankfurt.getData().add(new XYChart.Data("11:00", 1005));
-        pressureFrankfurt.getData().add(new XYChart.Data("12:00", 999));
-        pressureFrankfurt.getData().add(new XYChart.Data("13:00", 998));
-        pressureFrankfurt.getData().add(new XYChart.Data("14:00", 996));
-        pressureFrankfurt.getData().add(new XYChart.Data("15:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("16:00", 1002));
-        pressureFrankfurt.getData().add(new XYChart.Data("17:00", 1001));
-        pressureFrankfurt.getData().add(new XYChart.Data("18:00", 996));
-        pressureFrankfurt.getData().add(new XYChart.Data("19:00", 997));
-        pressureFrankfurt.getData().add(new XYChart.Data("20:00", 998));
-        pressureFrankfurt.getData().add(new XYChart.Data("21:00", 999));
-        pressureFrankfurt.getData().add(new XYChart.Data("22:00", 1001));
-        pressureFrankfurt.getData().add(new XYChart.Data("23:00", 1002));
 
+        if(!humidityChart.getData().isEmpty()){
+            humCheckbox.setDisable(false);
+            double average = calculateAverage(humidityChart);
+            avgHumidity.setDisable(false);
+            avgHumidity.setText(Double.toString(average));
+        }
 
-        airQualityFrankfurt.setName("ARQ");
-        airQualityFrankfurt.getData().add(new XYChart.Data("00:00", 20));
-        airQualityFrankfurt.getData().add(new XYChart.Data("01:00", 40));
-        airQualityFrankfurt.getData().add(new XYChart.Data("02:00", 60));
-        airQualityFrankfurt.getData().add(new XYChart.Data("03:00", 55));
-        airQualityFrankfurt.getData().add(new XYChart.Data("04:00", 10));
-        airQualityFrankfurt.getData().add(new XYChart.Data("05:00", 25));
-
-        arqBoundary.setName("MAX. ARQ LEVEL");
-        arqBoundary.getData().add(new XYChart.Data("00:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("01:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("02:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("03:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("04:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("05:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("06:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("07:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("08:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("09:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("10:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("11:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("12:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("13:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("14:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("15:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("16:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("17:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("18:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("19:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("20:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("21:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("22:00", 50));
-        arqBoundary.getData().add(new XYChart.Data("23:00", 50));
-
-        fineDustFrankfurtPM1.setName("PM1.0");
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("00:00", 5));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("01:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("02:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("03:00", 5));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("04:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("05:00", 7));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("06:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("07:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("08:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("09:00", 7));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("10:00", 8));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("11:00", 9));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("12:00", 8));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("13:00", 8));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("14:00", 7));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("15:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("16:00", 5));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("17:00", 6));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("18:00", 4));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("19:00", 4));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("20:00", 3));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("21:00", 3));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("22:00", 2));
-        fineDustFrankfurtPM1.getData().add(new XYChart.Data("23:00", 3));
-
-        if(!fineDustFrankfurtPM1.getData().isEmpty()){
+        if(!fineDustChart.getData().isEmpty()){
             fineCheckBox.setDisable(false);
-            double average = calculateAverage(fineDustFrankfurtPM1);
+            double average = calculateAverage(fineDustChart);
             avgFinedust.setDisable(false);
             avgFinedust.setText(Double.toString(average));
         }
 
-
-        fineDustFrankfurtPM2.setName("PM2.5");
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("00:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("01:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("02:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("03:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("04:00", 8));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("05:00", 5));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("06:00", 6));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("07:00", 8));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("08:00", 8));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("09:00", 9));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("10:00", 4));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("11:00", 5));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("12:00", 6));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("13:00", 6));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("14:00", 4));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("15:00", 5));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("16:00", 6));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("17:00", 5));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("18:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("19:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("20:00", 7));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("21:00", 3));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("22:00", 2));
-        fineDustFrankfurtPM2.getData().add(new XYChart.Data("23:00", 3));
-
-        if(!fineDustFrankfurtPM2.getData().isEmpty()){
-            fineCheckBox.setDisable(false);
-            double average = calculateAverage(fineDustFrankfurtPM2);
-            avgFinedust.setDisable(false);
-            avgFinedust.setText(Double.toString(average));
+        if(!brightnessChart.getData().isEmpty()){
+            brighCheckbox.setDisable(false);
+            double average = calculateAverage(brightnessChart);
+            avgBrightness.setDisable(false);
+            avgBrightness.setText(Double.toString(average));
         }
 
-        fineDustFrankfurtPM3.setName("PM10");
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("00:00", 8));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("01:00", 8));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("02:00", 9));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("03:00", 8));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("04:00", 9));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("05:00", 8));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("06:00", 9));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("07:00", 10));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("08:00", 10));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("09:00", 11));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("10:00", 12));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("11:00", 10));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("12:00", 9));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("13:00", 10));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("14:00", 10));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("15:00", 12));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("16:00", 15));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("17:00", 16));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("18:00", 12));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("19:00", 9));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("20:00", 8));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("21:00", 5));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("22:00", 6));
-        fineDustFrankfurtPM3.getData().add(new XYChart.Data("23:00", 4));
-
-        if(!fineDustFrankfurtPM3.getData().isEmpty()){
-            fineCheckBox.setDisable(false);
-            double average = calculateAverage(fineDustFrankfurtPM3);
-            avgFinedust.setDisable(false);
-            avgFinedust.setText(Double.toString(average));
-        }
-
-        if(!airQualityFrankfurt.getData().isEmpty()){
-            arqCheckbox.setDisable(false);
-            double average = calculateAverage(airQualityFrankfurt);
-            avgArq.setDisable(false);
-            avgArq.setText(Double.toString(average));
+        if(!co2Chart.getData().isEmpty()){
+            co2Checkbox.setDisable(false);
+            double average = calculateAverage(co2Chart);
+            avgCO2.setDisable(false);
+            avgCO2.setText(Double.toString(average));
         }
 
 
-
-        if(!pressureFrankfurt.getData().isEmpty()){
+        if(!pressureChart.getData().isEmpty()){
             pressCheckbox.setDisable(false);
-            double average = calculateAverage(pressureFrankfurt);
+            double average = calculateAverage(pressureChart);
             avgPressure.setDisable(false);
             avgPressure.setText(Double.toString(average) + " HPA");
         }
