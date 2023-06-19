@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import objects.Measurement;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -130,12 +132,12 @@ public class SceneController {
             // Generate random values for each measurement attribute
             int id = i + 1;
             LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
-            double temperature = random.nextDouble() * 100;
-            double co2Level = random.nextDouble() * 1000;
-            double fineDustLevel = random.nextDouble() * 100;
-            double brightnessLevel = random.nextDouble() * 1000;
-            double pressureLevel = random.nextDouble() * 2000;
-            double humidityLevel = random.nextDouble() * 100;
+            double temperature = round(random.nextDouble() * 100,1);
+            double co2Level = round(random.nextDouble() * 1000,1);
+            double fineDustLevel = round(random.nextDouble() * 100,1);
+            double brightnessLevel = round(random.nextDouble() * 1000,1);
+            double pressureLevel = round(random.nextDouble() * 2000,1);
+            double humidityLevel = round(random.nextDouble() * 100,1);
 
             // Create a new Measurement object
             Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, fineDustLevel,
@@ -144,6 +146,14 @@ public class SceneController {
             // Add the measurement to the List
             measurmentList.add(measurement);
         }
+    }
+
+    public double round(double value, int decimalPlaces) {
+        if (decimalPlaces < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     public void addMeasurementsToChart(List<Measurement> measurements) {
