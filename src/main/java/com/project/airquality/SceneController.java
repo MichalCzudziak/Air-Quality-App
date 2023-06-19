@@ -128,7 +128,7 @@ public class SceneController {
         Random random = new Random();
         LocalDateTime baseTimestamp = LocalDateTime.now();
 
-        for (int i = 0; i < 48; i++) {
+        for (int i = 0; i < 24; i++) {
             // Generate random values for each measurement attribute
             int id = i + 1;
             LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
