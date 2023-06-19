@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
     <children>
         <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -195,6 +195,18 @@
                   <VBox layoutX="936.0" layoutY="660.0" prefHeight="170.0" prefWidth="280.0" style="-fx-background-color: #1E1F22;">
                      <children>
                         <Label fx:id="avgArq" alignment="CENTER" disable="true" prefHeight="170.0" prefWidth="280.0" text="0" textFill="#41bc5a">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="936.0" layoutY="586.0" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #1E1F22;">
+                     <children>
+                        <Label fx:id="actualDate" alignment="CENTER" disable="true" prefHeight="60.0" prefWidth="283.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>

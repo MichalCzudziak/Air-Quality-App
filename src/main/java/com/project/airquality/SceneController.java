@@ -18,14 +18,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class SceneController {
-
-
     // FXML DECLARATIONS #################################################
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
+    @FXML
+    private Label actualDate;
     @FXML
     private ProgressBar arqProgressbar;
     @FXML
@@ -150,6 +150,7 @@ public class SceneController {
         for (Measurement measurement : measurements) {
             // Convert the timestamp to the desired format
             String timestampString = measurement.getFormattedTimestamp();
+            actualDate.setText(timestampString);
             // Add the temperature data to the series
             tempList.put(timestampString, measurement.getTemperature());
             temperatureChart.getData().add(new XYChart.Data<>(timestampString, measurement.getTemperature()));
@@ -394,6 +395,7 @@ public class SceneController {
                 int clickedDataX = xAxisFromChart.getCategories().indexOf(xAxisFromChart.getValueForDisplay(xPos).toString());
                 if (clickedDataX >= 0) {
                     String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
+                    actualDate.setText(clickedCategory);
                     avgTemperature.setText(Double.toString(findTemperatureValueByClick(clickedCategory)));
                     avgBrightness.setText(Double.toString(findBrightnessValueByClick(clickedCategory)));
                     avgPressure.setText(Double.toString(findPressureValueByClick(clickedCategory)));
