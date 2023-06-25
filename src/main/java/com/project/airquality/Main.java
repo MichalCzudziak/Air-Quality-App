@@ -31,6 +31,7 @@ public class Main extends Application {
             fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
             scene = new Scene(fxmlLoader.load());
             stage.setTitle("Dashboard App");
+            stage.setResizable(false);
         }
         stage.setScene(scene);
         stage.show();

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
     <children>
         <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -50,44 +50,44 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </LineChart>
-                  <RadioButton fx:id="tempCheckbox" disable="true" layoutX="28.0" layoutY="593.0" mnemonicParsing="false" onAction="#showTemperature" text="Temperature" textFill="#dfe1e5">
+                  <RadioButton fx:id="tempCheckbox" disable="true" layoutX="28.0" layoutY="580.0" mnemonicParsing="false" onAction="#showTemperature" prefHeight="1.0" text="Temperature" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="co2Checkbox" disable="true" layoutX="28.0" layoutY="631.0" mnemonicParsing="false" onAction="#showCO2" text="CO2" textFill="#dfe1e5">
+                  <RadioButton fx:id="co2Checkbox" disable="true" layoutX="28.0" layoutY="685.0" mnemonicParsing="false" onAction="#showCO2" text="CO2" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="fineCheckBox" disable="true" layoutX="28.0" layoutY="669.0" mnemonicParsing="false" onAction="#showFineDust" prefHeight="30.0" prefWidth="124.0" text="Finedust" textFill="#dfe1e5">
+                  <RadioButton fx:id="pm1Checkbox" disable="true" layoutX="28.0" layoutY="755.0" mnemonicParsing="false" onAction="#showPM1" prefHeight="0.0" prefWidth="126.0" text="PM 1.0" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="humCheckbox" disable="true" layoutX="28.0" layoutY="706.0" mnemonicParsing="false" onAction="#showHumidity" text="Humidity" textFill="#dfe1e5">
+                  <RadioButton fx:id="humCheckbox" disable="true" layoutX="28.0" layoutY="615.0" mnemonicParsing="false" onAction="#showHumidity" text="Humidity" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="pressCheckbox" disable="true" layoutX="28.0" layoutY="749.0" mnemonicParsing="false" onAction="#showPressure" text="Pressure" textFill="#dfe1e5">
+                  <RadioButton fx:id="pressCheckbox" disable="true" layoutX="28.0" layoutY="650.0" mnemonicParsing="false" onAction="#showPressure" prefHeight="30.0" prefWidth="140.0" text="Pressure" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="brighCheckbox" disable="true" layoutX="28.0" layoutY="794.0" mnemonicParsing="false" onAction="#showBrightness" prefHeight="30.0" prefWidth="140.0" text="Brightness" textFill="#dfe1e5">
+                  <RadioButton fx:id="brighCheckbox" disable="true" layoutX="28.0" layoutY="720.0" mnemonicParsing="false" onAction="#showBrightness" prefHeight="30.0" prefWidth="140.0" text="Brightness" textFill="#dfe1e5">
                      <font>
                         <Font name="Nirmala UI" size="20.0" />
                      </font>
                   </RadioButton>
-                  <RadioButton fx:id="arqCheckbox" disable="true" layoutX="28.0" layoutY="837.0" mnemonicParsing="false" onAction="#showAirquality" text="Air quality" textFill="#dfe1e5">
+                  <RadioButton fx:id="arqCheckbox" disable="true" layoutX="28.0" layoutY="860.0" mnemonicParsing="false" onAction="#showAirquality" text="Air Quality" textFill="#dfe1e5">
                      <font>
-                        <Font name="Nirmala UI" size="20.0" />
+                        <Font name="Nirmala UI Bold" size="20.0" />
                      </font>
                   </RadioButton>
                   <VBox layoutX="225.0" layoutY="594.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgTemperature" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="temperatureLabel" alignment="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -117,7 +117,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label layoutX="700.0" layoutY="708.0" prefHeight="27.0" prefWidth="124.0" text="     Finedust" textFill="#dfe1e5">
+                  <Label layoutX="700.0" layoutY="708.0" prefHeight="27.0" prefWidth="124.0" text="     PM 1.0" textFill="#dfe1e5">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -127,14 +127,9 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label layoutX="962.0" layoutY="830.0" prefHeight="48.0" prefWidth="250.0" text="Airquality Index" textFill="#dfe1e5">
-                     <font>
-                        <Font size="33.0" />
-                     </font>
-                  </Label>
                   <VBox layoutX="445.0" layoutY="596.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgHumidity" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="humidityLabel" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -144,9 +139,9 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox layoutX="672.0" layoutY="596.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
+                  <VBox fx:id="pm1" layoutX="672.0" layoutY="596.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgFinedust" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="pm1Label" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -158,7 +153,7 @@
                   </VBox>
                   <VBox layoutX="225.0" layoutY="749.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgCO2" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="co2Label" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -170,7 +165,7 @@
                   </VBox>
                   <VBox layoutX="445.0" layoutY="749.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgPressure" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="pressureLabel" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -182,7 +177,7 @@
                   </VBox>
                   <VBox layoutX="672.0" layoutY="744.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgBrightness" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="brightnessLabel" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -192,9 +187,9 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox layoutX="936.0" layoutY="660.0" prefHeight="170.0" prefWidth="280.0" style="-fx-background-color: #1E1F22;">
+                  <VBox layoutX="896.0" layoutY="744.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="avgArq" alignment="CENTER" disable="true" prefHeight="170.0" prefWidth="280.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="arqLabel" alignment="CENTER" disable="true" prefHeight="170.0" prefWidth="280.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -204,9 +199,49 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox layoutX="936.0" layoutY="586.0" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #1E1F22;">
+                  <Label layoutX="375.0" layoutY="638.0" prefHeight="85.0" prefWidth="58.0" text="C°" textFill="#fff420">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="596.0" layoutY="639.0" prefHeight="85.0" prefWidth="58.0" text="C°" textFill="#fff420">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="376.0" layoutY="782.0" prefHeight="105.0" prefWidth="58.0" text="C°" textFill="#fff420">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="586.0" layoutY="784.0" prefHeight="100.0" prefWidth="91.0" text="HPA" textFill="#fff420">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="813.0" layoutY="785.0" prefHeight="94.0" prefWidth="99.0" text="LUX" textFill="#fff420">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="821.0" layoutY="628.0" prefHeight="105.0" prefWidth="91.0" text="C°" textFill="#fff420">
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Label>
+                  <RadioButton fx:id="pm2Checkbox" disable="true" layoutX="28.0" layoutY="790.0" mnemonicParsing="false" onAction="#showPM2" prefHeight="0.0" prefWidth="126.0" text="PM 2.5" textFill="#dfe1e5">
+                     <font>
+                        <Font name="Nirmala UI" size="20.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton fx:id="pm10Checkbox" disable="true" layoutX="28.0" layoutY="825.0" mnemonicParsing="false" onAction="#showPM10" prefHeight="0.0" prefWidth="126.0" text="PM 10.0" textFill="#dfe1e5">
+                     <font>
+                        <Font name="Nirmala UI" size="20.0" />
+                     </font>
+                  </RadioButton>
+                  <VBox layoutX="896.0" layoutY="595.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
                      <children>
-                        <Label fx:id="actualDate" alignment="CENTER" disable="true" prefHeight="60.0" prefWidth="283.0" text="0" textFill="#41bc5a">
+                        <Label fx:id="pm2Label" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -216,6 +251,50 @@
                         </Label>
                      </children>
                   </VBox>
+                  <VBox layoutX="1106.0" layoutY="596.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
+                     <children>
+                        <Label fx:id="pm10Label" alignment="CENTER" disable="true" prefHeight="100.0" prefWidth="180.0" text="0" textFill="#41bc5a">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Label layoutX="912.0" layoutY="854.0" prefHeight="27.0" prefWidth="149.0" text="            AQI" textFill="#dfe1e5">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="924.0" layoutY="707.0" prefHeight="27.0" prefWidth="124.0" text="       PM 2.5" textFill="#dfe1e5">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="1134.0" layoutY="702.0" prefHeight="27.0" prefWidth="124.0" text="       PM 10" textFill="#dfe1e5">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <VBox layoutX="1106.0" layoutY="744.0" prefHeight="100.0" prefWidth="180.0" style="-fx-background-color: #1E1F22;">
+                     <children>
+                        <Label fx:id="actualDate" alignment="CENTER" prefHeight="170.0" prefWidth="280.0" text="0" textFill="#41bc5a">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <Label layoutX="1122.0" layoutY="854.0" prefHeight="27.0" prefWidth="149.0" text="           Time" textFill="#dfe1e5">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children></Pane>
             </children>
         </VBox>

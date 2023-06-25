@@ -60,7 +60,7 @@ public class DBController {
                 measurement.setTimestamp(rs.getString("date"));
                 measurement.setTemperature(rs.getDouble("temperature"));
                 measurement.setCo2Level(rs.getDouble("co2_level"));
-                measurement.setFineDustLevel(rs.getDouble("fine_dust_level"));
+                measurement.setPm1Level(rs.getDouble("fine_dust_level"));
                 measurement.setBrightnessLevel(rs.getDouble("brightness_level"));
                 measurement.setPressureLevel(rs.getDouble("pressure_level"));
                 measurement.setHumidityLevel(rs.getDouble("humidity_level"));
@@ -86,7 +86,7 @@ public class DBController {
                 measurement.setTimestamp(rs.getString("date"));
                 measurement.setTemperature(rs.getDouble("temperature"));
                 measurement.setCo2Level(rs.getDouble("co2_level"));
-                measurement.setFineDustLevel(rs.getDouble("fine_dust_level"));
+                measurement.setPm1Level(rs.getDouble("fine_dust_level"));
                 measurement.setBrightnessLevel(rs.getDouble("brightness_level"));
                 measurement.setPressureLevel(rs.getDouble("pressure_level"));
                 measurement.setHumidityLevel(rs.getDouble("humidity_level"));

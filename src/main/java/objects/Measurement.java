@@ -9,7 +9,13 @@ public class Measurement {
     private String timestamp;
     private double temperature;
     private double co2Level;
-    private double fineDustLevel;
+    private double pm1Level;
+
+    private double pm2Level;
+
+
+
+    private double pm10Level;
     private double brightnessLevel;
     private double pressureLevel;
     private double humidityLevel;
@@ -42,12 +48,12 @@ public class Measurement {
         this.co2Level = co2Level;
     }
 
-    public double getFineDustLevel() {
-        return fineDustLevel;
+    public double getPm1Level() {
+        return pm1Level;
     }
 
-    public void setFineDustLevel(double fineDustLevel) {
-        this.fineDustLevel = fineDustLevel;
+    public void setPm1Level(double pm1Level) {
+        this.pm1Level = pm1Level;
     }
 
     public double getBrightnessLevel() {
@@ -57,6 +63,23 @@ public class Measurement {
     public void setBrightnessLevel(double brightnessLevel) {
         this.brightnessLevel = brightnessLevel;
     }
+
+    public double getPm2Level() {
+        return pm2Level;
+    }
+
+    public void setPm2Level(double pm2Level) {
+        this.pm2Level = pm2Level;
+    }
+
+    public double getPm10Level() {
+        return pm10Level;
+    }
+
+    public void setPm10Level(double pm10Level) {
+        this.pm10Level = pm10Level;
+    }
+
 
     public double getPressureLevel() {
         return pressureLevel;
@@ -107,25 +130,27 @@ public class Measurement {
         this.timestampDate = timestampDate;
     }
 
-    public Measurement(int id, String timestamp, double temperature, double co2Level, double fineDustLevel, double brightnessLevel, double pressureLevel, double humidityLevel) {
+    public Measurement(int id, String timestamp, double temperature, double co2Level, double pm1Level, double brightnessLevel, double pressureLevel, double humidityLevel) {
         this.id = id;
         this.timestamp = timestamp;
         this.temperature = temperature;
         this.co2Level = co2Level;
-        this.fineDustLevel = fineDustLevel;
+        this.pm1Level = pm1Level;
         this.brightnessLevel = brightnessLevel;
         this.pressureLevel = pressureLevel;
         this.humidityLevel = humidityLevel;
         this.airIndex = calculateArqIndex();
     }
 
-    public Measurement(int id, LocalDateTime timestamp, double temperature, double co2Level, double fineDustLevel,
+    public Measurement(int id, LocalDateTime timestamp, double temperature, double co2Level, double pm1Level, double pm2Level, double pm10Level,
                        double brightnessLevel, double pressureLevel, double humidityLevel) {
         this.id = id;
         this.timestampDate = timestamp;
         this.temperature = temperature;
         this.co2Level = co2Level;
-        this.fineDustLevel = fineDustLevel;
+        this.pm1Level = pm1Level;
+        this.pm2Level = pm2Level;
+        this.pm10Level = pm10Level;
         this.brightnessLevel = brightnessLevel;
         this.pressureLevel = pressureLevel;
         this.humidityLevel = humidityLevel;

@@ -34,25 +34,25 @@ public class SceneController {
     private AnchorPane locMenu;
 
     @FXML
-    private Label avgArq;
+    private Label arqLabel;
 
     @FXML
-    private Label avgBrightness;
+    private Label brightnessLabel;
 
     @FXML
-    private Label avgCO2;
+    private Label co2Label;
 
     @FXML
-    private Label avgFinedust;
+    private Label finedustLabel;
 
     @FXML
-    private Label avgHumidity;
+    private Label humidityLabel;
 
     @FXML
-    private Label avgPressure;
+    private Label pressureLabel;
 
     @FXML
-    private Label avgTemperature;
+    private Label temperatureLabel;
     @FXML
     private LineChart<String, Number> lineChart;
 
@@ -87,6 +87,24 @@ public class SceneController {
     private RadioButton fineCheckBox;
 
     @FXML
+    private RadioButton pm10Checkbox;
+
+    @FXML
+    private Label pm10Label;
+
+    @FXML
+    private RadioButton pm1Checkbox;
+
+    @FXML
+    private Label pm1Label;
+
+    @FXML
+    private RadioButton pm2Checkbox;
+
+    @FXML
+    private Label pm2Label;
+
+    @FXML
     private RadioButton humCheckbox;
 
     @FXML
@@ -102,7 +120,13 @@ public class SceneController {
 
     private Map<String, Double> tempList = new HashMap<>();
     private Map<String, Double> co2List = new HashMap<>();
-    private Map<String, Double> fineDustList = new HashMap<>();
+    private Map<String, Double> pm1List = new HashMap<>();
+
+    private Map<String, Double> pm2List = new HashMap<>();
+
+    private Map<String, Double> pm10List = new HashMap<>();
+
+
 
     private Map<String, Double> brightnessList = new HashMap<>();
     private Map<String, Double> pressureList = new HashMap<>();
@@ -110,7 +134,9 @@ public class SceneController {
 
     public XYChart.Series temperatureChart = new XYChart.Series();
     public XYChart.Series pressureChart = new XYChart.Series();
-    public XYChart.Series fineDustChart = new XYChart.Series();
+    public XYChart.Series pm1Chart = new XYChart.Series();
+    public XYChart.Series pm2Chart = new XYChart.Series();
+    public XYChart.Series pm10Chart = new XYChart.Series();
     public XYChart.Series humidityChart = new XYChart.Series();
     public XYChart.Series co2Chart = new XYChart.Series();
     public XYChart.Series brightnessChart = new XYChart.Series();
@@ -128,19 +154,21 @@ public class SceneController {
         Random random = new Random();
         LocalDateTime baseTimestamp = LocalDateTime.now();
 
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < 48; i++) {
             // Generate random values for each measurement attribute
             int id = i + 1;
             LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
             double temperature = round(random.nextDouble() * 100,1);
             double co2Level = round(random.nextDouble() * 1000,1);
-            double fineDustLevel = round(random.nextDouble() * 100,1);
+            double pm1Level = round(random.nextDouble() * 100,1);
+            double pm2Level = round(random.nextDouble() * 100,1);
+            double pm10Level = round(random.nextDouble() * 100,1);
             double brightnessLevel = round(random.nextDouble() * 1000,1);
             double pressureLevel = round(random.nextDouble() * 2000,1);
             double humidityLevel = round(random.nextDouble() * 100,1);
 
             // Create a new Measurement object
-            Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, fineDustLevel,
+            Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, pm1Level, pm2Level, pm10Level,
                     brightnessLevel, pressureLevel, humidityLevel);
 
             // Add the measurement to the List
@@ -175,9 +203,18 @@ public class SceneController {
             humidityChart.getData().add(new XYChart.Data<>(timestampString, measurement.getHumidityLevel()));
             humidityChart.setName("Humidity");
 
-            fineDustList.put(timestampString, measurement.getFineDustLevel());
-            fineDustChart.getData().add(new XYChart.Data<>(timestampString, measurement.getFineDustLevel()));
-            fineDustChart.setName("FineDust");
+            pm1List.put(timestampString, measurement.getPm1Level());
+            pm1Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm1Level()));
+            pm1Chart.setName("PM 1");
+
+            pm2List.put(timestampString, measurement.getPm2Level());
+            pm2Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm2Level()));
+            pm2Chart.setName("PM 2.5");
+
+            pm10List.put(timestampString, measurement.getPm10Level());
+            pm10Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm10Level()));
+            pm10Chart.setName("PM 10");
+
 
             co2List.put(timestampString, measurement.getCo2Level());
             co2Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getCo2Level()));
@@ -259,8 +296,16 @@ public class SceneController {
         return brightnessList.get(userInput);
     }
 
-    public double findFineDustValueByClick(String userInput) {
-        return fineDustList.get(userInput);
+    public double findPM1ValueByClick(String userInput) {
+        return pm1List.get(userInput);
+    }
+
+    public double findPM2ValueByClick(String userInput) {
+        return pm2List.get(userInput);
+    }
+
+    public double findPM10ValueByClick(String userInput) {
+        return pm10List.get(userInput);
     }
 
     public double findPressureValueByClick(String userInput) {
@@ -295,14 +340,38 @@ public class SceneController {
     }
 
     @FXML
-    public void showFineDust(ActionEvent event) {
-        if (fineCheckBox.isSelected()) {
-            lineChart.getData().addAll(fineDustChart);
-            enableDataPointHover(fineDustChart);
+    public void showPM1(ActionEvent event) {
+        if (pm1Checkbox.isSelected()) {
+            lineChart.getData().addAll(pm1Chart);
+            enableDataPointHover(pm1Chart);
         }
-        if (!fineCheckBox.isSelected()) {
-            lineChart.getData().removeAll(fineDustChart);
-            disableDataPointHover(fineDustChart);
+        if (!pm1Checkbox.isSelected()) {
+            lineChart.getData().removeAll(pm1Chart);
+            disableDataPointHover(pm1Chart);
+        }
+    }
+
+    @FXML
+    public void showPM2(ActionEvent event) {
+        if (pm2Checkbox.isSelected()) {
+            lineChart.getData().addAll(pm2Chart);
+            enableDataPointHover(pm2Chart);
+        }
+        if (!pm2Checkbox.isSelected()) {
+            lineChart.getData().removeAll(pm2Chart);
+            disableDataPointHover(pm2Chart);
+        }
+    }
+
+    @FXML
+    public void showPM10(ActionEvent event) {
+        if (pm10Checkbox.isSelected()) {
+            lineChart.getData().addAll(pm10Chart);
+            enableDataPointHover(pm10Chart);
+        }
+        if (!pm10Checkbox.isSelected()) {
+            lineChart.getData().removeAll(pm10Chart);
+            disableDataPointHover(pm10Chart);
         }
     }
 
@@ -395,8 +464,16 @@ public class SceneController {
         generateRandomMeasurements();
         sortByAscendingTime(measurmentList);
         addMeasurementsToChart(measurmentList);
-
         CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
+
+        temperatureLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getTemperature()));
+        brightnessLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getBrightnessLevel()));
+        humidityLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getHumidityLevel()));
+        co2Label.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getCo2Level()));
+        pressureLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getPressureLevel()));
+        pm1Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm1Level()));
+        pm2Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm2Level()));
+        pm10Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm10Level()));
 
         // Add click functionality to the X axis
         xAxisFromChart.setOnMouseClicked(event -> {
@@ -406,58 +483,57 @@ public class SceneController {
                 if (clickedDataX >= 0) {
                     String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
                     actualDate.setText(clickedCategory);
-                    avgTemperature.setText(Double.toString(findTemperatureValueByClick(clickedCategory)));
-                    avgBrightness.setText(Double.toString(findBrightnessValueByClick(clickedCategory)));
-                    avgPressure.setText(Double.toString(findPressureValueByClick(clickedCategory)));
-                    avgCO2.setText(Double.toString(findCO2ValueByClick(clickedCategory)));
-                    avgHumidity.setText(Double.toString(findHumidityValueByClick(clickedCategory)));
-                    avgFinedust.setText(Double.toString(findFineDustValueByClick(clickedCategory)));
+                    temperatureLabel.setText(Double.toString(findTemperatureValueByClick(clickedCategory)));
+                    brightnessLabel.setText(Double.toString(findBrightnessValueByClick(clickedCategory)));
+                    pressureLabel.setText(Double.toString(findPressureValueByClick(clickedCategory)));
+                    co2Label.setText(Double.toString(findCO2ValueByClick(clickedCategory)));
+                    humidityLabel.setText(Double.toString(findHumidityValueByClick(clickedCategory)));
+                    pm1Label.setText(Double.toString(findPM1ValueByClick(clickedCategory)));
+                    pm2Label.setText(Double.toString(findPM2ValueByClick(clickedCategory)));
+                    pm10Label.setText(Double.toString(findPM10ValueByClick(clickedCategory)));
                 }
             }
         });
 
         if (!temperatureChart.getData().isEmpty()) {
             tempCheckbox.setDisable(false);
-            double average = calculateAverage(temperatureChart);
-            avgTemperature.setDisable(false);
-            avgTemperature.setText(Double.toString(average) + " C");
+            temperatureLabel.setDisable(false);
         }
-
 
         if(!humidityChart.getData().isEmpty()){
             humCheckbox.setDisable(false);
-            double average = calculateAverage(humidityChart);
-            avgHumidity.setDisable(false);
-            avgHumidity.setText(Double.toString(average));
+            humidityLabel.setDisable(false);
         }
 
-        if(!fineDustChart.getData().isEmpty()){
-            fineCheckBox.setDisable(false);
-            double average = calculateAverage(fineDustChart);
-            avgFinedust.setDisable(false);
-            avgFinedust.setText(Double.toString(average));
+        if(!pm1Chart.getData().isEmpty()){
+            pm1Checkbox.setDisable(false);
+            pm1Label.setDisable(false);
+        }
+
+        if(!pm2Chart.getData().isEmpty()){
+            pm2Checkbox.setDisable(false);
+            pm2Label.setDisable(false);
+        }
+
+        if(!pm10Chart.getData().isEmpty()){
+            pm10Checkbox.setDisable(false);
+            pm10Label.setDisable(false);
         }
 
         if(!brightnessChart.getData().isEmpty()){
             brighCheckbox.setDisable(false);
-            double average = calculateAverage(brightnessChart);
-            avgBrightness.setDisable(false);
-            avgBrightness.setText(Double.toString(average));
+            brightnessLabel.setDisable(false);
         }
 
         if(!co2Chart.getData().isEmpty()){
             co2Checkbox.setDisable(false);
-            double average = calculateAverage(co2Chart);
-            avgCO2.setDisable(false);
-            avgCO2.setText(Double.toString(average));
+            co2Label.setDisable(false);
         }
 
 
         if(!pressureChart.getData().isEmpty()){
             pressCheckbox.setDisable(false);
-            double average = calculateAverage(pressureChart);
-            avgPressure.setDisable(false);
-            avgPressure.setText(Double.toString(average) + " HPA");
+            pressureLabel.setDisable(false);
         }
     }
 
