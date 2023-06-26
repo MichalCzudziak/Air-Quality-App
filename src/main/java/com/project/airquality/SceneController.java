@@ -132,6 +132,8 @@ public class SceneController {
     private Map<String, Double> pressureList = new HashMap<>();
     private Map<String, Double> humidityList = new HashMap<>();
 
+    private Map<String, Double> airqualityList = new HashMap<>();
+
     public XYChart.Series temperatureChart = new XYChart.Series();
     public XYChart.Series pressureChart = new XYChart.Series();
     public XYChart.Series pm1Chart = new XYChart.Series();
@@ -223,6 +225,7 @@ public class SceneController {
             brightnessList.put(timestampString, measurement.getBrightnessLevel());
             brightnessChart.getData().add(new XYChart.Data<>(timestampString, measurement.getBrightnessLevel()));
             brightnessChart.setName("Brightness");
+
         }
     }
 
@@ -311,6 +314,8 @@ public class SceneController {
     public double findPressureValueByClick(String userInput) {
         return pressureList.get(userInput);
     }
+
+
 
 
     // ###########################################################
@@ -474,6 +479,7 @@ public class SceneController {
         pm1Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm1Level()));
         pm2Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm2Level()));
         pm10Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm10Level()));
+
 
         // Add click functionality to the X axis
         xAxisFromChart.setOnMouseClicked(event -> {
