@@ -358,7 +358,6 @@ public class MainController {
         changeButtonColorAvg(calculateAvgAQI(maintalMeasurments), maintalButton);
         changeButtonColorAvg(calculateAvgAQI(rodgauMeasurments), rodgauButton);
 
-        avgAQI.setText(Integer.toString(calculateAvgAQI(frankfurtMeasurments)));
 
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
