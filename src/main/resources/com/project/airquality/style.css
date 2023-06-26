@@ -17,3 +17,10 @@
 .bar-chart .chart-content .chart-plot-background {
     -fx-background-color: transparent;
 }
+
+.circular-javafx-button{
+    -fx-background-radius: 60;
+    -fx-pref-width: 120;
+    -fx-pref-height: 120;
+    -fx-background-color: green;
+}

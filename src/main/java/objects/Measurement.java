@@ -156,6 +156,8 @@ public class Measurement {
         this.humidityLevel = humidityLevel;
     }
 
-    public Measurement(){}
+    public Measurement(){
+        this.pm10Level = 15.0;
+    }
 
 }
