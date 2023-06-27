@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
    <children>
       <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
          <children>
@@ -90,6 +90,11 @@
                         <TableColumn fx:id="co2Column" prefWidth="75.0" text="CO2" />
                     </columns>
                   </TableView>
+                  <ImageView fitHeight="309.0" fitWidth="539.0" layoutX="768.0" layoutY="579.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../../OneDrive/Υπολογιστής/AQI.jpg" />
+                     </image>
+                  </ImageView>
                </children></Pane>
          </children>
       </VBox>

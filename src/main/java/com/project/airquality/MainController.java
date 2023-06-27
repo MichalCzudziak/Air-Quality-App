@@ -197,20 +197,20 @@ public class MainController {
     }
 
     public int getAQIPM2(Measurement m){
-        if(m.getPm2Level() <=5) return 1;
-        if(m.getPm2Level() >=6 && m.getPm2Level() <=10) return 2;
-        if(m.getPm2Level() >=11 && m.getPm2Level() <=15) return 3;
-        if(m.getPm2Level() >=16 && m.getPm2Level() <=30) return 4;
-        if(m.getPm2Level() >=31 && m.getPm2Level() <=50) return 5;
-        if(m.getPm2Level() > 50) return 6;
+        if(m.getPm2Level() <=9) return 1;
+        if(m.getPm2Level() >=10 && m.getPm2Level() <=20) return 2;
+        if(m.getPm2Level() >=21 && m.getPm2Level() <=29) return 3;
+        if(m.getPm2Level() >=30 && m.getPm2Level() <=49) return 4;
+        if(m.getPm2Level() >=50 && m.getPm2Level() <=75) return 5;
+        if(m.getPm2Level() > 75) return 6;
         return 0;
     }
 
     public int getAQIPM10(Measurement m){
-        if(m.getPm10Level() <=10) return 1;
-        if(m.getPm10Level() >=11 && m.getPm10Level() <=20) return 2;
-        if(m.getPm10Level() >=21 && m.getPm10Level() <=35) return 3;
-        if(m.getPm10Level()>=36 && m.getPm10Level() <=50) return 4;
+        if(m.getPm10Level() <=20) return 1;
+        if(m.getPm10Level() >=21 && m.getPm10Level() <=30) return 2;
+        if(m.getPm10Level() >=31 && m.getPm10Level() <=40) return 3;
+        if(m.getPm10Level()>=41 && m.getPm10Level() <=50) return 4;
         if(m.getPm10Level() >=51 && m.getPm10Level() <=100) return 5;
         if(m.getPm10Level() > 100) return 6;
         return 0;
@@ -303,8 +303,9 @@ public class MainController {
                 "AQI: \n" +
                 "PM1: " + list.get(value).getPm1Level() + "\n" +
                 "PM2.5: " + list.get(value).getPm2Level() + "\n" +
-                "CO2: " + list.get(value).getCo2Level() + "\n" +
-                "Temperature: " + list.get(value).getTemperature() + "\n"
+                "PM10: " + list.get(value).getPm10Level() + "\n" +
+                "CO2: " + list.get(value).getCo2Level() + "\n"
+
         );
         tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
         Tooltip.install(btn, tooltip);
