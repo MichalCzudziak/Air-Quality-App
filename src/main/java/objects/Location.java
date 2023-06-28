@@ -5,16 +5,17 @@ import java.util.ArrayList;
 public class Location {
     private int id;
     private String name;
-    private String address;
-    private String geoCoordinates;
+    private double lat;
+    private double lon;
     private ArrayList<Measurement> measurements = new ArrayList<>();
 
     public Location(){}
-    public Location(int id, String name, String address, String geoCoordinates) {
+
+    public Location(int id, String name, double lat, double lon) {
         this.id = id;
         this.name = name;
-        this.address = address;
-        this.geoCoordinates = geoCoordinates;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public int getId() {
@@ -33,20 +34,20 @@ public class Location {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public double getLat() {
+        return lat;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    public String getGeoCoordinates() {
-        return geoCoordinates;
+    public double getLon() {
+        return lon;
     }
 
-    public void setGeoCoordinates(String geoCoordinates) {
-        this.geoCoordinates = geoCoordinates;
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
     public ArrayList<Measurement> getMeasurements() {

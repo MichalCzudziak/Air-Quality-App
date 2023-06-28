@@ -7,19 +7,15 @@ import java.util.Locale;
 public class Measurement {
     private int id;
     private String timestamp;
-    private double temperature;
-    private double co2Level;
-    private double pm1Level;
+    private int temperature;
+    private int co2Level;
+    private int pm1Level;
 
-    private double pm2Level;
-
-
-
-    private double pm10Level;
-    private double brightnessLevel;
-    private double pressureLevel;
-    private double humidityLevel;
-    private double airIndex;
+    private int pm2Level;
+    private int pm10Level;
+    private int brightnessLevel;
+    private int pressureLevel;
+    private int humidityLevel;
 
     private LocalDateTime timestampDate;
 
@@ -36,7 +32,7 @@ public class Measurement {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
+    public void setTemperature(int temperature) {
         this.temperature = temperature;
     }
 
@@ -44,7 +40,7 @@ public class Measurement {
         return co2Level;
     }
 
-    public void setCo2Level(double co2Level) {
+    public void setCo2Level(int co2Level) {
         this.co2Level = co2Level;
     }
 
@@ -52,7 +48,7 @@ public class Measurement {
         return pm1Level;
     }
 
-    public void setPm1Level(double pm1Level) {
+    public void setPm1Level(int pm1Level) {
         this.pm1Level = pm1Level;
     }
 
@@ -60,7 +56,7 @@ public class Measurement {
         return brightnessLevel;
     }
 
-    public void setBrightnessLevel(double brightnessLevel) {
+    public void setBrightnessLevel(int brightnessLevel) {
         this.brightnessLevel = brightnessLevel;
     }
 
@@ -68,7 +64,7 @@ public class Measurement {
         return pm2Level;
     }
 
-    public void setPm2Level(double pm2Level) {
+    public void setPm2Level(int pm2Level) {
         this.pm2Level = pm2Level;
     }
 
@@ -76,7 +72,7 @@ public class Measurement {
         return pm10Level;
     }
 
-    public void setPm10Level(double pm10Level) {
+    public void setPm10Level(int pm10Level) {
         this.pm10Level = pm10Level;
     }
 
@@ -85,7 +81,7 @@ public class Measurement {
         return pressureLevel;
     }
 
-    public void setPressureLevel(double pressureLevel) {
+    public void setPressureLevel(int pressureLevel) {
         this.pressureLevel = pressureLevel;
     }
 
@@ -93,16 +89,8 @@ public class Measurement {
         return humidityLevel;
     }
 
-    public void setHumidityLevel(double humidityLevel) {
+    public void setHumidityLevel(int humidityLevel) {
         this.humidityLevel = humidityLevel;
-    }
-
-    public double getAirIndex() {
-        return airIndex;
-    }
-
-    public void setAirIndex(double airIndex) {
-        this.airIndex = airIndex;
     }
 
     public String getTimestamp() {
@@ -111,10 +99,6 @@ public class Measurement {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public double calculateArqIndex() {
-        return 20.0;
     }
 
     public String getFormattedTimestamp() {
@@ -130,7 +114,7 @@ public class Measurement {
         this.timestampDate = timestampDate;
     }
 
-    public Measurement(int id, String timestamp, double temperature, double co2Level, double pm1Level, double brightnessLevel, double pressureLevel, double humidityLevel) {
+    public Measurement(int id, String timestamp, int temperature, int co2Level, int pm1Level, int brightnessLevel, int pressureLevel, int humidityLevel) {
         this.id = id;
         this.timestamp = timestamp;
         this.temperature = temperature;
@@ -139,11 +123,10 @@ public class Measurement {
         this.brightnessLevel = brightnessLevel;
         this.pressureLevel = pressureLevel;
         this.humidityLevel = humidityLevel;
-        this.airIndex = calculateArqIndex();
     }
 
-    public Measurement(int id, LocalDateTime timestamp, double temperature, double co2Level, double pm1Level, double pm2Level, double pm10Level,
-                       double brightnessLevel, double pressureLevel, double humidityLevel) {
+    public Measurement(int id, LocalDateTime timestamp, int temperature, int co2Level, int pm1Level, int pm2Level, int pm10Level,
+                       int brightnessLevel, int pressureLevel, int humidityLevel) {
         this.id = id;
         this.timestampDate = timestamp;
         this.temperature = temperature;
@@ -156,8 +139,5 @@ public class Measurement {
         this.humidityLevel = humidityLevel;
     }
 
-    public Measurement(){
-        this.pm10Level = 15.0;
-    }
-
+    public Measurement(){}
 }

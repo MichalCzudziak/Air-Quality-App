@@ -28,7 +28,7 @@ public class DBController {
     public ArrayList<Location> getAllLocations() throws SQLException {
         ArrayList<Location> allLocations = new ArrayList<>();
         Connection conn = this.getConnection();
-        String query = "SELECT * FROM Außenklima.Location";
+        String query = "SELECT * FROM Airquality.Location";
         PreparedStatement ps = conn.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
 
@@ -36,8 +36,8 @@ public class DBController {
             Location location = new Location();
             location.setId(rs.getInt("id"));
             location.setName(rs.getString("name"));
-            location.setAddress(rs.getString("address"));
-            location.setGeoCoordinates(rs.getString("geo_coordinates"));
+            location.setLat(rs.getDouble("lat"));
+            location.setLon(rs.getDouble("lon"));
             allLocations.add(location);
         }
 
@@ -51,20 +51,21 @@ public class DBController {
 
         for (Location loc : Main.allLocations) {
             ArrayList<Measurement> allMeasurements = new ArrayList<>();
-            String query = "SELECT * FROM Außenklima.Measurement WHERE location_id=" + loc.getId() ;
+            String query = "SELECT * FROM Airquality.Measurement WHERE idLocation=" + loc.getId() ;
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Measurement measurement = new Measurement();
                 measurement.setId(rs.getInt("id"));
-                measurement.setTimestamp(rs.getString("date"));
-                measurement.setTemperature(rs.getDouble("temperature"));
-                measurement.setCo2Level(rs.getDouble("co2_level"));
-                measurement.setPm1Level(rs.getDouble("fine_dust_level"));
-                measurement.setBrightnessLevel(rs.getDouble("brightness_level"));
-                measurement.setPressureLevel(rs.getDouble("pressure_level"));
-                measurement.setHumidityLevel(rs.getDouble("humidity_level"));
-                measurement.setAirIndex(rs.getDouble("air_index"));
+                measurement.setTimestamp(rs.getString("timestamp"));
+                measurement.setTemperature(rs.getInt("temperature"));
+                measurement.setCo2Level(rs.getInt("co2"));
+                measurement.setPm1Level(rs.getInt("pm1"));
+                measurement.setBrightnessLevel(rs.getInt("lux"));
+                measurement.setPressureLevel(rs.getInt("pressure"));
+                measurement.setHumidityLevel(rs.getInt("humidity"));
+                measurement.setPm2Level(rs.getInt("pm2_5"));
+                measurement.setPm10Level(rs.getInt("pm10"));
                 allMeasurements.add(measurement);
             }
             loc.setMeasurements(allMeasurements);
@@ -77,20 +78,21 @@ public class DBController {
         for (Location loc : Main.allLocations) {
             ArrayList<Measurement> allMeasurements = new ArrayList<>();
             int listSize = loc.getMeasurements().size();
-            String query = "SELECT * FROM Außenklima.Measurement WHERE location_id >" + loc.getMeasurements().get(listSize -1).getId() ;
+            String query = "SELECT * FROM Airquality.Measurement WHERE idLocation >" + loc.getMeasurements().get(listSize -1).getId() ;
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Measurement measurement = new Measurement();
                 measurement.setId(rs.getInt("id"));
-                measurement.setTimestamp(rs.getString("date"));
-                measurement.setTemperature(rs.getDouble("temperature"));
-                measurement.setCo2Level(rs.getDouble("co2_level"));
-                measurement.setPm1Level(rs.getDouble("fine_dust_level"));
-                measurement.setBrightnessLevel(rs.getDouble("brightness_level"));
-                measurement.setPressureLevel(rs.getDouble("pressure_level"));
-                measurement.setHumidityLevel(rs.getDouble("humidity_level"));
-                measurement.setAirIndex(rs.getDouble("air_index"));
+                measurement.setTimestamp(rs.getString("timestamp"));
+                measurement.setTemperature(rs.getInt("temperature"));
+                measurement.setCo2Level(rs.getInt("co2"));
+                measurement.setPm1Level(rs.getInt("pm1"));
+                measurement.setBrightnessLevel(rs.getInt("lux"));
+                measurement.setPressureLevel(rs.getInt("pressure"));
+                measurement.setHumidityLevel(rs.getInt("humidity"));
+                measurement.setPm2Level(rs.getInt("pm2_5"));
+                measurement.setPm10Level(rs.getInt("pm10"));
                 allMeasurements.add(measurement);
             }
             loc.setMeasurements(allMeasurements);

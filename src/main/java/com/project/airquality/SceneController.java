@@ -160,14 +160,14 @@ public class SceneController {
             // Generate random values for each measurement attribute
             int id = i + 1;
             LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
-            double temperature = round(random.nextDouble() * 100,1);
-            double co2Level = round(random.nextDouble() * 1000,1);
-            double pm1Level = round(random.nextDouble() * 100,1);
-            double pm2Level = round(random.nextDouble() * 100,1);
-            double pm10Level = round(random.nextDouble() * 100,1);
-            double brightnessLevel = round(random.nextDouble() * 1000,1);
-            double pressureLevel = round(random.nextDouble() * 2000,1);
-            double humidityLevel = round(random.nextDouble() * 100,1);
+            int temperature = (int) round(random.nextInt() * 100, 1);
+            int co2Level = (int) (400 + round(random.nextInt() * (2000-400), 1));
+            int pm1Level = (int) (0 + round(random.nextInt() * (35-0), 1));
+            int pm2Level = (int) (0 + round(random.nextInt() * (53-0), 1));
+            int pm10Level = (int) round(random.nextInt() * 100, 1);
+            int brightnessLevel = (int) round(random.nextInt() * 1000, 1);
+            int pressureLevel = (int) round(random.nextInt() * 2000, 1);
+            int humidityLevel = (int) round(random.nextInt() * 100, 1);
 
             // Create a new Measurement object
             Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, pm1Level, pm2Level, pm10Level,
@@ -467,6 +467,7 @@ public class SceneController {
     @FXML
     public void initialize() {
         generateRandomMeasurements();
+        System.out.println(Main.allLocations.get(0).getMeasurements().get(4).getPm10Level());
         sortByAscendingTime(measurmentList);
         addMeasurementsToChart(measurmentList);
         CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
