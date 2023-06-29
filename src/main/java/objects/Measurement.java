@@ -17,8 +17,6 @@ public class Measurement {
     private int pressureLevel;
     private int humidityLevel;
 
-    private LocalDateTime timestampDate;
-
 
     public int getId() {
         return id;
@@ -28,7 +26,7 @@ public class Measurement {
         this.id = id;
     }
 
-    public double getTemperature() {
+    public int getTemperature() {
         return temperature;
     }
 
@@ -36,7 +34,7 @@ public class Measurement {
         this.temperature = temperature;
     }
 
-    public double getCo2Level() {
+    public int getCo2Level() {
         return co2Level;
     }
 
@@ -44,7 +42,7 @@ public class Measurement {
         this.co2Level = co2Level;
     }
 
-    public double getPm1Level() {
+    public int getPm1Level() {
         return pm1Level;
     }
 
@@ -52,7 +50,7 @@ public class Measurement {
         this.pm1Level = pm1Level;
     }
 
-    public double getBrightnessLevel() {
+    public int getBrightnessLevel() {
         return brightnessLevel;
     }
 
@@ -60,7 +58,7 @@ public class Measurement {
         this.brightnessLevel = brightnessLevel;
     }
 
-    public double getPm2Level() {
+    public int getPm2Level() {
         return pm2Level;
     }
 
@@ -68,7 +66,7 @@ public class Measurement {
         this.pm2Level = pm2Level;
     }
 
-    public double getPm10Level() {
+    public int getPm10Level() {
         return pm10Level;
     }
 
@@ -77,7 +75,7 @@ public class Measurement {
     }
 
 
-    public double getPressureLevel() {
+    public int getPressureLevel() {
         return pressureLevel;
     }
 
@@ -85,7 +83,7 @@ public class Measurement {
         this.pressureLevel = pressureLevel;
     }
 
-    public double getHumidityLevel() {
+    public int getHumidityLevel() {
         return humidityLevel;
     }
 
@@ -101,18 +99,6 @@ public class Measurement {
         this.timestamp = timestamp;
     }
 
-    public String getFormattedTimestamp() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd HH:mm", Locale.GERMAN);
-        return this.timestampDate.format(formatter);
-    }
-
-    public LocalDateTime getTimestampDate() {
-        return timestampDate;
-    }
-
-    public void setTimestampDate(LocalDateTime timestampDate) {
-        this.timestampDate = timestampDate;
-    }
 
     public Measurement(int id, String timestamp, int temperature, int co2Level, int pm1Level, int brightnessLevel, int pressureLevel, int humidityLevel) {
         this.id = id;
@@ -125,19 +111,13 @@ public class Measurement {
         this.humidityLevel = humidityLevel;
     }
 
-    public Measurement(int id, LocalDateTime timestamp, int temperature, int co2Level, int pm1Level, int pm2Level, int pm10Level,
-                       int brightnessLevel, int pressureLevel, int humidityLevel) {
-        this.id = id;
-        this.timestampDate = timestamp;
-        this.temperature = temperature;
-        this.co2Level = co2Level;
-        this.pm1Level = pm1Level;
-        this.pm2Level = pm2Level;
-        this.pm10Level = pm10Level;
-        this.brightnessLevel = brightnessLevel;
-        this.pressureLevel = pressureLevel;
-        this.humidityLevel = humidityLevel;
+    public Measurement(){}
+
+    public LocalDateTime getTimestampDate() {
+        return null;
     }
 
-    public Measurement(){}
+    public String getFormattedTimestamp() {
+        return null;
+    }
 }

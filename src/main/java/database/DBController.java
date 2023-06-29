@@ -62,7 +62,7 @@ public class DBController {
                 measurement.setCo2Level(rs.getInt("co2"));
                 measurement.setPm1Level(rs.getInt("pm1"));
                 measurement.setBrightnessLevel(rs.getInt("lux"));
-                measurement.setPressureLevel(rs.getInt("pressure"));
+                measurement.setPressureLevel(rs.getInt("pressure")/100);
                 measurement.setHumidityLevel(rs.getInt("humidity"));
                 measurement.setPm2Level(rs.getInt("pm2_5"));
                 measurement.setPm10Level(rs.getInt("pm10"));
@@ -89,7 +89,7 @@ public class DBController {
                 measurement.setCo2Level(rs.getInt("co2"));
                 measurement.setPm1Level(rs.getInt("pm1"));
                 measurement.setBrightnessLevel(rs.getInt("lux"));
-                measurement.setPressureLevel(rs.getInt("pressure"));
+                measurement.setPressureLevel(rs.getInt("pressure")/100);
                 measurement.setHumidityLevel(rs.getInt("humidity"));
                 measurement.setPm2Level(rs.getInt("pm2_5"));
                 measurement.setPm10Level(rs.getInt("pm10"));

@@ -1,6 +1,4 @@
 package com.project.airquality;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,9 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objects.Measurement;
@@ -23,6 +22,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.lang.Math.round;
@@ -30,25 +30,42 @@ import static java.lang.Math.round;
 public class MainController {
 
     @FXML
+    void showScale(MouseEvent event) {
+        System.out.println("Test");
+    }
+
+    @FXML
+    private ImageView infoButton;
+
+
+    @FXML
+    private Label actualDate;
+
+    @FXML
+    private DatePicker datepicker;
+    @FXML
     private Label avgAQI;
 
     @FXML
-    private TableColumn<Measurement, Double> pm1Column;
+    private TableColumn<Measurement, Integer> aqiColumn;
 
     @FXML
-    private TableColumn<Measurement, Double> co2Column;
+    private TableColumn<Measurement, Integer> pm1Column;
 
     @FXML
-    private TableColumn<Measurement, Double> temperatureColumn;
+    private TableColumn<Measurement, Integer> co2Column;
 
     @FXML
-    private TableColumn<Measurement, LocalDateTime> timeColumn;
+    private TableColumn<Measurement, Integer> temperatureColumn;
 
     @FXML
-    private TableColumn<Measurement, Double> pm10Column;
+    private TableColumn<Measurement, String> timeColumn;
 
     @FXML
-    private TableColumn<Measurement, Double> pm2Column;
+    private TableColumn<Measurement, Integer> pm10Column;
+
+    @FXML
+    private TableColumn<Measurement, Integer> pm2Column;
 
     @FXML
     private TableView<Measurement> tableView;
@@ -65,6 +82,8 @@ public class MainController {
     @FXML
     private Button rodgauButton;
 
+    @FXML
+    private Label localTime;
 
     @FXML
     private Slider slider;
@@ -72,12 +91,37 @@ public class MainController {
     @FXML
     private Label timeLabel;
 
+    @FXML
+    private ChoiceBox<String> choiceBox;
+
+    private ArrayList<Measurement> kelsterbach = Main.allLocations.get(0).getMeasurements();
+    private ArrayList<Measurement> maintal;
+    private ArrayList<Measurement> rodgau;
+
     public Button settingsButton;
     public Label avgArq;
     private Stage stage;
     private Scene scene;
     private Parent root;
 
+    private int year;
+    private int month;
+    private int day;
+
+    private int selectedLocation;
+
+
+    public void selectLocation(int location){
+        this.selectedLocation = location;
+    }
+
+    public void setTime(String timeString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
+        this.year = dateTime.getYear();
+        this.month = dateTime.getMonthValue();
+        this.day = dateTime.getDayOfMonth();
+    }
 
 
 
@@ -88,8 +132,24 @@ public class MainController {
         stage.setScene(scene);
         stage.show();
     }
-    public void switchToFrankfurt(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("frankfurt.fxml"));
+    public void switchToKelsterbach(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("kelsterbach.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToMaintal(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToRodgau(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -104,58 +164,22 @@ public class MainController {
         stage.show();
     }
 
-    private ArrayList<Measurement> measurmentList = new ArrayList<>();
-    private ArrayList<Measurement> frankfurtMeasurments = new ArrayList<>();
-    private ArrayList<Measurement> rodgauMeasurments = new ArrayList<>();
-    private ArrayList<Measurement> maintalMeasurments = new ArrayList<>();
-    private ArrayList<Measurement> kelsterbachMeasurments = new ArrayList<>();
-    private Map<String, Double> tempList = new HashMap<>();
-    private Map<String, Double> co2List = new HashMap<>();
-    private Map<String, Double> pm1List = new HashMap<>();
+    private Map<String, Integer> tempList = new HashMap<>();
+    private Map<String, Integer> co2List = new HashMap<>();
+    private Map<String, Integer> pm1List = new HashMap<>();
 
-    private Map<String, Double> pm2List = new HashMap<>();
+    private Map<String, Integer> pm2List = new HashMap<>();
 
-    private Map<String, Double> pm10List = new HashMap<>();
+    private Map<String, Integer> pm10List = new HashMap<>();
 
-
-
-    private Map<String, Double> brightnessList = new HashMap<>();
-    private Map<String, Double> pressureList = new HashMap<>();
-    private Map<String, Double> humidityList = new HashMap<>();
-
-    private Map<String, Double> airqualityList = new HashMap<>();
-
-    public ArrayList<Measurement> generateRandomMeasurements() {
-        Random random = new Random();
-        ArrayList<Measurement> list = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            // Generate random values for each measurement attribute
-            int id = i + 1;
-            LocalTime time = LocalTime.of(i, random.nextInt(60)); // Generate random minutes for each hour
-            LocalDateTime timestamp = LocalDateTime.of(LocalDate.now(), time);
-            int temperature = (int) round(random.nextInt() * 100, 1);
-            int co2Level = (int) (400 + round(random.nextInt() * (2000-400), 1));
-            int pm1Level = (int) (0 + round(random.nextInt() * (35-0), 1));
-            int pm2Level = (int) (0 + round(random.nextInt() * (53-0), 1));
-            int pm10Level = (int) round(random.nextInt() * 100, 1);
-            int brightnessLevel = (int) round(random.nextInt() * 1000, 1);
-            int pressureLevel = (int) round(random.nextInt() * 2000, 1);
-            int humidityLevel = (int) round(random.nextInt() * 100, 1);
-
-            // Create a new Measurement object
-            Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, pm1Level, pm2Level, pm10Level,
-                    brightnessLevel, pressureLevel, humidityLevel);
-
-            // Add the measurement to the List
-            list.add(measurement);
-        }
-        return list;
-    }
+    private Map<String, Integer> brightnessList = new HashMap<>();
+    private Map<String, Integer> pressureList = new HashMap<>();
+    private Map<String, Integer> humidityList = new HashMap<>();
 
     public void addMeasurements(List<Measurement> measurements) {
         for (Measurement measurement : measurements) {
             // Convert the timestamp to the desired format
-            String timestampString = measurement.getFormattedTimestamp();
+            String timestampString = measurement.getTimestamp();
             // Add the temperature data to the series
             tempList.put(timestampString, measurement.getTemperature());
             pressureList.put(timestampString, measurement.getPressureLevel());
@@ -296,10 +320,10 @@ public class MainController {
 
     }
 
-    public void showTooltip(int value, ArrayList<Measurement> list, Button btn){
+    public void showTooltip(int value, List<Measurement> list, Button btn){
         Tooltip tooltip = new Tooltip();
         tooltip.setShowDelay(Duration.ZERO);
-        tooltip.setText("Time: " + list.get(value).getFormattedTimestamp() + "\n" +
+        tooltip.setText("Time: " + list.get(value).getTimestamp() + "\n" +
                 "AQI: \n" +
                 "PM1: " + list.get(value).getPm1Level() + "\n" +
                 "PM2.5: " + list.get(value).getPm2Level() + "\n" +
@@ -317,63 +341,118 @@ public class MainController {
         return obsList;
     }
 
+    public Measurement getLastMeasurement(List<Measurement> list){
+        return list.get(list.size()-1);
+    }
 
+    public String getActualTime(int value, List<Measurement> measurements){
+        Measurement m = measurements.get(value);
+        return m.getTimestamp();
+    }
+
+
+    private int selectedDay = 0;
+    private int selectedMonth = 0;
+    private int selectedYear = 0;
+
+    public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
+        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
+        for (Measurement measurement : measurements) {
+            setTime(measurement.getTimestamp());
+            if (this.day == day && this.month == month && this.year == year) {
+                obsList.add(measurement);
+            }
+        }
+        return obsList;
+    }
+
+    public ObservableList<Measurement> getAllList(List<Measurement> measurements) {
+        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
+        for (Measurement measurement : measurements) {
+                obsList.add(measurement);
+            }
+        return obsList;
+    }
 
 
     @FXML
     public void initialize(){
-        LocalDateTime baseTimestamp = LocalDateTime.now();
-        frankfurtMeasurments = generateRandomMeasurements();
-        kelsterbachMeasurments = generateRandomMeasurements();
-        maintalMeasurments = generateRandomMeasurements();
-        rodgauMeasurments = generateRandomMeasurements();
 
-        sortByAscendingTime(frankfurtMeasurments);
-        sortByAscendingTime(kelsterbachMeasurments);
-        sortByAscendingTime(maintalMeasurments);
-        sortByAscendingTime(rodgauMeasurments);
 
-        addMeasurements(frankfurtMeasurments);
-        addMeasurements(kelsterbachMeasurments);
-        addMeasurements(maintalMeasurments);
-        addMeasurements(rodgauMeasurments);
 
-        slider.setValue(baseTimestamp.getHour());
-        timeLabel.setText(frankfurtMeasurments.get(baseTimestamp.getHour()).getFormattedTimestamp());
-        showTooltip(baseTimestamp.getHour(), frankfurtMeasurments, frankfurtButton);
-        showTooltip(baseTimestamp.getHour(), rodgauMeasurments, rodgauButton);
-        showTooltip(baseTimestamp.getHour(), maintalMeasurments, maintalButton);
-        showTooltip(baseTimestamp.getHour(), kelsterbachMeasurments, kelsterbachButton);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime currentTime = LocalDateTime.now();
+        String formattedTime = currentTime.format(formatter);
+        localTime.setText("Current Time: \n" + formattedTime);
 
-        slider.setMax(baseTimestamp.getHour());
-        co2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Double>("co2Level"));
-        temperatureColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Double>("temperature"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<Measurement, LocalDateTime>("timestampDate"));
-        pm10Column.setCellValueFactory(new PropertyValueFactory<Measurement, Double>("pm10Level"));
-        pm1Column.setCellValueFactory(new PropertyValueFactory<Measurement, Double>("pm1Level"));
-        pm2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Double>("pm2Level"));
-        tableView.setItems(convertList(frankfurtMeasurments));
 
-        changeButtonColorAvg(calculateAvgAQI(frankfurtMeasurments), frankfurtButton);
-        changeButtonColorAvg(calculateAvgAQI(kelsterbachMeasurments), kelsterbachButton);
-        changeButtonColorAvg(calculateAvgAQI(maintalMeasurments), maintalButton);
-        changeButtonColorAvg(calculateAvgAQI(rodgauMeasurments), rodgauButton);
+        choiceBox.getItems().add(0, "Kelsterbach");
+        choiceBox.getItems().add(1, "Maintal");
+        choiceBox.getItems().add(0, "Rodgau");
 
+        datepicker.setDisable(true);
+
+        slider.setDisable(false);
+
+        ObservableList<Measurement> observableList = getAllList(kelsterbach);
+
+
+
+        actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
+        showTooltip(observableList.size()-1, kelsterbach, kelsterbachButton);
+        setTime(getLastMeasurement(kelsterbach).getTimestamp());
+        co2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("co2Level"));
+        temperatureColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("temperature"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<Measurement, String>("timestamp"));
+        pm10Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm10Level"));
+        pm1Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm1Level"));
+        pm2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm2Level"));
+
+        choiceBox.setOnAction(event -> {
+
+            if(choiceBox.getValue().equals("Kelsterbach")){
+                datepicker.setDisable(false);
+                selectedLocation = 0;
+
+            }
+            if(choiceBox.getValue().equals("Maintal")){
+                tableView.getItems().clear();
+                selectedLocation = 1;
+            }
+
+            if(choiceBox.getValue().equals("Rodgau")){
+                tableView.getItems().clear();
+                selectedLocation = 2;
+            }
+        });
+
+        datepicker.setOnAction(event -> {
+            LocalDate selectedDate = datepicker.getValue();
+            selectedMonth = selectedDate.getMonthValue();
+            selectedDay = selectedDate.getDayOfMonth();
+            selectedYear = selectedDate.getYear();
+
+            if(selectedLocation == 0){
+                ObservableList<Measurement> filteredList = getListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
+                setTime(getLastMeasurement(kelsterbach).getTimestamp());
+                slider.setValue(filteredList.size()-1);
+                slider.setMax(filteredList.size()-1);
+                tableView.setItems(filteredList);
+            }
+
+        });
+
+        ObservableList<Measurement> filteredList = getListByDate(kelsterbach, day, month, year);
 
         slider.valueProperty().addListener(new ChangeListener<Number>() {
+
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                showTooltip(newValue.intValue(), frankfurtMeasurments, frankfurtButton);
-                showTooltip(newValue.intValue(), rodgauMeasurments, rodgauButton);
-                showTooltip(newValue.intValue(), maintalMeasurments, maintalButton);
-                showTooltip(newValue.intValue(), kelsterbachMeasurments, kelsterbachButton);
 
-                changeButtonColor(newValue.intValue(), frankfurtMeasurments, frankfurtButton);
-                changeButtonColor(newValue.intValue(), kelsterbachMeasurments, kelsterbachButton);
-                changeButtonColor(newValue.intValue(), maintalMeasurments, maintalButton);
-                changeButtonColor(newValue.intValue(), kelsterbachMeasurments, rodgauButton);
-
-                timeLabel.setText(frankfurtMeasurments.get(newValue.intValue()).getFormattedTimestamp());
+                showTooltip(newValue.intValue(), filteredList, kelsterbachButton);
+                changeButtonColor(newValue.intValue(), filteredList, kelsterbachButton);
+                actualDate.setText(getActualTime(newValue.intValue(), filteredList));
+                System.out.println(filteredList.size());
             }
         });
     }

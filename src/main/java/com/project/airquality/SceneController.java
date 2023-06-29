@@ -1,4 +1,6 @@
 package com.project.airquality;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import objects.Location;
 import objects.Measurement;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class SceneController {
@@ -25,6 +30,19 @@ public class SceneController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    private int year;
+    private int month;
+    private int day;
+
+    private LocalDateTime dateTime;
+
+    private int selectedDay = 0;
+    private int selectedMonth = 0;
+    private int selectedYear = 0;
+
+    @FXML
+    private DatePicker datepicker;
 
     @FXML
     private Label actualDate;
@@ -118,21 +136,25 @@ public class SceneController {
     // ###########################################################
     private ArrayList<Measurement> measurmentList = new ArrayList<>();
 
-    private Map<String, Double> tempList = new HashMap<>();
-    private Map<String, Double> co2List = new HashMap<>();
-    private Map<String, Double> pm1List = new HashMap<>();
+    private ArrayList<Location> list = Main.allLocations;
 
-    private Map<String, Double> pm2List = new HashMap<>();
-
-    private Map<String, Double> pm10List = new HashMap<>();
+    private ArrayList<Measurement> kelsterbach = list.get(0).getMeasurements();
 
 
+    private Map<String, Integer> tempList = new HashMap<>();
+    private Map<String, Integer> co2List = new HashMap<>();
+    private Map<String, Integer> pm1List = new HashMap<>();
 
-    private Map<String, Double> brightnessList = new HashMap<>();
-    private Map<String, Double> pressureList = new HashMap<>();
-    private Map<String, Double> humidityList = new HashMap<>();
+    private Map<String, Integer> pm2List = new HashMap<>();
 
-    private Map<String, Double> airqualityList = new HashMap<>();
+    private Map<String, Integer> pm10List = new HashMap<>();
+
+
+
+    private Map<String, Integer> brightnessList = new HashMap<>();
+    private Map<String, Integer> pressureList = new HashMap<>();
+    private Map<String, Integer> humidityList = new HashMap<>();
+
 
     public XYChart.Series temperatureChart = new XYChart.Series();
     public XYChart.Series pressureChart = new XYChart.Series();
@@ -152,31 +174,25 @@ public class SceneController {
     // ###########################################################
     // DATA IMPORT
     // ###########################################################
-    public void generateRandomMeasurements() {
-        Random random = new Random();
-        LocalDateTime baseTimestamp = LocalDateTime.now();
-
-        for (int i = 0; i < 48; i++) {
-            // Generate random values for each measurement attribute
-            int id = i + 1;
-            LocalDateTime timestamp = baseTimestamp.minusMinutes(i * 30);
-            int temperature = (int) round(random.nextInt() * 100, 1);
-            int co2Level = (int) (400 + round(random.nextInt() * (2000-400), 1));
-            int pm1Level = (int) (0 + round(random.nextInt() * (35-0), 1));
-            int pm2Level = (int) (0 + round(random.nextInt() * (53-0), 1));
-            int pm10Level = (int) round(random.nextInt() * 100, 1);
-            int brightnessLevel = (int) round(random.nextInt() * 1000, 1);
-            int pressureLevel = (int) round(random.nextInt() * 2000, 1);
-            int humidityLevel = (int) round(random.nextInt() * 100, 1);
-
-            // Create a new Measurement object
-            Measurement measurement = new Measurement(id, timestamp, temperature, co2Level, pm1Level, pm2Level, pm10Level,
-                    brightnessLevel, pressureLevel, humidityLevel);
-
-            // Add the measurement to the List
-            measurmentList.add(measurement);
+    public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
+        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
+        for (Measurement measurement : measurements) {
+            setTime(measurement.getTimestamp());
+            if (this.day == day && this.month == month && this.year == year) {
+                obsList.add(measurement);
+            }
         }
+        return obsList;
     }
+
+    public void setTime(String timeString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.dateTime = LocalDateTime.parse(timeString, formatter);
+        this.year = dateTime.getYear();
+        this.month = dateTime.getMonthValue();
+        this.day = dateTime.getDayOfMonth();
+    }
+
 
     public double round(double value, int decimalPlaces) {
         if (decimalPlaces < 0) throw new IllegalArgumentException();
@@ -186,10 +202,23 @@ public class SceneController {
         return bd.doubleValue();
     }
 
+
+    public void refreshChart(){
+        lineChart.getData().clear();
+        temperatureChart.getData().clear();
+        pressureChart.getData().clear();
+        humidityChart.getData().clear();
+        pm1Chart.getData().clear();
+        pm2Chart.getData().clear();
+        pm10Chart.getData().clear();
+        co2Chart.getData().clear();
+        brightnessChart.getData().clear();
+    }
     public void addMeasurementsToChart(List<Measurement> measurements) {
+        refreshChart();
         for (Measurement measurement : measurements) {
             // Convert the timestamp to the desired format
-            String timestampString = measurement.getFormattedTimestamp();
+            String timestampString = measurement.getTimestamp();
             actualDate.setText(timestampString);
             // Add the temperature data to the series
             tempList.put(timestampString, measurement.getTemperature());
@@ -283,35 +312,35 @@ public class SceneController {
         }
     }
 
-    public double findTemperatureValueByClick(String userInput) {
+    public int findTemperatureValueByClick(String userInput) {
         return tempList.get(userInput);
     }
 
-    public double findCO2ValueByClick(String userInput) {
+    public int findCO2ValueByClick(String userInput) {
         return co2List.get(userInput);
     }
 
-    public double findHumidityValueByClick(String userInput) {
+    public int findHumidityValueByClick(String userInput) {
         return humidityList.get(userInput);
     }
 
-    public double findBrightnessValueByClick(String userInput) {
+    public int findBrightnessValueByClick(String userInput) {
         return brightnessList.get(userInput);
     }
 
-    public double findPM1ValueByClick(String userInput) {
+    public int findPM1ValueByClick(String userInput) {
         return pm1List.get(userInput);
     }
 
-    public double findPM2ValueByClick(String userInput) {
+    public int findPM2ValueByClick(String userInput) {
         return pm2List.get(userInput);
     }
 
-    public double findPM10ValueByClick(String userInput) {
+    public int findPM10ValueByClick(String userInput) {
         return pm10List.get(userInput);
     }
 
-    public double findPressureValueByClick(String userInput) {
+    public int findPressureValueByClick(String userInput) {
         return pressureList.get(userInput);
     }
 
@@ -447,9 +476,25 @@ public class SceneController {
         stage.show();
     }
 
-    public void switchToFrankfurt(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("frankfurt.fxml"));
+    public void switchToKelsterbach(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("kelsterbach.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToMaintal(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToRodgau(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -463,45 +508,19 @@ public class SceneController {
         stage.show();
     }
 
+    // ID 0 = Kelsterbach
 
-    @FXML
-    public void initialize() {
-        generateRandomMeasurements();
-        System.out.println(Main.allLocations.get(0).getMeasurements().get(4).getPm10Level());
-        sortByAscendingTime(measurmentList);
-        addMeasurementsToChart(measurmentList);
-        CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
+    public Measurement getLastMeasurement(List<Measurement> list){
+        return list.get(list.size()-1);
+    }
 
-        temperatureLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getTemperature()));
-        brightnessLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getBrightnessLevel()));
-        humidityLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getHumidityLevel()));
-        co2Label.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getCo2Level()));
-        pressureLabel.setText(Double.toString(measurmentList.get(measurmentList.size() -1).getPressureLevel()));
-        pm1Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm1Level()));
-        pm2Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm2Level()));
-        pm10Label.setText(Double.toString(measurmentList.get(measurmentList.size() - 1).getPm10Level()));
+    public ObservableList<Measurement> convertList(List<Measurement> measurements){
+        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
+        obsList.addAll(measurements);
+        return obsList;
+    }
 
-
-        // Add click functionality to the X axis
-        xAxisFromChart.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {
-                double xPos = event.getX();
-                int clickedDataX = xAxisFromChart.getCategories().indexOf(xAxisFromChart.getValueForDisplay(xPos).toString());
-                if (clickedDataX >= 0) {
-                    String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
-                    actualDate.setText(clickedCategory);
-                    temperatureLabel.setText(Double.toString(findTemperatureValueByClick(clickedCategory)));
-                    brightnessLabel.setText(Double.toString(findBrightnessValueByClick(clickedCategory)));
-                    pressureLabel.setText(Double.toString(findPressureValueByClick(clickedCategory)));
-                    co2Label.setText(Double.toString(findCO2ValueByClick(clickedCategory)));
-                    humidityLabel.setText(Double.toString(findHumidityValueByClick(clickedCategory)));
-                    pm1Label.setText(Double.toString(findPM1ValueByClick(clickedCategory)));
-                    pm2Label.setText(Double.toString(findPM2ValueByClick(clickedCategory)));
-                    pm10Label.setText(Double.toString(findPM10ValueByClick(clickedCategory)));
-                }
-            }
-        });
-
+    public void checkSize(){
         if (!temperatureChart.getData().isEmpty()) {
             tempCheckbox.setDisable(false);
             temperatureLabel.setDisable(false);
@@ -542,6 +561,84 @@ public class SceneController {
             pressCheckbox.setDisable(false);
             pressureLabel.setDisable(false);
         }
+    }
+
+    public void setLabels(){
+        actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
+        temperatureLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getTemperature()));
+        brightnessLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getBrightnessLevel()));
+        pressureLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getPressureLevel()));
+        co2Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getCo2Level()));
+        humidityLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getHumidityLevel()));
+        pm1Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm1Level()));
+        pm2Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm2Level()));
+        pm10Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm10Level()));
+    }
+
+    public void setLabelsClick(String clickedCategory){
+        actualDate.setText(clickedCategory);
+        temperatureLabel.setText(Integer.toString(findTemperatureValueByClick(clickedCategory)));
+        brightnessLabel.setText(Integer.toString(findBrightnessValueByClick(clickedCategory)));
+        pressureLabel.setText(Integer.toString(findPressureValueByClick(clickedCategory)));
+        co2Label.setText(Integer.toString(findCO2ValueByClick(clickedCategory)));
+        humidityLabel.setText(Integer.toString(findHumidityValueByClick(clickedCategory)));
+        pm1Label.setText(Integer.toString(findPM1ValueByClick(clickedCategory)));
+        pm2Label.setText(Integer.toString(findPM2ValueByClick(clickedCategory)));
+        pm10Label.setText(Integer.toString(findPM10ValueByClick(clickedCategory)));
+    }
+
+    @FXML
+    private Label localTime;
+
+    public void clearCheckboxes(){
+        tempCheckbox.setSelected(false);
+        brighCheckbox.setSelected(false);
+        pressCheckbox.setSelected(false);
+        co2Checkbox.setSelected(false);
+        humCheckbox.setSelected(false);
+        pm1Checkbox.setSelected(false);
+        pm2Checkbox.setSelected(false);
+        pm10Checkbox.setSelected(false);
+    }
+
+    @FXML
+    public void initialize() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime currentTime = LocalDateTime.now();
+        String formattedTime = currentTime.format(formatter);
+        localTime.setText("Current Time: \n" + formattedTime);
+        setLabels();
+        setTime(getLastMeasurement(kelsterbach).getTimestamp());
+        datepicker.setValue(this.dateTime.toLocalDate());
+        ObservableList<Measurement> list = convertList(getListByDate(kelsterbach, this.day, this.month, this.year));
+        addMeasurementsToChart(list);
+        checkSize();
+
+        datepicker.setOnAction(event -> {
+            LocalDate selectedDate = datepicker.getValue();
+            selectedMonth = selectedDate.getMonthValue();
+            selectedDay = selectedDate.getDayOfMonth();
+            selectedYear = selectedDate.getYear();
+            ObservableList<Measurement> filteredList = getListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
+            addMeasurementsToChart(filteredList);
+            checkSize();
+            clearCheckboxes();
+        });
+        //sortByAscendingTime(measurmentList);
+        CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
+        // Add click functionality to the X axis
+        xAxisFromChart.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                double xPos = event.getX();
+                int clickedDataX = xAxisFromChart.getCategories().indexOf(xAxisFromChart.getValueForDisplay(xPos).toString());
+                if (clickedDataX >= 0) {
+                    String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
+                    setLabelsClick(clickedCategory);
+                }
+            }
+        });
+
     }
 
 }
