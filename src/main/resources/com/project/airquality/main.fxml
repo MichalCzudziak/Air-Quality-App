@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
    <children>
       <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
          <children>
@@ -136,7 +136,7 @@
                         <Image url="@Abbild-AQI.jpg" />
                      </image>
                   </ImageView>
-                  <Label layoutX="1252.0" layoutY="13.0" onMousePressed="#showScale" onMouseReleased="#disableScale" prefHeight="28.0" prefWidth="34.0">
+                  <Label layoutX="1252.0" layoutY="13.0" onMouseEntered="#showScale" onMouseExited="#disableScale" prefHeight="28.0" prefWidth="34.0">
                      <tooltip>
                         <Tooltip text="Hold pressed to see the AQI Scale" />
                      </tooltip>

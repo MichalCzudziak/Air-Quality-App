@@ -165,8 +165,16 @@ public class SceneController {
     public XYChart.Series co2Chart = new XYChart.Series();
     public XYChart.Series brightnessChart = new XYChart.Series();
     public XYChart.Series airQualityChart = new XYChart.Series();
-
     public XYChart.Series arqBoundary = new XYChart.Series();
+
+    public XYChart.Series veryGoodAQIBoundary = new XYChart.Series<>();
+    public XYChart.Series goodAQIBoundary = new XYChart.Series<>();
+    public XYChart.Series okAQIBoundary = new XYChart.Series<>();
+
+    public XYChart.Series ausreichendAQIBoundary= new XYChart.Series<>();
+    public XYChart.Series badAQIBoundary = new XYChart.Series<>();
+
+
 
 
     // ###########################################################
@@ -200,6 +208,16 @@ public class SceneController {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public void clearNode(XYChart.Series<String, Integer> series){
+            for(XYChart.Data<String, Integer> data : series.getData()){
+                Node node = data.getNode();
+                if(node != null){
+                    node.setVisible(false);
+                    node.setManaged(false);
+                }
+            }
     }
 
 
@@ -255,6 +273,62 @@ public class SceneController {
             brightnessChart.getData().add(new XYChart.Data<>(timestampString, measurement.getBrightnessLevel()));
             brightnessChart.setName("Brightness");
 
+        }
+    }
+
+    public void clearBoundaries(){
+        lineChart.getData().clear();
+        veryGoodAQIBoundary.getData().clear();
+        goodAQIBoundary.getData().clear();
+        okAQIBoundary.getData().clear();
+        ausreichendAQIBoundary.getData().clear();
+        badAQIBoundary.getData().clear();
+    }
+
+    public void createBoundaries(List<Measurement> measurements, String choice){
+        int listSize = measurements.size();
+        if(choice.equals("PM1")){
+            for(int i = 0; i < listSize; i++){
+                veryGoodAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),5)));
+                goodAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),10)));
+                okAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),15)));
+                ausreichendAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),30)));
+                badAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),50)));
+            }
+
+            clearNode(veryGoodAQIBoundary);
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(ausreichendAQIBoundary);
+            lineChart.getData().add(badAQIBoundary);
+        }
+        if(choice.equals("PM2")){
+            for(int i = 0; i < listSize; i++){
+                veryGoodAQIBoundary.getData().add(i, 9);
+                goodAQIBoundary.getData().add(i, 20);
+                okAQIBoundary.getData().add(i, 29);
+                ausreichendAQIBoundary.getData().add(i, 49);
+                badAQIBoundary.getData().add(i, 75);
+            }
+        }
+        if(choice.equals("PM10")){
+            for(int i = 0; i < listSize; i++){
+                veryGoodAQIBoundary.getData().add(i, 20);
+                goodAQIBoundary.getData().add(i, 30);
+                okAQIBoundary.getData().add(i, 40);
+                ausreichendAQIBoundary.getData().add(i, 50);
+                badAQIBoundary.getData().add(i, 100);
+            }
+        }
+        if(choice.equals("CO2")){
+            for(int i = 0; i < listSize; i++){
+                veryGoodAQIBoundary.getData().add(i, 650);
+                goodAQIBoundary.getData().add(i, 1500);
+                okAQIBoundary.getData().add(i, 2000);
+                ausreichendAQIBoundary.getData().add(i, 2500);
+                badAQIBoundary.getData().add(i, 5000);
+            }
         }
     }
 
@@ -377,10 +451,18 @@ public class SceneController {
     public void showPM1(ActionEvent event) {
         if (pm1Checkbox.isSelected()) {
             lineChart.getData().addAll(pm1Chart);
+            createBoundaries(convertList(getListByDate(kelsterbach, this.day, this.month, this.year)), "PM1");
+            for (Object obj : veryGoodAQIBoundary.getData()) {
+                if (obj instanceof XYChart.Data) {
+                    XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                    data.getNode().setOpacity(0);
+                }
+            }
             enableDataPointHover(pm1Chart);
         }
         if (!pm1Checkbox.isSelected()) {
             lineChart.getData().removeAll(pm1Chart);
+            clearBoundaries();
             disableDataPointHover(pm1Chart);
         }
     }
