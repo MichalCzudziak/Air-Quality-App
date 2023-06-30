@@ -30,12 +30,24 @@ import static java.lang.Math.round;
 public class MainController {
 
     @FXML
+    private ImageView infoButton;
+
+    @FXML
+    private ImageView aqiScale;
+
+    @FXML
+    private Button showingAqi;
+    @FXML
     void showScale(MouseEvent event) {
-        System.out.println("Test");
+        aqiScale.setVisible(true);
     }
 
     @FXML
-    private ImageView infoButton;
+    void disableScale(MouseEvent event) {
+        aqiScale.setVisible(false);
+    }
+
+
 
 
     @FXML
