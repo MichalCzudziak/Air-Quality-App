@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import objects.Measurement;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 public class SettingsController {
@@ -34,6 +36,18 @@ public class SettingsController {
 
     @FXML
     private TextField textUsername;
+
+    @FXML
+    private Label localTime;
+
+    @FXML
+    public void initialize(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime currentTime = LocalDateTime.now();
+        String formattedTime = currentTime.format(formatter);
+        localTime.setText("Current Time: \n" + formattedTime);
+    }
+
     @FXML
     public void connectToDatabase(ActionEvent event) throws IOException, SQLException {
         DBConfigManager configManager = new DBConfigManager(textDBURL.getText(), textUsername.getText(),
@@ -69,6 +83,20 @@ public class SettingsController {
         stage.setScene(scene);
         stage.show();
     }
+    public void switchToRodgau(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("rodgau.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void switchToMaintal(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void switchToConnectDB(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("settings.fxml"));
@@ -76,11 +104,6 @@ public class SettingsController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-    }
-
-    @FXML
-    public void initialize(){
-
     }
 
 }

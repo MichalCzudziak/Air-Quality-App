@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.MainController">
    <children>
       <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
          <children>
@@ -73,24 +73,19 @@
                               <Image url="@map.png" />
                            </image>
                         </ImageView>
-                        <Button fx:id="frankfurtButton" mnemonicParsing="false" opacity="0.5" prefHeight="150.0" prefWidth="177.0" styleClass="circular-javafx-button" stylesheets="@style.css" textOverrun="CLIP">
-                           <StackPane.margin>
-                              <Insets bottom="40.0" right="70.0" />
-                           </StackPane.margin>
-                        </Button>
                         <Button fx:id="kelsterbachButton" layoutX="270.0" layoutY="200.0" mnemonicParsing="false" opacity="0.5" prefHeight="150.0" prefWidth="177.0" styleClass="circular-javafx-button" stylesheets="@style.css" textOverrun="CLIP">
                            <StackPane.margin>
-                              <Insets right="510.0" top="200.0" />
+                              <Insets right="510.0" top="180.0" />
                            </StackPane.margin>
                         </Button>
                         <Button fx:id="maintalButton" layoutX="270.0" layoutY="200.0" mnemonicParsing="false" opacity="0.5" prefHeight="150.0" prefWidth="177.0" styleClass="circular-javafx-button" stylesheets="@style.css" textOverrun="CLIP">
                            <StackPane.margin>
-                              <Insets bottom="200.0" left="320.0" />
+                              <Insets bottom="200.0" left="330.0" />
                            </StackPane.margin>
                         </Button>
                         <Button fx:id="rodgauButton" layoutX="465.0" layoutY="120.0" mnemonicParsing="false" opacity="0.5" prefHeight="150.0" prefWidth="177.0" styleClass="circular-javafx-button" stylesheets="@style.css" textOverrun="CLIP">
                            <StackPane.margin>
-                              <Insets left="465.0" top="400.0" />
+                              <Insets left="465.0" top="420.0" />
                            </StackPane.margin>
                         </Button>
                      </children>
@@ -138,7 +133,7 @@
                   </ImageView>
                   <Label layoutX="1252.0" layoutY="13.0" onMouseEntered="#showScale" onMouseExited="#disableScale" prefHeight="28.0" prefWidth="34.0">
                      <tooltip>
-                        <Tooltip text="Hold pressed to see the AQI Scale" />
+                        <Tooltip text="showing Air Quality Index scale " />
                      </tooltip>
                   </Label>
                </children></Pane>

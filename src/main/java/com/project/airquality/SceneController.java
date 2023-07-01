@@ -61,9 +61,6 @@ public class SceneController {
     private Label co2Label;
 
     @FXML
-    private Label finedustLabel;
-
-    @FXML
     private Label humidityLabel;
 
     @FXML
@@ -102,9 +99,6 @@ public class SceneController {
     private RadioButton co2Checkbox;
 
     @FXML
-    private RadioButton fineCheckBox;
-
-    @FXML
     private RadioButton pm10Checkbox;
 
     @FXML
@@ -139,7 +133,6 @@ public class SceneController {
     private ArrayList<Location> list = Main.allLocations;
 
     private ArrayList<Measurement> kelsterbach = list.get(0).getMeasurements();
-
 
     private Map<String, Integer> tempList = new HashMap<>();
     private Map<String, Integer> co2List = new HashMap<>();
@@ -575,7 +568,7 @@ public class SceneController {
     }
 
     public void switchToRodgau(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("rodgau.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -655,6 +648,7 @@ public class SceneController {
         pm1Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm1Level()));
         pm2Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm2Level()));
         pm10Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm10Level()));
+
     }
 
     public void setLabelsClick(String clickedCategory){

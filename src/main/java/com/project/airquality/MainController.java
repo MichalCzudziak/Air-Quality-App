@@ -161,7 +161,7 @@ public class MainController {
     }
 
     public void switchToRodgau(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("maintal.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("rodgau.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -419,6 +419,9 @@ public class MainController {
         pm10Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm10Level"));
         pm1Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm1Level"));
         pm2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm2Level"));
+
+
+
 
         choiceBox.setOnAction(event -> {
 
