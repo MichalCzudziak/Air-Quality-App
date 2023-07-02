@@ -1,6 +1,4 @@
 package com.project.airquality;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,143 +9,104 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import objects.Location;
 import objects.Measurement;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class SceneController {
-    // FXML DECLARATIONS #################################################
+
+    /**
+     *   Variables which are needed globally
+     */
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    private int year;
-    private int month;
-    private int day;
-
     private LocalDateTime dateTime;
-
     private int selectedDay = 0;
     private int selectedMonth = 0;
     private int selectedYear = 0;
 
+    private int selectedCheckboxes = 0;
+
+    /**
+     *   All required FXML GUI Components declaration needed to display all the functionalities
+     */
+
+    @FXML
+    private Label localTime;
+    @FXML
+    private RadioButton scalePM1Checkbox;
+    @FXML
+    private RadioButton scalePM2Checkbox;
+    @FXML
+    private RadioButton scalePM10Checkbox;
+    @FXML
+    private RadioButton scaleCO2Checkbox;
     @FXML
     private DatePicker datepicker;
-
     @FXML
     private Label actualDate;
     @FXML
-    private ProgressBar arqProgressbar;
-    @FXML
-    private AnchorPane locMenu;
-
-    @FXML
-    private Label arqLabel;
-
-    @FXML
     private Label brightnessLabel;
-
     @FXML
     private Label co2Label;
-
     @FXML
     private Label humidityLabel;
-
     @FXML
     private Label pressureLabel;
-
     @FXML
     private Label temperatureLabel;
     @FXML
     private LineChart<String, Number> lineChart;
-
-    @FXML
-    private Button dbConnectButton;
-
-    @FXML
-    private Button settingsButton;
-
-    @FXML
-    private TextField textDBName;
-
-    @FXML
-    private TextField textDBURL;
-
-    @FXML
-    private TextField textUsername;
-
-    @FXML
-    private PasswordField textPassword;
-
-    @FXML
-    private RadioButton arqCheckbox;
-
     @FXML
     private RadioButton brighCheckbox;
-
     @FXML
     private RadioButton co2Checkbox;
-
     @FXML
     private RadioButton pm10Checkbox;
-
     @FXML
     private Label pm10Label;
-
     @FXML
     private RadioButton pm1Checkbox;
-
     @FXML
     private Label pm1Label;
-
     @FXML
     private RadioButton pm2Checkbox;
-
     @FXML
     private Label pm2Label;
-
     @FXML
     private RadioButton humCheckbox;
-
     @FXML
     private RadioButton pressCheckbox;
-
     @FXML
     private RadioButton tempCheckbox;
 
-    // ###########################################################
-    // DATA STRUCTURES
-    // ###########################################################
-    private ArrayList<Measurement> measurmentList = new ArrayList<>();
+    /**
+     *   Arraylists and maps needed to store all the informations about measurments values
+     */
 
     private ArrayList<Location> list = Main.allLocations;
-
     private ArrayList<Measurement> kelsterbach = list.get(0).getMeasurements();
-
     private Map<String, Integer> tempList = new HashMap<>();
     private Map<String, Integer> co2List = new HashMap<>();
     private Map<String, Integer> pm1List = new HashMap<>();
-
     private Map<String, Integer> pm2List = new HashMap<>();
-
     private Map<String, Integer> pm10List = new HashMap<>();
-
-
-
     private Map<String, Integer> brightnessList = new HashMap<>();
     private Map<String, Integer> pressureList = new HashMap<>();
     private Map<String, Integer> humidityList = new HashMap<>();
 
+    /**
+     *   XYCharts objects which store the informations in graphs
+     */
 
     public XYChart.Series temperatureChart = new XYChart.Series();
     public XYChart.Series pressureChart = new XYChart.Series();
@@ -157,14 +116,13 @@ public class SceneController {
     public XYChart.Series humidityChart = new XYChart.Series();
     public XYChart.Series co2Chart = new XYChart.Series();
     public XYChart.Series brightnessChart = new XYChart.Series();
-    public XYChart.Series airQualityChart = new XYChart.Series();
-    public XYChart.Series arqBoundary = new XYChart.Series();
 
     public XYChart.Series veryGoodAQIBoundary = new XYChart.Series<>();
+
     public XYChart.Series goodAQIBoundary = new XYChart.Series<>();
     public XYChart.Series okAQIBoundary = new XYChart.Series<>();
 
-    public XYChart.Series ausreichendAQIBoundary= new XYChart.Series<>();
+    public XYChart.Series sufficientAQIBoundary = new XYChart.Series<>();
     public XYChart.Series badAQIBoundary = new XYChart.Series<>();
 
 
@@ -175,44 +133,24 @@ public class SceneController {
     // ###########################################################
     // DATA IMPORT
     // ###########################################################
-    public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
-        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
+    public ArrayList <Measurement> filterListByDate(ArrayList<Measurement> measurements, int day, int month, int year) {
+        ArrayList<Measurement> filteredList = new ArrayList<>();
         for (Measurement measurement : measurements) {
             setTime(measurement.getTimestamp());
-            if (this.day == day && this.month == month && this.year == year) {
-                obsList.add(measurement);
+            if (this.selectedDay == day && this.selectedMonth == month && this.selectedYear == year) {
+                filteredList.add(measurement);
             }
         }
-        return obsList;
+        return filteredList;
     }
 
-    public void setTime(String timeString) {
+    public void setTime(String timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        this.dateTime = LocalDateTime.parse(timeString, formatter);
-        this.year = dateTime.getYear();
-        this.month = dateTime.getMonthValue();
-        this.day = dateTime.getDayOfMonth();
+        this.dateTime = LocalDateTime.parse(timestamp, formatter);
+        this.selectedYear = dateTime.getYear();
+        this.selectedMonth = dateTime.getMonthValue();
+        this.selectedDay = dateTime.getDayOfMonth();
     }
-
-
-    public double round(double value, int decimalPlaces) {
-        if (decimalPlaces < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-    public void clearNode(XYChart.Series<String, Integer> series){
-            for(XYChart.Data<String, Integer> data : series.getData()){
-                Node node = data.getNode();
-                if(node != null){
-                    node.setVisible(false);
-                    node.setManaged(false);
-                }
-            }
-    }
-
 
     public void refreshChart(){
         lineChart.getData().clear();
@@ -225,131 +163,378 @@ public class SceneController {
         co2Chart.getData().clear();
         brightnessChart.getData().clear();
     }
-    public void addMeasurementsToChart(List<Measurement> measurements) {
+
+    public void addMeasurementsToChart(ArrayList<Measurement> measurements) {
         refreshChart();
+        veryGoodAQIBoundary.setName("Sehr gut");
+        goodAQIBoundary.setName("Gut");
+        okAQIBoundary.setName("Befriedigend");
+        sufficientAQIBoundary.setName("Ausreichend");
+        badAQIBoundary.setName("Schlecht");
+
         for (Measurement measurement : measurements) {
             // Convert the timestamp to the desired format
-            String timestampString = measurement.getTimestamp();
-            actualDate.setText(timestampString);
+            String timestamp = measurement.getTimestamp();
+            actualDate.setText(timestamp);
             // Add the temperature data to the series
-            tempList.put(timestampString, measurement.getTemperature());
-            temperatureChart.getData().add(new XYChart.Data<>(timestampString, measurement.getTemperature()));
+            tempList.put(timestamp, measurement.getTemperature());
+            temperatureChart.getData().add(new XYChart.Data<>(timestamp, measurement.getTemperature()));
             temperatureChart.setName("Temperature");
 
-            pressureList.put(timestampString, measurement.getPressureLevel());
-            pressureChart.getData().add(new XYChart.Data<>(timestampString, measurement.getPressureLevel()));
+            pressureList.put(timestamp, measurement.getPressureLevel());
+            pressureChart.getData().add(new XYChart.Data<>(timestamp, measurement.getPressureLevel()));
             pressureChart.setName("Pressure");
 
-
-            humidityList.put(timestampString, measurement.getHumidityLevel());
-            humidityChart.getData().add(new XYChart.Data<>(timestampString, measurement.getHumidityLevel()));
+            humidityList.put(timestamp, measurement.getHumidityLevel());
+            humidityChart.getData().add(new XYChart.Data<>(timestamp, measurement.getHumidityLevel()));
             humidityChart.setName("Humidity");
 
-            pm1List.put(timestampString, measurement.getPm1Level());
-            pm1Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm1Level()));
+            pm1List.put(timestamp, measurement.getPm1Level());
+            pm1Chart.getData().add(new XYChart.Data<>(timestamp, measurement.getPm1Level()));
             pm1Chart.setName("PM 1");
 
-            pm2List.put(timestampString, measurement.getPm2Level());
-            pm2Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm2Level()));
+            pm2List.put(timestamp, measurement.getPm2Level());
+            pm2Chart.getData().add(new XYChart.Data<>(timestamp, measurement.getPm2Level()));
             pm2Chart.setName("PM 2.5");
 
-            pm10List.put(timestampString, measurement.getPm10Level());
-            pm10Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getPm10Level()));
+            pm10List.put(timestamp, measurement.getPm10Level());
+            pm10Chart.getData().add(new XYChart.Data<>(timestamp, measurement.getPm10Level()));
             pm10Chart.setName("PM 10");
 
 
-            co2List.put(timestampString, measurement.getCo2Level());
-            co2Chart.getData().add(new XYChart.Data<>(timestampString, measurement.getCo2Level()));
+            co2List.put(timestamp, measurement.getCo2Level());
+            co2Chart.getData().add(new XYChart.Data<>(timestamp, measurement.getCo2Level()));
             co2Chart.setName("CO2");
 
-            brightnessList.put(timestampString, measurement.getBrightnessLevel());
-            brightnessChart.getData().add(new XYChart.Data<>(timestampString, measurement.getBrightnessLevel()));
+            brightnessList.put(timestamp, measurement.getBrightnessLevel());
+            brightnessChart.getData().add(new XYChart.Data<>(timestamp, measurement.getBrightnessLevel()));
             brightnessChart.setName("Brightness");
 
         }
     }
 
-    public void clearBoundaries(){
-        lineChart.getData().clear();
+    public int getHighestValue(ArrayList<Measurement> measurements, String choice){
+        int highestPM1 = 0;
+        int highestPM2 = 0;
+        int highestPM10 = 0;
+        int highestCO2 = 0;
+
+        for (Measurement measurement : measurements){
+            if(highestPM1 < measurement.getPm1Level()){
+                highestPM1 = measurement.getPm1Level();
+            }
+            if(highestPM2 < measurement.getPm2Level()){
+                highestPM2 = measurement.getPm2Level();
+            }
+            if(highestPM10 < measurement.getPm10Level()){
+                highestPM10 = measurement.getPm10Level();
+            }
+            if(highestCO2 < measurement.getCo2Level()){
+                highestCO2 = measurement.getCo2Level();
+            }
+        }
+        if (choice.equals("PM1")) {
+            return highestPM1;
+        }
+
+        if (choice.equals("PM2")){
+            return highestPM2;
+        }
+
+        if (choice.equals("PM10")) {
+            return highestPM10;
+        }
+
+        if (choice.equals("CO2")) {
+            return highestCO2;
+        }
+        return 0;
+    }
+
+    public void resetBoundaries(){
         veryGoodAQIBoundary.getData().clear();
         goodAQIBoundary.getData().clear();
         okAQIBoundary.getData().clear();
-        ausreichendAQIBoundary.getData().clear();
+        sufficientAQIBoundary.getData().clear();
         badAQIBoundary.getData().clear();
+        lineChart.getData().removeAll(veryGoodAQIBoundary);
+        lineChart.getData().removeAll(goodAQIBoundary);
+        lineChart.getData().removeAll(okAQIBoundary);
+        lineChart.getData().removeAll(sufficientAQIBoundary);
+        lineChart.getData().removeAll(badAQIBoundary);
     }
 
-    public void createBoundaries(List<Measurement> measurements, String choice){
+    public void createPM1Boundaries(ArrayList<Measurement> measurements, String choice){
         int listSize = measurements.size();
-        if(choice.equals("PM1")){
-            for(int i = 0; i < listSize; i++){
-                veryGoodAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),5)));
-                goodAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),10)));
-                okAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),15)));
-                ausreichendAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),30)));
-                badAQIBoundary.getData().add((new XYChart.Data<>(measurements.get(i).getTimestamp(),50)));
+        int highestValue = getHighestValue(measurements, choice);
+            if(highestValue <=5){
+                for (int i = 0; i < listSize; i++) {
+                    veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5));
+                }
+                lineChart.getData().add(veryGoodAQIBoundary);
             }
+            if(highestValue >=6 && highestValue <=10){
+                for (int i = 0; i < listSize; i++) {
+                    veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5));
+                    goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 10));
+                }
+                lineChart.getData().add(veryGoodAQIBoundary);
+                lineChart.getData().add(goodAQIBoundary);
+            }
+            if(highestValue >=11 && highestValue <=15){
+                for (int i = 0; i < listSize; i++) {
+                    veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5));
+                    goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 10));
+                    okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 15));
+                }
+                lineChart.getData().add(veryGoodAQIBoundary);
+                lineChart.getData().add(goodAQIBoundary);
+                lineChart.getData().add(okAQIBoundary);
+            }
+            if(highestValue >=16 && highestValue <=30){
+                for (int i = 0; i < listSize; i++) {
+                    veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5));
+                    goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 10));
+                    okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 15));
+                    sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
+                }
+                lineChart.getData().add(veryGoodAQIBoundary);
+                lineChart.getData().add(goodAQIBoundary);
+                lineChart.getData().add(okAQIBoundary);
+                lineChart.getData().add(sufficientAQIBoundary);
+            }
+            if(highestValue >=31 && highestValue <=50){
+                for (int i = 0; i < listSize; i++) {
+                    veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5));
+                    goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 10));
+                    okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 15));
+                    sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
+                    badAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 50));
+                }
+                lineChart.getData().add(veryGoodAQIBoundary);
+                lineChart.getData().add(goodAQIBoundary);
+                lineChart.getData().add(okAQIBoundary);
+                lineChart.getData().add(sufficientAQIBoundary);
+                lineChart.getData().add(badAQIBoundary);
+            }
+        }
 
-            clearNode(veryGoodAQIBoundary);
+    public void createPM2Boundaries(ArrayList<Measurement> measurements, String choice){
+        int listSize = measurements.size();
+        int highestValue = getHighestValue(measurements, choice);
+        if(highestValue <=9){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 9));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+        }
+        if(highestValue >=10 && highestValue <=20){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 9));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+        }
+        if(highestValue >= 21 && highestValue <=29){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 9));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 29));
+            }
             lineChart.getData().add(veryGoodAQIBoundary);
             lineChart.getData().add(goodAQIBoundary);
             lineChart.getData().add(okAQIBoundary);
-            lineChart.getData().add(ausreichendAQIBoundary);
+        }
+        if(highestValue >=30 && highestValue <=49){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 9));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 29));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 49));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
+        }
+        if(highestValue >=50 && highestValue <=75){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 9));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 29));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 49));
+                badAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 75));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
             lineChart.getData().add(badAQIBoundary);
         }
-        if(choice.equals("PM2")){
-            for(int i = 0; i < listSize; i++){
-                veryGoodAQIBoundary.getData().add(i, 9);
-                goodAQIBoundary.getData().add(i, 20);
-                okAQIBoundary.getData().add(i, 29);
-                ausreichendAQIBoundary.getData().add(i, 49);
-                badAQIBoundary.getData().add(i, 75);
+    }
+
+    public void createPM10Boundaries(ArrayList<Measurement> measurements, String choice){
+        int listSize = measurements.size();
+        int highestValue = getHighestValue(measurements, choice);
+        if(highestValue <=20){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
             }
+            lineChart.getData().add(veryGoodAQIBoundary);
         }
-        if(choice.equals("PM10")){
-            for(int i = 0; i < listSize; i++){
-                veryGoodAQIBoundary.getData().add(i, 20);
-                goodAQIBoundary.getData().add(i, 30);
-                okAQIBoundary.getData().add(i, 40);
-                ausreichendAQIBoundary.getData().add(i, 50);
-                badAQIBoundary.getData().add(i, 100);
+        if(highestValue >=21 && highestValue <=30){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
             }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
         }
-        if(choice.equals("CO2")){
-            for(int i = 0; i < listSize; i++){
-                veryGoodAQIBoundary.getData().add(i, 650);
-                goodAQIBoundary.getData().add(i, 1500);
-                okAQIBoundary.getData().add(i, 2000);
-                ausreichendAQIBoundary.getData().add(i, 2500);
-                badAQIBoundary.getData().add(i, 5000);
+        if(highestValue >=31 && highestValue <=40){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 40));
             }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+        }
+        if(highestValue >=41 && highestValue <=50){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 40));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 50));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
+        }
+        if(highestValue >=51 && highestValue <=100){
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 20));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 30));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 40));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 50));
+                badAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 100));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
+            lineChart.getData().add(badAQIBoundary);
         }
     }
 
-    public double calculateAverage(XYChart.Series<String, Number> chart) {
-        double sum = 0.0;
-        int count = 0;
-
-        for (XYChart.Data<String, Number> data : chart.getData()) {
-            double value = data.getYValue().doubleValue();
-            sum += value;
-            count++;
-        }
-        double average = sum / count;
-        average = Math.round(average * 10.0) / 10.0;
-        return average;
-    }
-
-    public static void sortByAscendingTime(List<Measurement> measurements) {
-        measurements.sort(new Comparator<Measurement>() {
-            @Override
-            public int compare(Measurement m1, Measurement m2) {
-                LocalDateTime time1 = m1.getTimestampDate();
-                LocalDateTime time2 = m2.getTimestampDate();
-                return time1.compareTo(time2);
+    public void createCO2Boundaries(ArrayList<Measurement> measurements, String choice) {
+        int listSize = measurements.size();
+        int highestValue = getHighestValue(measurements, choice);
+        if (highestValue <= 650) {
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 650));
             }
-        });
+            lineChart.getData().add(veryGoodAQIBoundary);
+        }
+        if (highestValue >= 651 && highestValue <= 1500) {
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 650));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 1500));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+        }
+        if (highestValue >= 1501 && highestValue <= 2000) {
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 650));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 1500));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 2000));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+        }
+        if (highestValue >= 2001 && highestValue <= 2500) {
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 650));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 1500));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 2000));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 2500));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
+        }
+        if (highestValue >= 2501 && highestValue <= 5000) {
+            for (int i = 0; i < listSize; i++) {
+                veryGoodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 650));
+                goodAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 1500));
+                okAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 2000));
+                sufficientAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 2500));
+                badAQIBoundary.getData().add(new XYChart.Data<>(measurements.get(i).getTimestamp(), 5000));
+            }
+            lineChart.getData().add(veryGoodAQIBoundary);
+            lineChart.getData().add(goodAQIBoundary);
+            lineChart.getData().add(okAQIBoundary);
+            lineChart.getData().add(sufficientAQIBoundary);
+            lineChart.getData().add(badAQIBoundary);
+        }
     }
 
+     public void disableNodes() {
+         for (Object obj : veryGoodAQIBoundary.getData()) {
+             if (obj instanceof XYChart.Data) {
+                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                 data.getNode().setOpacity(0);
+             }
+         }
+         for (Object obj : goodAQIBoundary.getData()) {
+             if (obj instanceof XYChart.Data) {
+                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                 data.getNode().setOpacity(0);
+             }
+         }
+         for (Object obj : okAQIBoundary.getData()) {
+             if (obj instanceof XYChart.Data) {
+                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                 data.getNode().setOpacity(0);
+             }
+         }
+         for (Object obj : sufficientAQIBoundary.getData()) {
+             if (obj instanceof XYChart.Data) {
+                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                 data.getNode().setOpacity(0);
+             }
+         }
+         for (Object obj : badAQIBoundary.getData()) {
+             if (obj instanceof XYChart.Data) {
+                 XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
+                 data.getNode().setOpacity(0);
+             }
+         }
+     }
+
+    public void setBoundaries(ArrayList<Measurement> measurements, String choice){
+        if (choice.equals("PM1")) {
+            createPM1Boundaries(measurements, choice);
+            disableNodes();
+        }
+        if (choice.equals("PM2")) {
+            createPM2Boundaries(measurements, choice);
+            disableNodes();
+        }
+        if (choice.equals("PM10")) {
+            createPM10Boundaries(measurements, choice);
+            disableNodes();
+        }
+        if (choice.equals("CO2")) {
+            createCO2Boundaries(measurements, choice);
+            disableNodes();
+        }
+    }
 
 
     // ###########################################################
@@ -379,50 +564,120 @@ public class SceneController {
         }
     }
 
-    public int findTemperatureValueByClick(String userInput) {
-        return tempList.get(userInput);
+    public int getTemperatureValueByClick(String clickedInput) {
+        return tempList.get(clickedInput);
     }
 
-    public int findCO2ValueByClick(String userInput) {
-        return co2List.get(userInput);
+    public int getCO2ValueByClick(String clickedInput) {
+        return co2List.get(clickedInput);
     }
 
-    public int findHumidityValueByClick(String userInput) {
-        return humidityList.get(userInput);
+    public int getHumidityValueByClick(String clickedInput) {
+        return humidityList.get(clickedInput);
     }
 
-    public int findBrightnessValueByClick(String userInput) {
-        return brightnessList.get(userInput);
+    public int getBrightnessValueByClick(String clickedInput) {
+        return brightnessList.get(clickedInput);
     }
 
-    public int findPM1ValueByClick(String userInput) {
-        return pm1List.get(userInput);
+    public int getPM1ValueByClick(String clickedInput) {
+        return pm1List.get(clickedInput);
     }
 
-    public int findPM2ValueByClick(String userInput) {
-        return pm2List.get(userInput);
+    public int getPM2ValueByClick(String clickedInput) {
+        return pm2List.get(clickedInput);
     }
 
-    public int findPM10ValueByClick(String userInput) {
-        return pm10List.get(userInput);
+    public int getPM10ValueByClick(String clickedInput) {
+        return pm10List.get(clickedInput);
     }
 
-    public int findPressureValueByClick(String userInput) {
-        return pressureList.get(userInput);
+    public int getPressureValueByClick(String clickedInput) {
+        return pressureList.get(clickedInput);
     }
 
+    public void blockCheckboxes(){
+        tempCheckbox.setDisable(true);
+        brighCheckbox.setDisable(true);
+        pressCheckbox.setDisable(true);
+        co2Checkbox.setDisable(true);
+        humCheckbox.setDisable(true);
+        pm1Checkbox.setDisable(true);
+        pm2Checkbox.setDisable(true);
+        pm10Checkbox.setDisable(true);
+    }
 
-
+    public void enableCheckboxes(){
+        tempCheckbox.setDisable(false);
+        brighCheckbox.setDisable(false);
+        pressCheckbox.setDisable(false);
+        co2Checkbox.setDisable(false);
+        humCheckbox.setDisable(false);
+        pm1Checkbox.setDisable(false);
+        pm2Checkbox.setDisable(false);
+        pm10Checkbox.setDisable(false);
+    }
 
     // ###########################################################
     // SHOWING CONTROLS
     // ###########################################################
     @FXML
+    void showPM1Scale(ActionEvent event) {
+        if(scalePM1Checkbox.isSelected()){
+            setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM1");
+            blockCheckboxes();
+        }
+       if (!scalePM1Checkbox.isSelected()){
+           resetBoundaries();
+           enableCheckboxes();
+       }
+    }
+    @FXML
+    void showPM2Scale(ActionEvent event) {
+        if(scalePM2Checkbox.isSelected()){
+            setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM2");
+            blockCheckboxes();
+        }
+        if (!scalePM2Checkbox.isSelected()){
+            resetBoundaries();
+            enableCheckboxes();
+        }
+    }
+
+    @FXML
+    void showPM10Scale(ActionEvent event) {
+        if(scalePM10Checkbox.isSelected()){
+            setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM10");
+            blockCheckboxes();
+        }
+        if (!scalePM10Checkbox.isSelected()){
+            resetBoundaries();
+            enableCheckboxes();
+        }
+    }
+
+    @FXML
+    void showCO2Scale(ActionEvent event) {
+        if(scaleCO2Checkbox.isSelected()){
+            setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "CO2");
+            blockCheckboxes();
+        }
+        if (!scaleCO2Checkbox.isSelected()){
+            resetBoundaries();
+            enableCheckboxes();
+        }
+    }
+
+    @FXML
     public void showTemperature(ActionEvent event) {
         if (tempCheckbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().add(temperatureChart);
             enableDataPointHover(temperatureChart);
         } else {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(temperatureChart);
             disableDataPointHover(temperatureChart);
         }
@@ -431,10 +686,14 @@ public class SceneController {
     @FXML
     public void showPressure(ActionEvent event) {
         if (pressCheckbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(pressureChart);
             enableDataPointHover(pressureChart);
         }
         if (!pressCheckbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(pressureChart);
             disableDataPointHover(pressureChart);
         }
@@ -443,67 +702,90 @@ public class SceneController {
     @FXML
     public void showPM1(ActionEvent event) {
         if (pm1Checkbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(pm1Chart);
-            createBoundaries(convertList(getListByDate(kelsterbach, this.day, this.month, this.year)), "PM1");
-            for (Object obj : veryGoodAQIBoundary.getData()) {
-                if (obj instanceof XYChart.Data) {
-                    XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
-                    data.getNode().setOpacity(0);
-                }
-            }
             enableDataPointHover(pm1Chart);
         }
         if (!pm1Checkbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(pm1Chart);
-            clearBoundaries();
+            scalePM1Checkbox.setSelected(false);
+            scalePM1Checkbox.setDisable(true);
+            resetBoundaries();
             disableDataPointHover(pm1Chart);
         }
     }
 
+
     @FXML
     public void showPM2(ActionEvent event) {
         if (pm2Checkbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(pm2Chart);
             enableDataPointHover(pm2Chart);
         }
         if (!pm2Checkbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(pm2Chart);
+            resetBoundaries();
             disableDataPointHover(pm2Chart);
         }
     }
 
     @FXML
     public void showPM10(ActionEvent event) {
+
         if (pm10Checkbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(pm10Chart);
             enableDataPointHover(pm10Chart);
+            checkSelection();
         }
         if (!pm10Checkbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(pm10Chart);
+            resetBoundaries();
             disableDataPointHover(pm10Chart);
         }
     }
 
     @FXML
     public void showHumidity(ActionEvent event) {
+
         if (humCheckbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(humidityChart);
             enableDataPointHover(humidityChart);
         }
         if (!humCheckbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(humidityChart);
             disableDataPointHover(humidityChart);
+
         }
     }
 
     @FXML
     public void showCO2(ActionEvent event) {
         if (co2Checkbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(co2Chart);
             enableDataPointHover(co2Chart);
         }
         if (!co2Checkbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(co2Chart);
+            resetBoundaries();
             disableDataPointHover(co2Chart);
         }
     }
@@ -511,33 +793,48 @@ public class SceneController {
     @FXML
     public void showBrightness(ActionEvent event) {
         if (brighCheckbox.isSelected()) {
+            this.selectedCheckboxes++;
+            checkSelection();
             lineChart.getData().addAll(brightnessChart);
             enableDataPointHover(brightnessChart);
         }
         if (!brighCheckbox.isSelected()) {
+            this.selectedCheckboxes--;
+            checkSelection();
             lineChart.getData().removeAll(brightnessChart);
             disableDataPointHover(brightnessChart);
         }
     }
 
-    @FXML
-    public void showAirquality(ActionEvent event) {
-        if (arqCheckbox.isSelected()) {
-            lineChart.getData().addAll(airQualityChart);
-            lineChart.getData().addAll(arqBoundary);
-            for (Object obj : arqBoundary.getData()) {
-                if (obj instanceof XYChart.Data) {
-                    XYChart.Data<String, Number> data = (XYChart.Data<String, Number>) obj;
-                    data.getNode().setOpacity(0);
-                }
-            }
+    public void checkSelection(){
+        if (this.selectedCheckboxes == 1 && co2Checkbox.isSelected()) {
+            scaleCO2Checkbox.setDisable(false);
+        } else {
+            scaleCO2Checkbox.setDisable(true);
+            scaleCO2Checkbox.setSelected(false);
         }
-        if (!arqCheckbox.isSelected()) {
-            lineChart.getData().removeAll(airQualityChart);
-            lineChart.getData().removeAll(arqBoundary);
+
+        if (this.selectedCheckboxes == 1 && pm1Checkbox.isSelected()) {
+            scalePM1Checkbox.setDisable(false);
+        } else {
+            scalePM1Checkbox.setDisable(true);
+            scalePM1Checkbox.setSelected(false);
+        }
+
+        if (this.selectedCheckboxes == 1 && pm2Checkbox.isSelected()) {
+            scalePM2Checkbox.setDisable(false);
+        } else {
+            scalePM2Checkbox.setDisable(true);
+            scalePM2Checkbox.setSelected(false);
+        }
+
+        if (this.selectedCheckboxes == 1 && pm10Checkbox.isSelected()) {
+            scalePM10Checkbox.setDisable(false);
+        } else {
+            scalePM10Checkbox.setDisable(true);
+            scalePM10Checkbox.setSelected(false);
         }
     }
-
 
     // ###########################################################
     // SWITCHING CONTROLS
@@ -583,16 +880,9 @@ public class SceneController {
         stage.show();
     }
 
-    // ID 0 = Kelsterbach
 
     public Measurement getLastMeasurement(List<Measurement> list){
         return list.get(list.size()-1);
-    }
-
-    public ObservableList<Measurement> convertList(List<Measurement> measurements){
-        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
-        obsList.addAll(measurements);
-        return obsList;
     }
 
     public void checkSize(){
@@ -638,33 +928,30 @@ public class SceneController {
         }
     }
 
-    public void setLabels(){
-        actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
-        temperatureLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getTemperature()));
-        brightnessLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getBrightnessLevel()));
-        pressureLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getPressureLevel()));
-        co2Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getCo2Level()));
-        humidityLabel.setText(Integer.toString(getLastMeasurement(kelsterbach).getHumidityLevel()));
-        pm1Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm1Level()));
-        pm2Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm2Level()));
-        pm10Label.setText(Integer.toString(getLastMeasurement(kelsterbach).getPm10Level()));
+    public void setLabels(ArrayList<Measurement> measurements){
+        actualDate.setText(getLastMeasurement(measurements).getTimestamp());
+        temperatureLabel.setText(Integer.toString(getLastMeasurement(measurements).getTemperature()));
+        brightnessLabel.setText(Integer.toString(getLastMeasurement(measurements).getBrightnessLevel()));
+        pressureLabel.setText(Integer.toString(getLastMeasurement(measurements).getPressureLevel()));
+        co2Label.setText(Integer.toString(getLastMeasurement(measurements).getCo2Level()));
+        humidityLabel.setText(Integer.toString(getLastMeasurement(measurements).getHumidityLevel()));
+        pm1Label.setText(Integer.toString(getLastMeasurement(measurements).getPm1Level()));
+        pm2Label.setText(Integer.toString(getLastMeasurement(measurements).getPm2Level()));
+        pm10Label.setText(Integer.toString(getLastMeasurement(measurements).getPm10Level()));
 
     }
 
-    public void setLabelsClick(String clickedCategory){
+    public void setLabelsByClick(String clickedCategory){
         actualDate.setText(clickedCategory);
-        temperatureLabel.setText(Integer.toString(findTemperatureValueByClick(clickedCategory)));
-        brightnessLabel.setText(Integer.toString(findBrightnessValueByClick(clickedCategory)));
-        pressureLabel.setText(Integer.toString(findPressureValueByClick(clickedCategory)));
-        co2Label.setText(Integer.toString(findCO2ValueByClick(clickedCategory)));
-        humidityLabel.setText(Integer.toString(findHumidityValueByClick(clickedCategory)));
-        pm1Label.setText(Integer.toString(findPM1ValueByClick(clickedCategory)));
-        pm2Label.setText(Integer.toString(findPM2ValueByClick(clickedCategory)));
-        pm10Label.setText(Integer.toString(findPM10ValueByClick(clickedCategory)));
+        temperatureLabel.setText(Integer.toString(getTemperatureValueByClick(clickedCategory)));
+        brightnessLabel.setText(Integer.toString(getBrightnessValueByClick(clickedCategory)));
+        pressureLabel.setText(Integer.toString(getPressureValueByClick(clickedCategory)));
+        co2Label.setText(Integer.toString(getCO2ValueByClick(clickedCategory)));
+        humidityLabel.setText(Integer.toString(getHumidityValueByClick(clickedCategory)));
+        pm1Label.setText(Integer.toString(getPM1ValueByClick(clickedCategory)));
+        pm2Label.setText(Integer.toString(getPM2ValueByClick(clickedCategory)));
+        pm10Label.setText(Integer.toString(getPM10ValueByClick(clickedCategory)));
     }
-
-    @FXML
-    private Label localTime;
 
     public void clearCheckboxes(){
         tempCheckbox.setSelected(false);
@@ -675,46 +962,85 @@ public class SceneController {
         pm1Checkbox.setSelected(false);
         pm2Checkbox.setSelected(false);
         pm10Checkbox.setSelected(false);
+        scaleCO2Checkbox.setSelected(false);
+        scaleCO2Checkbox.setDisable(true);
+        scalePM1Checkbox.setSelected(false);
+        scalePM1Checkbox.setDisable(true);
+        scalePM10Checkbox.setSelected(false);
+        scalePM10Checkbox.setDisable(true);
+        scalePM2Checkbox.setSelected(false);
+        scalePM2Checkbox.setDisable(true);
     }
 
-    @FXML
-    public void initialize() {
-
+    public void initializeTime(ArrayList<Measurement> list){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(formatter);
         localTime.setText("Current Time: \n" + formattedTime);
-        setLabels();
-        setTime(getLastMeasurement(kelsterbach).getTimestamp());
+        setTime(getLastMeasurement(list).getTimestamp());
         datepicker.setValue(this.dateTime.toLocalDate());
-        ObservableList<Measurement> list = convertList(getListByDate(kelsterbach, this.day, this.month, this.year));
-        addMeasurementsToChart(list);
-        checkSize();
+    }
 
+    public ArrayList<LocalDate> findDisablesDays(ArrayList<Measurement> list){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ArrayList<LocalDate> rtr = new ArrayList<>();
+        for (Measurement m : list){
+            LocalDate date = LocalDate.parse(m.getTimestamp(), formatter);
+            System.out.println(date.getYear());
+            System.out.println(date.getMonthValue());
+            rtr.add(LocalDate.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
+        }
+        return rtr;
+    }
+
+    @FXML
+    public void initialize() {
+        initializeTime(kelsterbach);
+        setLabels(kelsterbach);
+        List<LocalDate> disabledDates = findDisablesDays(kelsterbach);
+        addMeasurementsToChart(filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear));
+        checkSize();
         datepicker.setOnAction(event -> {
+            resetBoundaries();
             LocalDate selectedDate = datepicker.getValue();
-            selectedMonth = selectedDate.getMonthValue();
-            selectedDay = selectedDate.getDayOfMonth();
-            selectedYear = selectedDate.getYear();
-            ObservableList<Measurement> filteredList = getListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
+            this.selectedMonth = selectedDate.getMonthValue();
+            this.selectedDay = selectedDate.getDayOfMonth();
+            this.selectedYear = selectedDate.getYear();
+            ArrayList<Measurement> filteredList = filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
             addMeasurementsToChart(filteredList);
+            initializeTime(filteredList);
             checkSize();
             clearCheckboxes();
+            resetBoundaries();
+            setLabels(filteredList);
+            this.selectedCheckboxes = 0;
         });
-        //sortByAscendingTime(measurmentList);
-        CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
+        datepicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date != null && !disabledDates.contains(date)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #ffc0cb;");
+                } else {
+                    setDisable(false);
+                    setStyle("");
+                }
+            }
+
+        });
+
         // Add click functionality to the X axis
+        CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
         xAxisFromChart.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
                 double xPos = event.getX();
                 int clickedDataX = xAxisFromChart.getCategories().indexOf(xAxisFromChart.getValueForDisplay(xPos).toString());
                 if (clickedDataX >= 0) {
                     String clickedCategory = xAxisFromChart.getCategories().get(clickedDataX);
-                    setLabelsClick(clickedCategory);
+                    setLabelsByClick(clickedCategory);
                 }
             }
         });
-
     }
-
 }

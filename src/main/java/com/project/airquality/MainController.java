@@ -24,10 +24,20 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static java.lang.Math.round;
 
 public class MainController {
+
+    @FXML
+    private Label lastAQIMaintal;
+
+    @FXML
+    private Label avgAQIMaintal;
+
+    @FXML
+    private Label actualDateMaintal;
 
     @FXML
     private ImageView infoButton;
@@ -79,6 +89,11 @@ public class MainController {
     @FXML
     private TableColumn<Measurement, Integer> pm2Column;
 
+
+    @FXML
+    private TableColumn<Measurement, Integer> idColumn;
+
+
     @FXML
     private TableView<Measurement> tableView;
 
@@ -107,8 +122,8 @@ public class MainController {
     private ChoiceBox<String> choiceBox;
 
     private ArrayList<Measurement> kelsterbach = Main.allLocations.get(0).getMeasurements();
-    private ArrayList<Measurement> maintal;
-    private ArrayList<Measurement> rodgau;
+    private ArrayList<Measurement> maintal = Main.allLocations.get(0).getMeasurements();
+    private ArrayList<Measurement> rodgau = Main.allLocations.get(0).getMeasurements();
 
     public Button settingsButton;
     public Label avgArq;
@@ -121,20 +136,38 @@ public class MainController {
     private int day;
 
     private int selectedLocation;
+    private LocalDateTime dateTime;
+    private int selectedDay = 0;
+    private int selectedMonth = 0;
+    private int selectedYear = 0;
+
+    private int selectedDayKelsterbach = 0;
+    private int selectedMonthKelsterbach = 0;
+    private int selectedYearKelsterbach = 0;
+
+    private int selectedDayMaintal = 0;
+    private int selectedMonthMaintal  = 0;
+    private int selectedYearMaintal  = 0;
+
+
+    private int selectedDayRodgau = 0;
+    private int selectedMonthRodgau = 0;
+    private int selectedYearRodgau = 0;
+
+
 
 
     public void selectLocation(int location){
         this.selectedLocation = location;
     }
 
-    public void setTime(String timeString) {
+    public void setTime(String timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
-        this.year = dateTime.getYear();
-        this.month = dateTime.getMonthValue();
-        this.day = dateTime.getDayOfMonth();
+        this.dateTime = LocalDateTime.parse(timestamp, formatter);
+        this.selectedYear = dateTime.getYear();
+        this.selectedMonth = dateTime.getMonthValue();
+        this.selectedDay = dateTime.getDayOfMonth();
     }
-
 
 
     public void switchToHome(ActionEvent event) throws IOException {
@@ -204,22 +237,11 @@ public class MainController {
         }
     }
 
-    public double round(double value, int decimalPlaces) {
-        if (decimalPlaces < 0) throw new IllegalArgumentException();
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
 
-    public static void sortByAscendingTime(List<Measurement> measurements) {
-        measurements.sort(new Comparator<Measurement>() {
-            @Override
-            public int compare(Measurement m1, Measurement m2) {
-                LocalDateTime time1 = m1.getTimestampDate();
-                LocalDateTime time2 = m2.getTimestampDate();
-                return time1.compareTo(time2);
-            }
-        });
+    public void calculateAQI(ArrayList<Measurement>list){
+        for(Measurement m: list){
+            m.calculateAll();
+        }
     }
 
     public int getAQIPM1(Measurement m){
@@ -263,23 +285,12 @@ public class MainController {
     }
 
     public int calculateAvgAQI(List<Measurement> measurements) {
-        int sumPM1 = 0;
-        int sumPM2 = 0;
-        int sumPM10 = 0;
-        int sumCO2 = 0;
-        int count = 0;
+        int size = measurements.size();
+        int sum = 0;
         for (Measurement measurement : measurements) {
-            sumPM1 += getAQIPM1(measurement);
-            sumPM2 += getAQIPM2(measurement);
-            sumPM10 += getAQIPM10(measurement);
-            sumCO2 += getAQIPMCO2(measurement);
-            count++;
+            sum = sum + measurement.getDominantAQI();
         }
-        sumPM1 = sumPM1 / count;
-        sumPM2 = sumPM2 / count;
-        sumPM10 = sumPM10 / count;
-        sumCO2 = sumCO2 / count;
-        return Math.max(Math.max(sumPM1, sumPM2), Math.max(sumPM10, sumCO2));
+        return sum / size;
     }
 
     public void changeButtonColorAvg(int max, Button btn){
@@ -303,44 +314,38 @@ public class MainController {
         }
     }
 
-    public void changeButtonColor(int value, List<Measurement> measurements, Button btn){
-        Measurement m = measurements.get(value);
-        int pm1Index = getAQIPM1(m);
-        int pm10Index = getAQIPM10(m);
-        int co2Index = getAQIPMCO2(m);
-        int max = Math.max(Math.max(pm1Index, pm10Index), co2Index);
-
-        if (max == 1) {
+    public void changeButtonColor(Measurement m, Button btn){
+        if (m.getDominantAQI() == 1) {
             btn.setStyle("-fx-background-color: #0411E7;");
         }
-        if (max == 2) {
+        if (m.getDominantAQI() == 2) {
             btn.setStyle("-fx-background-color: #046AE7;");
         }
-        if (max == 3) {
+        if (m.getDominantAQI() == 3) {
             btn.setStyle("-fx-background-color: #04C9E7;");
         }
-        if (max == 4) {
+        if (m.getDominantAQI() == 4) {
             btn.setStyle("-fx-background-color: #CCB532;");
         }
-        if (max == 5) {
+        if (m.getDominantAQI() == 5) {
             btn.setStyle("-fx-background-color: #E9830E;");
         }
-        if (max == 6) {
+        if (m.getDominantAQI() == 6) {
             btn.setStyle("-fx-background-color: #CE2903;");
         }
 
 
     }
 
-    public void showTooltip(int value, List<Measurement> list, Button btn){
+    public void showTooltip(int value, Measurement m, Button btn){
         Tooltip tooltip = new Tooltip();
         tooltip.setShowDelay(Duration.ZERO);
-        tooltip.setText("Time: " + list.get(value).getTimestamp() + "\n" +
-                "AQI: \n" +
-                "PM1: " + list.get(value).getPm1Level() + "\n" +
-                "PM2.5: " + list.get(value).getPm2Level() + "\n" +
-                "PM10: " + list.get(value).getPm10Level() + "\n" +
-                "CO2: " + list.get(value).getCo2Level() + "\n"
+        tooltip.setText("Time: " + m.getTimestamp() + "\n" +
+                "AQI: " + m.getDominantAQI() + "\n" +
+                "PM1: " + m.getPm1Level() + "\n" +
+                "PM2.5: " + m.getPm2Level() + "\n" +
+                "PM10: " + m.getPm10Level() + "\n" +
+                "CO2: " + m.getCo2Level() + "\n"
 
         );
         tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
@@ -358,14 +363,10 @@ public class MainController {
     }
 
     public String getActualTime(int value, List<Measurement> measurements){
-        Measurement m = measurements.get(value);
+        Measurement m = measurements.get(value-1);
         return m.getTimestamp();
     }
 
-
-    private int selectedDay = 0;
-    private int selectedMonth = 0;
-    private int selectedYear = 0;
 
     public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
         ObservableList<Measurement> obsList = FXCollections.observableArrayList();
@@ -386,90 +387,428 @@ public class MainController {
         return obsList;
     }
 
+    public ArrayList <Measurement> filterListByDate(List<Measurement> measurements, int day, int month, int year) {
+        ArrayList<Measurement> filteredList = new ArrayList<>();
+        for (Measurement measurement : measurements) {
+            setTime(measurement.getTimestamp());
+            if (this.selectedDay == day && this.selectedMonth == month && this.selectedYear == year) {
+                filteredList.add(measurement);
+            }
+        }
+        return filteredList;
+    }
+
+    public ArrayList<LocalDate> findDisablesDays(ArrayList<Measurement> list){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ArrayList<LocalDate> rtr = new ArrayList<>();
+        for (Measurement m : list){
+            LocalDate date = LocalDate.parse(m.getTimestamp(), formatter);
+            System.out.println(date.getYear());
+            System.out.println(date.getMonthValue());
+            rtr.add(LocalDate.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
+        }
+        return rtr;
+    }
+
+    public void setPM1TableColor(){
+        pm1Column.setCellFactory(column -> new TableCell<Measurement, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && item <= 5) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 17, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 6 && item <=10) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 106, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 11 && item <=15) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 201, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 16 && item <=30) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(204, 181, 50, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 31 && item <=50) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(233, 131, 14, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >50){
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(206, 41, 3, 0.5); -fx-text-fill: white;");
+                }
+            }
+        });
+    }
+    public void setPM2TableColor(){
+        pm2Column.setCellFactory(column -> new TableCell<Measurement, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && item <= 9) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 17, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 10 && item <=20) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 106, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 21 && item <=29) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 201, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 30 && item <=49) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(204, 181, 50, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 50 && item <=75) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(233, 131, 14, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >75){
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(206, 41, 3, 0.5); -fx-text-fill: white;");
+                }
+            }
+        });
+    }
+    public void setPM10TableColor(){
+
+        pm10Column.setCellFactory(column -> new TableCell<Measurement, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && item <= 20) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 17, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 21 && item <=30) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 106, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 31 && item <=40) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 201, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 41 && item <=50) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(204, 181, 50, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 51 && item <=100) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(233, 131, 14, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >100){
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(206, 41, 3, 0.5); -fx-text-fill: white;");
+                }
+            }
+        });
+    }
+
+    public void setCO2TableColor(){
+        co2Column.setCellFactory(column -> new TableCell<Measurement, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && item >= 400 &&item <= 650) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 17, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 651 && item <=1500) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 106, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 1501 && item <=2000) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 201, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 2001 && item <=2500) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(204, 181, 50, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >= 2501 && item <=5000) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(233, 131, 14, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item >5000){
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(206, 41, 3, 0.5); -fx-text-fill: white;");
+                }
+            }
+        });
+    }
+
+    public void setAQITableColor(){
+        aqiColumn.setCellFactory(column -> new TableCell<Measurement, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null && item == 1) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 17, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item == 2) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 106, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item == 3) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(4, 201, 231, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item == 4) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(204, 181, 50, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item == 5) {
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(233, 131, 14, 0.5); -fx-text-fill: white;");
+                }
+                if (item != null && item == 6){
+                    setText(item.toString());
+                    setStyle("-fx-background-color: rgba(206, 41, 3, 0.5); -fx-text-fill: white;");
+                }
+            }
+        });
+    }
+
+    public void clearTableColumns() {
+        idColumn.setCellValueFactory(null);
+        co2Column.setCellValueFactory(null);
+        temperatureColumn.setCellValueFactory(null);
+        timeColumn.setCellValueFactory(null);
+        pm10Column.setCellValueFactory(null);
+        pm1Column.setCellValueFactory(null);
+        pm2Column.setCellValueFactory(null);
+        aqiColumn.setCellValueFactory(null);
+    }
+
+    public Measurement getMeasurementFromList(ArrayList<Measurement> list,int index){
+        return list.get(index);
+    }
 
     @FXML
     public void initialize(){
-
-
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(formatter);
         localTime.setText("Current Time: \n" + formattedTime);
-
-
         choiceBox.getItems().add(0, "Kelsterbach");
         choiceBox.getItems().add(1, "Maintal");
         choiceBox.getItems().add(0, "Rodgau");
 
+        calculateAQI(kelsterbach);
+        calculateAQI(maintal);
+        calculateAQI(rodgau);
+        changeButtonColor(getLastMeasurement(kelsterbach), kelsterbachButton);
+        changeButtonColor(getLastMeasurement(maintal), maintalButton);
+        changeButtonColor(getLastMeasurement(rodgau), rodgauButton);
+        lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(maintal).getDominantAQI()));
+        actualDateMaintal.setText(getLastMeasurement(maintal).getTimestamp());
+        List<LocalDate> disabledDatesKelsterbach = findDisablesDays(kelsterbach);
+        List<LocalDate> disabledDatesRodgau = findDisablesDays(rodgau);
+        List<LocalDate> disabledDatesMaintal = findDisablesDays(maintal);
+
         datepicker.setDisable(true);
-
-        slider.setDisable(false);
-
+        datepicker.setValue(currentTime.toLocalDate());
         ObservableList<Measurement> observableList = getAllList(kelsterbach);
-
-
-
-        actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
-        showTooltip(observableList.size()-1, kelsterbach, kelsterbachButton);
         setTime(getLastMeasurement(kelsterbach).getTimestamp());
+        ArrayList<Measurement> filteredListMaintal = filterListByDate(maintal, selectedDay, selectedMonth, selectedYear);
+        avgAQIMaintal.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredListMaintal)));
+
+
+        //actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
+        //showTooltip(observableList.size()-1, kelsterbach, kelsterbachButton);
+
+
+
+        choiceBox.setOnAction(event -> {
+            if(choiceBox.getValue().equals("Kelsterbach")){
+                datepicker.setDisable(false);
+                tableView.getItems().clear();
+                selectedLocation = 0;
+
+            }
+            if(choiceBox.getValue().equals("Maintal")){
+                datepicker.setDisable(false);
+                tableView.getItems().clear();
+                selectedLocation = 1;
+            }
+
+            if(choiceBox.getValue().equals("Rodgau")){
+                datepicker.setDisable(false);
+                tableView.getItems().clear();
+                selectedLocation = 2;
+            }
+        });
+
+        setPM1TableColor();
+        setPM2TableColor();
+        setPM10TableColor();
+        setCO2TableColor();
+        setAQITableColor();
+
+        idColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("id"));
         co2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("co2Level"));
         temperatureColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("temperature"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<Measurement, String>("timestamp"));
         pm10Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm10Level"));
         pm1Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm1Level"));
         pm2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm2Level"));
-
-
-
-
-        choiceBox.setOnAction(event -> {
-
-            if(choiceBox.getValue().equals("Kelsterbach")){
-                datepicker.setDisable(false);
-                selectedLocation = 0;
-
-            }
-            if(choiceBox.getValue().equals("Maintal")){
-                tableView.getItems().clear();
-                selectedLocation = 1;
-            }
-
-            if(choiceBox.getValue().equals("Rodgau")){
-                tableView.getItems().clear();
-                selectedLocation = 2;
-            }
-        });
+        aqiColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("dominantAQI"));
 
         datepicker.setOnAction(event -> {
-            LocalDate selectedDate = datepicker.getValue();
-            selectedMonth = selectedDate.getMonthValue();
-            selectedDay = selectedDate.getDayOfMonth();
-            selectedYear = selectedDate.getYear();
-
             if(selectedLocation == 0){
-                ObservableList<Measurement> filteredList = getListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
-                setTime(getLastMeasurement(kelsterbach).getTimestamp());
-                slider.setValue(filteredList.size()-1);
-                slider.setMax(filteredList.size()-1);
-                tableView.setItems(filteredList);
+                tableView.getItems().clear();
+                LocalDate selectedDate = datepicker.getValue();
+                selectedMonthKelsterbach = selectedDate.getMonthValue();
+                selectedDayKelsterbach = selectedDate.getDayOfMonth();
+                selectedYearKelsterbach = selectedDate.getYear();
+
+
+                ObservableList<Measurement> measurementList = convertList(filterListByDate(kelsterbach, selectedDayKelsterbach, selectedMonthKelsterbach, selectedYearKelsterbach));
+                slider.setMin(0);
+                slider.setMax(measurementList.size() - 1);
+                slider.setBlockIncrement(1);
+                slider.setMinorTickCount(0);
+                slider.setMajorTickUnit(1);
+                slider.setSnapToTicks(true);
+                slider.setDisable(false);
+                slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                    int index = newValue.intValue();
+                    if (index >= 0 && index < measurementList.size()) {
+                        Measurement measurement = measurementList.get(index);
+                        showTooltip(index, measurement, kelsterbachButton);
+                        changeButtonColor(measurement, kelsterbachButton);
+                    }
+                });
+                //slider.valueProperty().addListener(new ChangeListener<Number>() {
+                //
+                //    @Override
+                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
+                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
+                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
+                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
+                //    }
+                //});
+                tableView.getItems().addAll(measurementList);
+            }
+
+            if(selectedLocation == 1){
+                LocalDate selectedDate = datepicker.getValue();
+                selectedMonthMaintal= selectedDate.getMonthValue();
+                selectedDayMaintal = selectedDate.getDayOfMonth();
+                selectedYearMaintal = selectedDate.getYear();
+                ArrayList<Measurement> test = filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal);
+                ObservableList<Measurement> measurementList = convertList(filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal));
+                slider.setMin(0);
+                slider.setMax(measurementList.size() - 1);
+                slider.setBlockIncrement(1);
+                slider.setMinorTickCount(0);
+                slider.setMajorTickUnit(1);
+                slider.setSnapToTicks(true);
+                slider.setDisable(false);
+                actualDateMaintal.setText(getLastMeasurement(test).getTimestamp());
+                lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(test).getDominantAQI()));
+                avgAQIMaintal.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(test)));
+                slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                    int index = newValue.intValue();
+                    if (index >= 0 && index < measurementList.size()) {
+                        Measurement measurement = measurementList.get(index);
+                        showTooltip(index, measurement, maintalButton);
+                        changeButtonColor(measurement, maintalButton);
+                        actualDateMaintal.setText(measurement.getTimestamp());
+                        lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(measurement.getDominantAQI()));
+                    }
+                });
+                //slider.valueProperty().addListener(new ChangeListener<Number>() {
+                //
+                //    @Override
+                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
+                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
+                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
+                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
+                //    }
+                //});
+                tableView.getItems().addAll(measurementList);
+            }
+
+            if(selectedLocation == 2){
+                LocalDate selectedDate = datepicker.getValue();
+                selectedMonthRodgau = selectedDate.getMonthValue();
+                selectedDayRodgau = selectedDate.getDayOfMonth();
+                selectedYearRodgau = selectedDate.getYear();
+
+                ObservableList<Measurement> measurementList = convertList(filterListByDate(rodgau, selectedDayRodgau, selectedMonthRodgau, selectedYearRodgau));
+                slider.setMin(0);
+                slider.setMax(measurementList.size() - 1);
+                slider.setBlockIncrement(1);
+                slider.setMinorTickCount(0);
+                slider.setMajorTickUnit(1);
+                slider.setSnapToTicks(true);
+                slider.setDisable(false);
+                slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+                    int index = newValue.intValue();
+                    if (index >= 0 && index < measurementList.size()) {
+                        Measurement measurement = measurementList.get(index);
+                        showTooltip(index, measurement, rodgauButton);
+                        changeButtonColor(measurement, rodgauButton);
+                    }
+                });
+                //slider.valueProperty().addListener(new ChangeListener<Number>() {
+                //
+                //    @Override
+                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
+                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
+                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
+                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
+                //    }
+                //});
+                tableView.getItems().addAll(measurementList);
             }
 
         });
-
-        ObservableList<Measurement> filteredList = getListByDate(kelsterbach, day, month, year);
-
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-
+        datepicker.setDayCellFactory(picker -> new DateCell() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (selectedLocation == 0) {
+                    if (date != null && !disabledDatesKelsterbach.contains(date)) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    } else {
+                        setDisable(false);
+                        setStyle("");
+                    }
+                }
+                if (selectedLocation == 1) {
+                    if (date != null && !disabledDatesMaintal.contains(date)) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    } else {
+                        setDisable(false);
+                        setStyle("");
+                    }
+                }
+                if (selectedLocation == 2) {
+                    if (date != null && !disabledDatesRodgau.contains(date)) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    } else {
+                        setDisable(false);
+                        setStyle("");
+                    }
+                }
 
-                showTooltip(newValue.intValue(), filteredList, kelsterbachButton);
-                changeButtonColor(newValue.intValue(), filteredList, kelsterbachButton);
-                actualDate.setText(getActualTime(newValue.intValue(), filteredList));
-                System.out.println(filteredList.size());
             }
         });
+
+
     }
 
 }
