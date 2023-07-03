@@ -148,9 +148,9 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Line endX="100.0" endY="-53.0" layoutX="310.0" layoutY="677.0" startX="101.0" startY="204.0" />
-                  <Line endX="100.0" endY="-53.0" layoutX="712.0" layoutY="668.0" startX="100.0" startY="210.0" />
-                  <VBox layoutX="421.0" layoutY="836.0" prefHeight="34.0" prefWidth="391.0" style="-fx-background-color: #1E1F22;">
+                  <Line endX="100.0" endY="-53.0" layoutX="307.0" layoutY="677.0" startX="101.0" startY="204.0" />
+                  <Line endX="100.0" endY="-53.0" layoutX="702.0" layoutY="674.0" startX="100.0" startY="210.0" />
+                  <VBox layoutX="421.0" layoutY="836.0" prefHeight="45.0" prefWidth="366.0" style="-fx-background-color: #1E1F22;">
                      <children>
                         <Label fx:id="actualDateRodgau" alignment="CENTER" prefHeight="100.0" prefWidth="393.0" text="0" textFill="#41bc5a">
                            <font>
@@ -162,7 +162,7 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox layoutX="812.0" layoutY="834.0" prefHeight="34.0" prefWidth="391.0" style="-fx-background-color: #1E1F22;">
+                  <VBox layoutX="815.0" layoutY="836.0" prefHeight="45.0" prefWidth="366.0" style="-fx-background-color: #1E1F22;">
                      <children>
                         <Label fx:id="actualDateKelsterbach" alignment="CENTER" prefHeight="100.0" prefWidth="393.0" text="0" textFill="#41bc5a">
                            <font>
@@ -214,7 +214,7 @@
                         <Font size="27.0" />
                      </font>
                   </Label>
-                  <Label layoutX="883.0" layoutY="788.0" prefHeight="39.0" prefWidth="249.0" text="Measurement Time" textFill="#4fff67">
+                  <Label layoutX="889.0" layoutY="788.0" prefHeight="39.0" prefWidth="249.0" text="Measurement Time" textFill="#4fff67">
                      <font>
                         <Font size="27.0" />
                      </font>
