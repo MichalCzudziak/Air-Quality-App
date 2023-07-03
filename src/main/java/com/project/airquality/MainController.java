@@ -31,13 +31,34 @@ import static java.lang.Math.round;
 public class MainController {
 
     @FXML
-    private Label lastAQIMaintal;
+    private Label avgAQIKelsterbach;
 
     @FXML
     private Label avgAQIMaintal;
 
     @FXML
+    private Label avgAQIRodgau;
+
+    @FXML
+    private Label lastAQIMaintal;
+
+
+    @FXML
+    private Label lastAQIKelsterbach;
+
+
+    @FXML
+    private Label lastAQIRodgau;
+
+
+    @FXML
+    private Label actualDateKelsterbach;
+
+    @FXML
     private Label actualDateMaintal;
+
+    @FXML
+    private Label actualDateRodgau;
 
     @FXML
     private ImageView infoButton;
@@ -137,6 +158,9 @@ public class MainController {
 
     private int selectedLocation;
     private LocalDateTime dateTime;
+    private LocalDateTime dateTimeKelsterbach;
+    private LocalDateTime dateTimeMaintal;
+    private LocalDateTime dateTimeRodgau;
     private int selectedDay = 0;
     private int selectedMonth = 0;
     private int selectedYear = 0;
@@ -160,13 +184,28 @@ public class MainController {
     public void selectLocation(int location){
         this.selectedLocation = location;
     }
-
     public void setTime(String timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.dateTime = LocalDateTime.parse(timestamp, formatter);
-        this.selectedYear = dateTime.getYear();
-        this.selectedMonth = dateTime.getMonthValue();
         this.selectedDay = dateTime.getDayOfMonth();
+        this.selectedMonth = dateTime.getMonthValue();
+        this.selectedYear = dateTime.getYear();
+    }
+
+    public void setTime(String timestampKelsterbach, String timestampMaintal, String timestampRodgau) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.dateTimeKelsterbach = LocalDateTime.parse(timestampKelsterbach, formatter);
+        this.selectedYearKelsterbach = dateTimeKelsterbach.getYear();
+        this.selectedMonthKelsterbach = dateTimeKelsterbach.getMonthValue();
+        this.selectedDayKelsterbach = dateTimeKelsterbach.getDayOfMonth();
+        this.dateTimeMaintal = LocalDateTime.parse(timestampMaintal, formatter);
+        this.selectedYearMaintal = dateTimeMaintal.getYear();
+        this.selectedMonthMaintal = dateTimeMaintal.getMonthValue();
+        this.selectedDayMaintal = dateTimeMaintal.getDayOfMonth();
+        this.dateTimeRodgau = LocalDateTime.parse(timestampRodgau, formatter);
+        this.selectedYearRodgau = dateTimeRodgau.getYear();
+        this.selectedMonthRodgau = dateTimeRodgau.getMonthValue();
+        this.selectedDayRodgau = dateTimeRodgau.getDayOfMonth();
     }
 
 
@@ -352,7 +391,7 @@ public class MainController {
         Tooltip.install(btn, tooltip);
     }
 
-    public ObservableList<Measurement> convertList(List<Measurement> measurements){
+    public ObservableList<Measurement> convertList(ArrayList<Measurement> measurements){
         ObservableList<Measurement> obsList = FXCollections.observableArrayList();
         obsList.addAll(measurements);
         return obsList;
@@ -371,7 +410,7 @@ public class MainController {
     public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
         ObservableList<Measurement> obsList = FXCollections.observableArrayList();
         for (Measurement measurement : measurements) {
-            setTime(measurement.getTimestamp());
+            //setTime(measurement.getTimestamp());
             if (this.day == day && this.month == month && this.year == year) {
                 obsList.add(measurement);
             }
@@ -403,8 +442,6 @@ public class MainController {
         ArrayList<LocalDate> rtr = new ArrayList<>();
         for (Measurement m : list){
             LocalDate date = LocalDate.parse(m.getTimestamp(), formatter);
-            System.out.println(date.getYear());
-            System.out.println(date.getMonthValue());
             rtr.add(LocalDate.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
         }
         return rtr;
@@ -585,6 +622,16 @@ public class MainController {
         aqiColumn.setCellValueFactory(null);
     }
 
+    public void setSlider(ArrayList<Measurement> list){
+        slider.setMin(0);
+        slider.setValue(list.size()-1);
+        slider.setMax(list.size()-1);
+        slider.setBlockIncrement(1);
+        slider.setMinorTickCount(0);
+        slider.setMajorTickUnit(1);
+        slider.setSnapToTicks(true);
+        slider.setDisable(false);
+    }
     public Measurement getMeasurementFromList(ArrayList<Measurement> list,int index){
         return list.get(index);
     }
@@ -595,34 +642,49 @@ public class MainController {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(formatter);
         localTime.setText("Current Time: \n" + formattedTime);
+
         choiceBox.getItems().add(0, "Kelsterbach");
         choiceBox.getItems().add(1, "Maintal");
-        choiceBox.getItems().add(0, "Rodgau");
+        choiceBox.getItems().add(2, "Rodgau");
+        slider.setDisable(true);
 
         calculateAQI(kelsterbach);
         calculateAQI(maintal);
         calculateAQI(rodgau);
+
         changeButtonColor(getLastMeasurement(kelsterbach), kelsterbachButton);
         changeButtonColor(getLastMeasurement(maintal), maintalButton);
         changeButtonColor(getLastMeasurement(rodgau), rodgauButton);
+
+        lastAQIKelsterbach.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(kelsterbach).getDominantAQI()));
+        actualDateKelsterbach.setText(getLastMeasurement(kelsterbach).getTimestamp());
         lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(maintal).getDominantAQI()));
         actualDateMaintal.setText(getLastMeasurement(maintal).getTimestamp());
+        lastAQIRodgau.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(rodgau).getDominantAQI()));
+        actualDateRodgau.setText(getLastMeasurement(rodgau).getTimestamp());
+
         List<LocalDate> disabledDatesKelsterbach = findDisablesDays(kelsterbach);
         List<LocalDate> disabledDatesRodgau = findDisablesDays(rodgau);
         List<LocalDate> disabledDatesMaintal = findDisablesDays(maintal);
 
+
         datepicker.setDisable(true);
-        datepicker.setValue(currentTime.toLocalDate());
-        ObservableList<Measurement> observableList = getAllList(kelsterbach);
-        setTime(getLastMeasurement(kelsterbach).getTimestamp());
-        ArrayList<Measurement> filteredListMaintal = filterListByDate(maintal, selectedDay, selectedMonth, selectedYear);
+        datepicker.setValue(null);
+
+        setTime(getLastMeasurement(kelsterbach).getTimestamp(), getLastMeasurement(maintal).getTimestamp(), getLastMeasurement(rodgau).getTimestamp());
+
+        ArrayList<Measurement> filteredListKelsterbach = filterListByDate(kelsterbach, selectedDayKelsterbach, selectedMonthKelsterbach, selectedYearKelsterbach);
+        ArrayList<Measurement> filteredListMaintal = filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal);
+        ArrayList<Measurement> filteredListRodgau = filterListByDate(rodgau, selectedDayRodgau, selectedMonthRodgau, selectedYearRodgau);
+
+        avgAQIKelsterbach.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredListKelsterbach)));
         avgAQIMaintal.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredListMaintal)));
+        avgAQIRodgau.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredListRodgau)));
 
 
-        //actualDate.setText(getLastMeasurement(kelsterbach).getTimestamp());
-        //showTooltip(observableList.size()-1, kelsterbach, kelsterbachButton);
-
-
+        showTooltip(filteredListKelsterbach.size()-1, getLastMeasurement(filteredListKelsterbach), kelsterbachButton);
+        showTooltip(filteredListMaintal.size()-1, getLastMeasurement(filteredListMaintal), maintalButton);
+        showTooltip(filteredListRodgau.size()-1, getLastMeasurement(filteredListRodgau), rodgauButton);
 
         choiceBox.setOnAction(event -> {
             if(choiceBox.getValue().equals("Kelsterbach")){
@@ -659,117 +721,105 @@ public class MainController {
         pm2Column.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("pm2Level"));
         aqiColumn.setCellValueFactory(new PropertyValueFactory<Measurement, Integer>("dominantAQI"));
 
+
         datepicker.setOnAction(event -> {
             if(selectedLocation == 0){
-                tableView.getItems().clear();
+                ObservableList<Measurement> lastList = tableView.getItems();
+
                 LocalDate selectedDate = datepicker.getValue();
-                selectedMonthKelsterbach = selectedDate.getMonthValue();
+                selectedMonthKelsterbach= selectedDate.getMonthValue();
                 selectedDayKelsterbach = selectedDate.getDayOfMonth();
                 selectedYearKelsterbach = selectedDate.getYear();
+                ArrayList<Measurement> filteredList = filterListByDate(kelsterbach, selectedDayKelsterbach, selectedMonthKelsterbach, selectedYearKelsterbach);
+                ObservableList<Measurement> observableList = convertList(filteredList);
 
+                setSlider(filteredList);
+                actualDateKelsterbach.setText(getLastMeasurement(filteredList).getTimestamp());
+                lastAQIKelsterbach.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(filteredList).getDominantAQI()));
+                avgAQIKelsterbach.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredList)));
 
-                ObservableList<Measurement> measurementList = convertList(filterListByDate(kelsterbach, selectedDayKelsterbach, selectedMonthKelsterbach, selectedYearKelsterbach));
-                slider.setMin(0);
-                slider.setMax(measurementList.size() - 1);
-                slider.setBlockIncrement(1);
-                slider.setMinorTickCount(0);
-                slider.setMajorTickUnit(1);
-                slider.setSnapToTicks(true);
-                slider.setDisable(false);
+                showTooltip(filteredList.size()-1, getLastMeasurement(filteredList), kelsterbachButton);
+                changeButtonColor(getLastMeasurement(filteredList), kelsterbachButton);
+
                 slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     int index = newValue.intValue();
-                    if (index >= 0 && index < measurementList.size()) {
-                        Measurement measurement = measurementList.get(index);
+                    if (index >= 0 && index < observableList.size() && selectedLocation == 0) {
+                        Measurement measurement = observableList.get(index);
                         showTooltip(index, measurement, kelsterbachButton);
                         changeButtonColor(measurement, kelsterbachButton);
+                        actualDateKelsterbach.setText(measurement.getTimestamp());
+                        lastAQIKelsterbach.setText("Last Measured AQI: " + Integer.toString(measurement.getDominantAQI()));
                     }
                 });
-                //slider.valueProperty().addListener(new ChangeListener<Number>() {
-                //
-                //    @Override
-                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
-                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
-                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
-                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
-                //    }
-                //});
-                tableView.getItems().addAll(measurementList);
+                tableView.getItems().removeAll(lastList);
+                tableView.refresh();
+                tableView.getItems().addAll(observableList);
             }
 
             if(selectedLocation == 1){
+                ObservableList<Measurement> lastList = tableView.getItems();
+
                 LocalDate selectedDate = datepicker.getValue();
                 selectedMonthMaintal= selectedDate.getMonthValue();
                 selectedDayMaintal = selectedDate.getDayOfMonth();
                 selectedYearMaintal = selectedDate.getYear();
-                ArrayList<Measurement> test = filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal);
-                ObservableList<Measurement> measurementList = convertList(filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal));
-                slider.setMin(0);
-                slider.setMax(measurementList.size() - 1);
-                slider.setBlockIncrement(1);
-                slider.setMinorTickCount(0);
-                slider.setMajorTickUnit(1);
-                slider.setSnapToTicks(true);
-                slider.setDisable(false);
-                actualDateMaintal.setText(getLastMeasurement(test).getTimestamp());
-                lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(test).getDominantAQI()));
-                avgAQIMaintal.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(test)));
+                ArrayList<Measurement> filteredList = filterListByDate(maintal, selectedDayMaintal, selectedMonthMaintal, selectedYearMaintal);
+                ObservableList<Measurement> observableList = convertList(filteredList);
+
+                setSlider(filteredList);
+                actualDateMaintal.setText(getLastMeasurement(filteredList).getTimestamp());
+                lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(filteredList).getDominantAQI()));
+                avgAQIMaintal.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredList)));
+
+                showTooltip(filteredList.size()-1, getLastMeasurement(filteredList), maintalButton);
+                changeButtonColor(getLastMeasurement(filteredList), maintalButton);
+
                 slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     int index = newValue.intValue();
-                    if (index >= 0 && index < measurementList.size()) {
-                        Measurement measurement = measurementList.get(index);
+                    if (index >= 0 && index < observableList.size() && selectedLocation == 1) {
+                        Measurement measurement = observableList.get(index);
                         showTooltip(index, measurement, maintalButton);
                         changeButtonColor(measurement, maintalButton);
                         actualDateMaintal.setText(measurement.getTimestamp());
                         lastAQIMaintal.setText("Last Measured AQI: " + Integer.toString(measurement.getDominantAQI()));
                     }
                 });
-                //slider.valueProperty().addListener(new ChangeListener<Number>() {
-                //
-                //    @Override
-                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
-                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
-                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
-                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
-                //    }
-                //});
-                tableView.getItems().addAll(measurementList);
+                tableView.getItems().removeAll(lastList);
+                tableView.refresh();
+                tableView.getItems().addAll(observableList);
             }
 
             if(selectedLocation == 2){
+                ObservableList<Measurement> lastList = tableView.getItems();
+
                 LocalDate selectedDate = datepicker.getValue();
-                selectedMonthRodgau = selectedDate.getMonthValue();
+                selectedMonthRodgau= selectedDate.getMonthValue();
                 selectedDayRodgau = selectedDate.getDayOfMonth();
                 selectedYearRodgau = selectedDate.getYear();
+                ArrayList<Measurement> filteredList = filterListByDate(rodgau, selectedDayRodgau, selectedMonthRodgau, selectedYearRodgau);
+                ObservableList<Measurement> observableList = convertList(filteredList);
 
-                ObservableList<Measurement> measurementList = convertList(filterListByDate(rodgau, selectedDayRodgau, selectedMonthRodgau, selectedYearRodgau));
-                slider.setMin(0);
-                slider.setMax(measurementList.size() - 1);
-                slider.setBlockIncrement(1);
-                slider.setMinorTickCount(0);
-                slider.setMajorTickUnit(1);
-                slider.setSnapToTicks(true);
-                slider.setDisable(false);
+                setSlider(filteredList);
+                actualDateRodgau.setText(getLastMeasurement(filteredList).getTimestamp());
+                lastAQIRodgau.setText("Last Measured AQI: " + Integer.toString(getLastMeasurement(filteredList).getDominantAQI()));
+                avgAQIRodgau.setText("Day Average AQI: " + Integer.toString(calculateAvgAQI(filteredList)));
+
+                showTooltip(filteredList.size()-1, getLastMeasurement(filteredList), rodgauButton);
+                changeButtonColor(getLastMeasurement(filteredList), rodgauButton);
+
                 slider.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                     int index = newValue.intValue();
-                    if (index >= 0 && index < measurementList.size()) {
-                        Measurement measurement = measurementList.get(index);
+                    if (index >= 0 && index < observableList.size() && selectedLocation == 2) {
+                        Measurement measurement = observableList.get(index);
                         showTooltip(index, measurement, rodgauButton);
                         changeButtonColor(measurement, rodgauButton);
+                        actualDateRodgau.setText(measurement.getTimestamp());
+                        lastAQIRodgau.setText("Last Measured AQI: " + Integer.toString(measurement.getDominantAQI()));
                     }
                 });
-                //slider.valueProperty().addListener(new ChangeListener<Number>() {
-                //
-                //    @Override
-                //    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                //        System.out.println(getMeasurementFromList(test, newValue.intValue()).getId());
-                //        //showTooltip(newValue.intValue(), test, kelsterbachButton);
-                //        //changeButtonColor(newValue.intValue(), test, kelsterbachButton);
-                //        //actualDate.setText(getActualTime(newValue.intValue(), filteredList));
-                //    }
-                //});
-                tableView.getItems().addAll(measurementList);
+                tableView.getItems().removeAll(lastList);
+                tableView.refresh();
+                tableView.getItems().addAll(observableList);
             }
 
         });
