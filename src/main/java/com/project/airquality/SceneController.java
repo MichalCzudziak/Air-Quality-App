@@ -986,8 +986,6 @@ public class SceneController {
         ArrayList<LocalDate> rtr = new ArrayList<>();
         for (Measurement m : list){
             LocalDate date = LocalDate.parse(m.getTimestamp(), formatter);
-            System.out.println(date.getYear());
-            System.out.println(date.getMonthValue());
             rtr.add(LocalDate.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
         }
         return rtr;
