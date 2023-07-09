@@ -98,7 +98,7 @@ public class SceneControllerMaintal {
          */
 
         private ArrayList<Location> list = Main.allLocations;
-        private ArrayList<Measurement> kelsterbach = list.get(0).getMeasurements();
+        private ArrayList<Measurement> maintal = list.get(2).getMeasurements();
         private Map<String, Integer> tempList = new HashMap<>();
         private Map<String, Integer> co2List = new HashMap<>();
         private Map<String, Integer> pm1List = new HashMap<>();
@@ -628,7 +628,7 @@ public class SceneControllerMaintal {
         @FXML
         void showPM1Scale(ActionEvent event) {
             if(scalePM1Checkbox.isSelected()){
-                setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM1");
+                setBoundaries((filterListByDate(maintal, selectedDay, selectedMonth, selectedYear)), "PM1");
                 blockCheckboxes();
             }
             if (!scalePM1Checkbox.isSelected()){
@@ -639,7 +639,7 @@ public class SceneControllerMaintal {
         @FXML
         void showPM2Scale(ActionEvent event) {
             if(scalePM2Checkbox.isSelected()){
-                setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM2");
+                setBoundaries((filterListByDate(maintal, selectedDay, selectedMonth, selectedYear)), "PM2");
                 blockCheckboxes();
             }
             if (!scalePM2Checkbox.isSelected()){
@@ -651,7 +651,7 @@ public class SceneControllerMaintal {
         @FXML
         void showPM10Scale(ActionEvent event) {
             if(scalePM10Checkbox.isSelected()){
-                setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "PM10");
+                setBoundaries((filterListByDate(maintal, selectedDay, selectedMonth, selectedYear)), "PM10");
                 blockCheckboxes();
             }
             if (!scalePM10Checkbox.isSelected()){
@@ -663,7 +663,7 @@ public class SceneControllerMaintal {
         @FXML
         void showCO2Scale(ActionEvent event) {
             if(scaleCO2Checkbox.isSelected()){
-                setBoundaries((filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear)), "CO2");
+                setBoundaries((filterListByDate(maintal, selectedDay, selectedMonth, selectedYear)), "CO2");
                 blockCheckboxes();
             }
             if (!scaleCO2Checkbox.isSelected()){
@@ -997,10 +997,10 @@ public class SceneControllerMaintal {
 
         @FXML
         public void initialize() {
-            initializeTime(kelsterbach);
-            setLabels(kelsterbach);
-            List<LocalDate> disabledDates = findDisablesDays(kelsterbach);
-            addMeasurementsToChart(filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear));
+            initializeTime(maintal);
+            setLabels(maintal);
+            List<LocalDate> disabledDates = findDisablesDays(maintal);
+            addMeasurementsToChart(filterListByDate(maintal, selectedDay, selectedMonth, selectedYear));
             checkSize();
             datepicker.setOnAction(event -> {
                 resetBoundaries();
@@ -1008,7 +1008,7 @@ public class SceneControllerMaintal {
                 this.selectedMonth = selectedDate.getMonthValue();
                 this.selectedDay = selectedDate.getDayOfMonth();
                 this.selectedYear = selectedDate.getYear();
-                ArrayList<Measurement> filteredList = filterListByDate(kelsterbach, selectedDay, selectedMonth, selectedYear);
+                ArrayList<Measurement> filteredList = filterListByDate(maintal, selectedDay, selectedMonth, selectedYear);
                 addMeasurementsToChart(filteredList);
                 initializeTime(filteredList);
                 checkSize();
