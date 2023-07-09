@@ -144,7 +144,7 @@ public class MainController {
 
     private ArrayList<Measurement> kelsterbach = Main.allLocations.get(0).getMeasurements();
     private ArrayList<Measurement> maintal = Main.allLocations.get(0).getMeasurements();
-    private ArrayList<Measurement> rodgau = Main.allLocations.get(0).getMeasurements();
+    private ArrayList<Measurement> rodgau = Main.allLocations.get(1).getMeasurements();
 
     public Button settingsButton;
     public Label avgArq;

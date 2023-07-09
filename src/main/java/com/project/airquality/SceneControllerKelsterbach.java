@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class SceneController {
+public class SceneControllerKelsterbach {
 
     /**
      *   Variables which are needed globally
@@ -1013,6 +1013,7 @@ public class SceneController {
             setLabels(filteredList);
             this.selectedCheckboxes = 0;
         });
+
         datepicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {

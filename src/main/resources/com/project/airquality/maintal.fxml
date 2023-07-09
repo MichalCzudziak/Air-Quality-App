@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.airquality.SceneControllerMaintal">
     <children>
         <VBox prefHeight="900.0" prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -27,16 +27,16 @@
                         <Font name="Nirmala UI" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="325.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
+                <Button layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToKelsterbach" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Kelsterbach" textFill="#dfe1e5">
                     <font>
                         <Font name="Nirmala UI" size="30.0" />
                     </font>
                 </Button>
-                <Button layoutX="10.0" layoutY="220.0" mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Maintal" textFill="#dfe1e5">
-                    <font>
-                        <Font name="Nirmala UI" size="30.0" />
-                    </font>
-                </Button>
+            <Button mnemonicParsing="false" onAction="#switchToMaintal" prefHeight="105.0" prefWidth="300.0" style="-fx-background-color: #202332;" styleClass="btn" text="Maintal" textFill="#dfe1e5">
+               <font>
+                  <Font name="Nirmala UI" size="30.0" />
+               </font>
+            </Button>
                 <Button layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#switchToRodgau" prefHeight="105.0" prefWidth="300.0" styleClass="btn" text="Rodgau" textFill="#dfe1e5">
                     <font>
                         <Font name="Nirmala UI" size="30.0" />
@@ -74,12 +74,12 @@
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
                         </RadioButton>
-                        <RadioButton fx:id="co2Checkbox" disable="true" layoutX="28.0" layoutY="685.0" mnemonicParsing="false" onAction="#showCO2" text="CO2" textFill="#dfe1e5">
+                        <RadioButton fx:id="co2Checkbox" disable="true" layoutX="28.0" layoutY="720.0" mnemonicParsing="false" onAction="#showCO2" text="CO2" textFill="#dfe1e5">
                             <font>
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
                         </RadioButton>
-                        <RadioButton fx:id="pm1Checkbox" disable="true" layoutX="28.0" layoutY="755.0" mnemonicParsing="false" onAction="#showPM1" prefHeight="0.0" prefWidth="126.0" text="PM 1.0" textFill="#dfe1e5">
+                        <RadioButton fx:id="pm1Checkbox" disable="true" layoutX="28.0" layoutY="755.0" mnemonicParsing="false" onAction="#showPM1" prefHeight="0.0" prefWidth="126.0" text="PM 1" textFill="#dfe1e5">
                             <font>
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
@@ -94,7 +94,7 @@
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
                         </RadioButton>
-                        <RadioButton fx:id="brighCheckbox" disable="true" layoutX="28.0" layoutY="720.0" mnemonicParsing="false" onAction="#showBrightness" prefHeight="30.0" prefWidth="140.0" text="Brightness" textFill="#dfe1e5">
+                        <RadioButton fx:id="brighCheckbox" disable="true" layoutX="28.0" layoutY="685.0" mnemonicParsing="false" onAction="#showBrightness" prefHeight="30.0" prefWidth="140.0" text="Brightness" textFill="#dfe1e5">
                             <font>
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
@@ -236,7 +236,7 @@
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
                         </RadioButton>
-                        <RadioButton fx:id="pm10Checkbox" disable="true" layoutX="28.0" layoutY="825.0" mnemonicParsing="false" onAction="#showPM10" prefHeight="0.0" prefWidth="126.0" text="PM 10.0" textFill="#dfe1e5">
+                        <RadioButton fx:id="pm10Checkbox" disable="true" layoutX="28.0" layoutY="825.0" mnemonicParsing="false" onAction="#showPM10" prefHeight="0.0" prefWidth="126.0" text="PM 10" textFill="#dfe1e5">
                             <font>
                                 <Font name="Nirmala UI" size="20.0" />
                             </font>
@@ -287,7 +287,7 @@
                                 </Label>
                             </children>
                         </VBox>
-                        <Label layoutX="980.0" layoutY="854.0" prefHeight="27.0" prefWidth="186.0" text="         Selected Time" textFill="#dfe1e5">
+                        <Label layoutX="980.0" layoutY="854.0" prefHeight="27.0" prefWidth="186.0" text="Measurement Time" textFill="#dfe1e5">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -303,6 +303,10 @@
                             </font>
                         </Label>
                         <DatePicker fx:id="datepicker" layoutX="1118.0" layoutY="10.0" />
+                        <RadioButton fx:id="scalePM1Checkbox" disable="true" layoutX="137.0" layoutY="762.0" mnemonicParsing="false" onAction="#showPM1Scale" text="Scale" textFill="WHITE" />
+                        <RadioButton fx:id="scalePM2Checkbox" disable="true" layoutX="137.0" layoutY="797.0" mnemonicParsing="false" onAction="#showPM2Scale" text="Scale" textFill="WHITE" />
+                        <RadioButton fx:id="scalePM10Checkbox" disable="true" layoutX="137.0" layoutY="832.0" mnemonicParsing="false" onAction="#showPM10Scale" text="Scale" textFill="WHITE" />
+                        <RadioButton fx:id="scaleCO2Checkbox" disable="true" layoutX="137.0" layoutY="726.0" mnemonicParsing="false" onAction="#showCO2Scale" text="Scale" textFill="WHITE" />
                     </children></Pane>
             </children>
         </VBox>
