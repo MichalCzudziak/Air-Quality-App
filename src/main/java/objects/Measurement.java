@@ -165,6 +165,10 @@ public class Measurement {
         this.dominantAQI = dominantAQI;
     }
 
+    /**
+     *   calling the functions to calculate the AQI
+     */
+
     public void calculateAll()
     {
         calculatePM2AQI();
@@ -173,6 +177,9 @@ public class Measurement {
         calculateCO2AQI();
         calculateDominantAQI();
     }
+    /**
+     *   calculating the AQI for each pollutant to determine the Index of AQI
+     */
 
     public void calculatePM1AQI(){
         if(this.pm1Level <=5) setPm1AQI(1);
@@ -206,6 +213,9 @@ public class Measurement {
         if(this.co2Level >=2501 && this.co2Level <=5000) setCo2AQI(5);
         if(this.co2Level > 5000) setCo2AQI(6);
     }
+    /**
+     *   picking up the worst index to determine the AQI for the location
+     */
 
     public void calculateDominantAQI(){
         setDominantAQI(Math.max(Math.max(this.pm1AQI, this.pm2AQI), Math.max(this.pm10AQI, this.co2AQI)));

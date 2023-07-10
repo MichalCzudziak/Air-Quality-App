@@ -2,11 +2,11 @@ package com.project.airquality;
 
 import database.DBController;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import objects.Location;
+import objects.Measurement;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main extends Application {
-
+    /**
+     *  creating new arraylist for all locations
+     */
     public static ArrayList<Location> allLocations = new ArrayList<>();
+
+    /**
+     *  starting the Application, first scene will be shown
+     */
     @Override
     public void start(Stage stage) throws IOException, SQLException {
         FXMLLoader fxmlLoader;
@@ -24,9 +30,11 @@ public class Main extends Application {
             fxmlLoader = new FXMLLoader(Main.class.getResource("connectDB.fxml"));
             scene = new Scene(fxmlLoader.load());
             stage.setTitle("Database Connection");
+
         } else {
             DBController dbController = new DBController();
             Main.allLocations = dbController.getAllLocations();
+            ArrayList<Measurement> test = Main.allLocations.get(0).getMeasurements();
             dbController.loadMeasurements();
             fxmlLoader = new FXMLLoader(Main.class.getResource("main.fxml"));
             scene = new Scene(fxmlLoader.load());

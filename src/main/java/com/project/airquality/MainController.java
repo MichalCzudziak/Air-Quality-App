@@ -30,6 +30,13 @@ import static java.lang.Math.round;
 
 public class MainController {
 
+    /**
+     *   All required FXML GUI Components declaration needed to display all the functionalities
+     */
+
+    @FXML
+    private Parent root;
+
     @FXML
     private Label avgAQIKelsterbach;
 
@@ -42,14 +49,11 @@ public class MainController {
     @FXML
     private Label lastAQIMaintal;
 
-
     @FXML
     private Label lastAQIKelsterbach;
 
-
     @FXML
     private Label lastAQIRodgau;
-
 
     @FXML
     private Label actualDateKelsterbach;
@@ -65,29 +69,19 @@ public class MainController {
 
     @FXML
     private ImageView aqiScale;
-
     @FXML
     private Button showingAqi;
     @FXML
     void showScale(MouseEvent event) {
         aqiScale.setVisible(true);
     }
-
     @FXML
     void disableScale(MouseEvent event) {
         aqiScale.setVisible(false);
     }
 
-
-
-
-    @FXML
-    private Label actualDate;
-
     @FXML
     private DatePicker datepicker;
-    @FXML
-    private Label avgAQI;
 
     @FXML
     private TableColumn<Measurement, Integer> aqiColumn;
@@ -110,16 +104,11 @@ public class MainController {
     @FXML
     private TableColumn<Measurement, Integer> pm2Column;
 
-
     @FXML
     private TableColumn<Measurement, Integer> idColumn;
 
-
     @FXML
     private TableView<Measurement> tableView;
-
-    @FXML
-    private Button frankfurtButton;
 
     @FXML
     private Button kelsterbachButton;
@@ -137,25 +126,20 @@ public class MainController {
     private Slider slider;
 
     @FXML
-    private Label timeLabel;
-
-    @FXML
     private ChoiceBox<String> choiceBox;
 
+    /**
+     *   Variables which are needed globally
+     */
     private ArrayList<Measurement> kelsterbach = Main.allLocations.get(0).getMeasurements();
     private ArrayList<Measurement> rodgau = Main.allLocations.get(1).getMeasurements();
     private ArrayList<Measurement> maintal = Main.allLocations.get(2).getMeasurements();
-
     public Button settingsButton;
-    public Label avgArq;
     private Stage stage;
     private Scene scene;
-    private Parent root;
-
     private int year;
     private int month;
     private int day;
-
     private int selectedLocation;
     private LocalDateTime dateTime;
     private LocalDateTime dateTimeKelsterbach;
@@ -164,26 +148,20 @@ public class MainController {
     private int selectedDay = 0;
     private int selectedMonth = 0;
     private int selectedYear = 0;
-
     private int selectedDayKelsterbach = 0;
     private int selectedMonthKelsterbach = 0;
     private int selectedYearKelsterbach = 0;
-
     private int selectedDayMaintal = 0;
     private int selectedMonthMaintal  = 0;
     private int selectedYearMaintal  = 0;
-
-
     private int selectedDayRodgau = 0;
     private int selectedMonthRodgau = 0;
     private int selectedYearRodgau = 0;
 
 
-
-
-    public void selectLocation(int location){
-        this.selectedLocation = location;
-    }
+    /**
+     *   Timestamp for  only one selected Location
+     */
     public void setTime(String timestamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.dateTime = LocalDateTime.parse(timestamp, formatter);
@@ -191,7 +169,9 @@ public class MainController {
         this.selectedMonth = dateTime.getMonthValue();
         this.selectedYear = dateTime.getYear();
     }
-
+    /**
+     *  Timestamp for all Locations
+     */
     public void setTime(String timestampKelsterbach, String timestampMaintal, String timestampRodgau) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.dateTimeKelsterbach = LocalDateTime.parse(timestampKelsterbach, formatter);
@@ -208,7 +188,9 @@ public class MainController {
         this.selectedDayRodgau = dateTimeRodgau.getDayOfMonth();
     }
 
-
+    /**
+     *   switching Panels
+     */
     public void switchToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -247,82 +229,18 @@ public class MainController {
         stage.setScene(scene);
         stage.show();
     }
-
-    private Map<String, Integer> tempList = new HashMap<>();
-    private Map<String, Integer> co2List = new HashMap<>();
-    private Map<String, Integer> pm1List = new HashMap<>();
-
-    private Map<String, Integer> pm2List = new HashMap<>();
-
-    private Map<String, Integer> pm10List = new HashMap<>();
-
-    private Map<String, Integer> brightnessList = new HashMap<>();
-    private Map<String, Integer> pressureList = new HashMap<>();
-    private Map<String, Integer> humidityList = new HashMap<>();
-
-    public void addMeasurements(List<Measurement> measurements) {
-        for (Measurement measurement : measurements) {
-            // Convert the timestamp to the desired format
-            String timestampString = measurement.getTimestamp();
-            // Add the temperature data to the series
-            tempList.put(timestampString, measurement.getTemperature());
-            pressureList.put(timestampString, measurement.getPressureLevel());
-            humidityList.put(timestampString, measurement.getHumidityLevel());
-            pm1List.put(timestampString, measurement.getPm1Level());
-            pm2List.put(timestampString, measurement.getPm2Level());
-            pm10List.put(timestampString, measurement.getPm10Level());
-            co2List.put(timestampString, measurement.getCo2Level());
-            brightnessList.put(timestampString, measurement.getBrightnessLevel());
-        }
-    }
-
-
+    /**
+     *   calculating the AQI
+     */
     public void calculateAQI(ArrayList<Measurement>list){
         for(Measurement m: list){
             m.calculateAll();
         }
     }
 
-    public int getAQIPM1(Measurement m){
-        if(m.getPm1Level() <=5) return 1;
-        if(m.getPm1Level() >=6 && m.getPm1Level() <=10) return 2;
-        if(m.getPm1Level() >=11 && m.getPm1Level() <=15) return 3;
-        if(m.getPm1Level() >=16 && m.getPm1Level() <=30) return 4;
-        if(m.getPm1Level() >=31 && m.getPm1Level() <=50) return 5;
-        if(m.getPm1Level() > 50) return 6;
-        return 0;
-    }
-
-    public int getAQIPM2(Measurement m){
-        if(m.getPm2Level() <=9) return 1;
-        if(m.getPm2Level() >=10 && m.getPm2Level() <=20) return 2;
-        if(m.getPm2Level() >=21 && m.getPm2Level() <=29) return 3;
-        if(m.getPm2Level() >=30 && m.getPm2Level() <=49) return 4;
-        if(m.getPm2Level() >=50 && m.getPm2Level() <=75) return 5;
-        if(m.getPm2Level() > 75) return 6;
-        return 0;
-    }
-
-    public int getAQIPM10(Measurement m){
-        if(m.getPm10Level() <=20) return 1;
-        if(m.getPm10Level() >=21 && m.getPm10Level() <=30) return 2;
-        if(m.getPm10Level() >=31 && m.getPm10Level() <=40) return 3;
-        if(m.getPm10Level()>=41 && m.getPm10Level() <=50) return 4;
-        if(m.getPm10Level() >=51 && m.getPm10Level() <=100) return 5;
-        if(m.getPm10Level() > 100) return 6;
-        return 0;
-    }
-
-    public int getAQIPMCO2(Measurement m){
-        if(m.getCo2Level() >= 400 && m.getCo2Level() <= 650) return 1;
-        if(m.getCo2Level() >=651 && m.getCo2Level() <=1500) return 2;
-        if(m.getCo2Level() >=1501 && m.getCo2Level() <=2000) return 3;
-        if(m.getCo2Level()>=2001 && m.getCo2Level() <=2500) return 4;
-        if(m.getCo2Level()>=2501 && m.getCo2Level() <=5000) return 5;
-        if(m.getCo2Level() > 5000) return 6;
-        return 0;
-    }
-
+    /**
+     *   calculating the average of AQI
+     */
     public int calculateAvgAQI(List<Measurement> measurements) {
         int size = measurements.size();
         int sum = 0;
@@ -332,27 +250,9 @@ public class MainController {
         return sum / size;
     }
 
-    public void changeButtonColorAvg(int max, Button btn){
-        if (max == 1) {
-            btn.setStyle("-fx-background-color: #0411E7;");
-        }
-        if (max == 2) {
-            btn.setStyle("-fx-background-color: #046AE7;");
-        }
-        if (max == 3) {
-            btn.setStyle("-fx-background-color: #04C9E7;");
-        }
-        if (max == 4) {
-            btn.setStyle("-fx-background-color: #CCB532;");
-        }
-        if (max == 5) {
-            btn.setStyle("-fx-background-color: #E9830E;");
-        }
-        if (max == 6) {
-            btn.setStyle("-fx-background-color: #CE2903;");
-        }
-    }
-
+    /**
+     *  changing the colors of the locations on the map fro AQI
+     */
     public void changeButtonColor(Measurement m, Button btn){
         if (m.getDominantAQI() == 1) {
             btn.setStyle("-fx-background-color: #0411E7;");
@@ -375,7 +275,9 @@ public class MainController {
 
 
     }
-
+    /**
+     *   showing tooltips by sliding with the cursor over the location on the map
+     */
     public void showTooltip(int value, Measurement m, Button btn){
         Tooltip tooltip = new Tooltip();
         tooltip.setShowDelay(Duration.ZERO);
@@ -390,42 +292,24 @@ public class MainController {
         tooltip.setStyle("-fx-font-size: 14px"); // Set the font size
         Tooltip.install(btn, tooltip);
     }
-
+    /**
+     *   Arraylists gets converted to ObservableList in order to save the data into table  view
+     */
     public ObservableList<Measurement> convertList(ArrayList<Measurement> measurements){
         ObservableList<Measurement> obsList = FXCollections.observableArrayList();
         obsList.addAll(measurements);
         return obsList;
     }
-
+    /**
+     *   getting last Measurement
+     */
     public Measurement getLastMeasurement(List<Measurement> list){
         return list.get(list.size()-1);
     }
 
-    public String getActualTime(int value, List<Measurement> measurements){
-        Measurement m = measurements.get(value-1);
-        return m.getTimestamp();
-    }
-
-
-    public ObservableList<Measurement> getListByDate(List<Measurement> measurements, int day, int month, int year) {
-        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
-        for (Measurement measurement : measurements) {
-            //setTime(measurement.getTimestamp());
-            if (this.day == day && this.month == month && this.year == year) {
-                obsList.add(measurement);
-            }
-        }
-        return obsList;
-    }
-
-    public ObservableList<Measurement> getAllList(List<Measurement> measurements) {
-        ObservableList<Measurement> obsList = FXCollections.observableArrayList();
-        for (Measurement measurement : measurements) {
-                obsList.add(measurement);
-            }
-        return obsList;
-    }
-
+    /**
+     *   showing the measurements of the selected day
+     */
     public ArrayList <Measurement> filterListByDate(List<Measurement> measurements, int day, int month, int year) {
         ArrayList<Measurement> filteredList = new ArrayList<>();
         for (Measurement measurement : measurements) {
@@ -436,7 +320,9 @@ public class MainController {
         }
         return filteredList;
     }
-
+    /**
+     *  finding disabled days
+     */
     public ArrayList<LocalDate> findDisablesDays(ArrayList<Measurement> list){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ArrayList<LocalDate> rtr = new ArrayList<>();
@@ -446,7 +332,9 @@ public class MainController {
         }
         return rtr;
     }
-
+    /**
+     *  coloring the cells of the Table based on the AQI Scale
+     */
     public void setPM1TableColor(){
         pm1Column.setCellFactory(column -> new TableCell<Measurement, Integer>() {
             @Override
@@ -611,17 +499,10 @@ public class MainController {
         });
     }
 
-    public void clearTableColumns() {
-        idColumn.setCellValueFactory(null);
-        co2Column.setCellValueFactory(null);
-        temperatureColumn.setCellValueFactory(null);
-        timeColumn.setCellValueFactory(null);
-        pm10Column.setCellValueFactory(null);
-        pm1Column.setCellValueFactory(null);
-        pm2Column.setCellValueFactory(null);
-        aqiColumn.setCellValueFactory(null);
-    }
 
+    /**
+     *   creating the slider to show all measurements for locations
+     */
     public void setSlider(ArrayList<Measurement> list){
         slider.setMin(0);
         slider.setValue(list.size()-1);
@@ -632,12 +513,14 @@ public class MainController {
         slider.setSnapToTicks(true);
         slider.setDisable(false);
     }
-    public Measurement getMeasurementFromList(ArrayList<Measurement> list,int index){
-        return list.get(index);
-    }
 
     @FXML
     public void initialize(){
+
+         kelsterbach = Main.allLocations.get(0).getMeasurements();
+         rodgau = Main.allLocations.get(1).getMeasurements();
+         maintal = Main.allLocations.get(2).getMeasurements();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(formatter);

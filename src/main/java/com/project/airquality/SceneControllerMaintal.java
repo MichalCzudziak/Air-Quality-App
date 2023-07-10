@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import objects.Location;
 import objects.Measurement;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,16 +27,14 @@ public class SceneControllerMaintal {
         /**
          *   Variables which are needed globally
          */
-
+        @FXML
+        private Parent root;
         private Stage stage;
         private Scene scene;
-        private Parent root;
-
         private LocalDateTime dateTime;
         private int selectedDay = 0;
         private int selectedMonth = 0;
         private int selectedYear = 0;
-
         private int selectedCheckboxes = 0;
 
         /**
@@ -94,7 +91,7 @@ public class SceneControllerMaintal {
         private RadioButton tempCheckbox;
 
         /**
-         *   Arraylists and maps needed to store all the informations about measurments values
+         *   Arraylists and maps needed to store all the informations about measurements values
          */
 
         private ArrayList<Location> list = Main.allLocations;
@@ -120,23 +117,17 @@ public class SceneControllerMaintal {
         public XYChart.Series humidityChart = new XYChart.Series();
         public XYChart.Series co2Chart = new XYChart.Series();
         public XYChart.Series brightnessChart = new XYChart.Series();
-
         public XYChart.Series veryGoodAQIBoundary = new XYChart.Series<>();
-
         public XYChart.Series goodAQIBoundary = new XYChart.Series<>();
         public XYChart.Series okAQIBoundary = new XYChart.Series<>();
-
         public XYChart.Series sufficientAQIBoundary = new XYChart.Series<>();
         public XYChart.Series badAQIBoundary = new XYChart.Series<>();
 
 
 
-
-        // ###########################################################
-
-        // ###########################################################
-        // DATA IMPORT
-        // ###########################################################
+    /**
+     *  List gets filtered by date
+     */
         public ArrayList <Measurement> filterListByDate(ArrayList<Measurement> measurements, int day, int month, int year) {
             ArrayList<Measurement> filteredList = new ArrayList<>();
             for (Measurement measurement : measurements) {
@@ -148,6 +139,9 @@ public class SceneControllerMaintal {
             return filteredList;
         }
 
+    /**
+     *    Setting global Time for Application
+     */
         public void setTime(String timestamp) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             this.dateTime = LocalDateTime.parse(timestamp, formatter);
@@ -155,7 +149,9 @@ public class SceneControllerMaintal {
             this.selectedMonth = dateTime.getMonthValue();
             this.selectedDay = dateTime.getDayOfMonth();
         }
-
+    /**
+     *   Refreshing of Charts
+     */
         public void refreshChart(){
             lineChart.getData().clear();
             temperatureChart.getData().clear();
@@ -167,7 +163,9 @@ public class SceneControllerMaintal {
             co2Chart.getData().clear();
             brightnessChart.getData().clear();
         }
-
+    /**
+     *   adding measurements to chart
+     */
         public void addMeasurementsToChart(ArrayList<Measurement> measurements) {
             refreshChart();
             veryGoodAQIBoundary.setName("Sehr gut");
@@ -217,6 +215,9 @@ public class SceneControllerMaintal {
             }
         }
 
+        /**
+     *   getting highest value of measurement to set the AQI limit in the graph
+     */
         public int getHighestValue(ArrayList<Measurement> measurements, String choice){
             int highestPM1 = 0;
             int highestPM2 = 0;
@@ -268,6 +269,9 @@ public class SceneControllerMaintal {
             lineChart.getData().removeAll(badAQIBoundary);
         }
 
+    /**
+     *   creating Boundaries to show the AQI limit in the graph
+     */
         public void createPM1Boundaries(ArrayList<Measurement> measurements, String choice){
             int listSize = measurements.size();
             int highestValue = getHighestValue(measurements, choice);
@@ -487,6 +491,9 @@ public class SceneControllerMaintal {
                 lineChart.getData().add(badAQIBoundary);
             }
         }
+    /**
+     *   nodes get disable
+     */
 
         public void disableNodes() {
             for (Object obj : veryGoodAQIBoundary.getData()) {
@@ -520,7 +527,9 @@ public class SceneControllerMaintal {
                 }
             }
         }
-
+    /**
+     *   adding boundaries to the graph
+     */
         public void setBoundaries(ArrayList<Measurement> measurements, String choice){
             if (choice.equals("PM1")) {
                 createPM1Boundaries(measurements, choice);
@@ -541,9 +550,9 @@ public class SceneControllerMaintal {
         }
 
 
-        // ###########################################################
-        // GRAPH OPTIONS
-        // ###########################################################
+    /**
+     *   showing the tooltip to view details of selected measurement
+     */
         private Tooltip tooltip = new Tooltip();
 
         private void enableDataPointHover(XYChart.Series<String, Number> series) {
@@ -567,7 +576,9 @@ public class SceneControllerMaintal {
                 node.setOnMouseExited(null);
             }
         }
-
+    /**
+     *   adding functionality to allow the user to choose the measurment by clicking the measurment date
+     */
         public int getTemperatureValueByClick(String clickedInput) {
             return tempList.get(clickedInput);
         }
@@ -600,6 +611,9 @@ public class SceneControllerMaintal {
             return pressureList.get(clickedInput);
         }
 
+    /**
+     * blocking the unneeded Checkboxes for AQI
+     */
         public void blockCheckboxes(){
             tempCheckbox.setDisable(true);
             brighCheckbox.setDisable(true);
@@ -610,7 +624,9 @@ public class SceneControllerMaintal {
             pm2Checkbox.setDisable(true);
             pm10Checkbox.setDisable(true);
         }
-
+    /**
+     *   enabling the needed checkboxes for AQI
+     */
         public void enableCheckboxes(){
             tempCheckbox.setDisable(false);
             brighCheckbox.setDisable(false);
@@ -622,9 +638,9 @@ public class SceneControllerMaintal {
             pm10Checkbox.setDisable(false);
         }
 
-        // ###########################################################
-        // SHOWING CONTROLS
-        // ###########################################################
+    /**
+     *  displaying the AQI limit in the graph
+     */
         @FXML
         void showPM1Scale(ActionEvent event) {
             if(scalePM1Checkbox.isSelected()){
@@ -671,7 +687,9 @@ public class SceneControllerMaintal {
                 enableCheckboxes();
             }
         }
-
+    /**
+     *  displaying the boundaries of air quality on the graph
+     */
         @FXML
         public void showTemperature(ActionEvent event) {
             if (tempCheckbox.isSelected()) {
@@ -810,6 +828,9 @@ public class SceneControllerMaintal {
             }
         }
 
+    /**
+     *  safety measures to prevent the user to choose multiple scales at the same time. Its not allowed to show multiple scales at the same time
+     */
         public void checkSelection(){
             if (this.selectedCheckboxes == 1 && co2Checkbox.isSelected()) {
                 scaleCO2Checkbox.setDisable(false);
@@ -840,9 +861,9 @@ public class SceneControllerMaintal {
             }
         }
 
-        // ###########################################################
-        // SWITCHING CONTROLS
-        // ###########################################################
+    /**
+     *   Switching Panels
+     */
 
         public void switchToHome(ActionEvent event) throws IOException {
             Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
@@ -884,7 +905,9 @@ public class SceneControllerMaintal {
             stage.show();
         }
 
-
+    /**
+     *  getting the last measurements from the list
+     */
         public Measurement getLastMeasurement(List<Measurement> list){
             return list.get(list.size()-1);
         }
@@ -931,7 +954,9 @@ public class SceneControllerMaintal {
                 pressureLabel.setDisable(false);
             }
         }
-
+    /**
+     *  setting the labels with the measurements
+     */
         public void setLabels(ArrayList<Measurement> measurements){
             actualDate.setText(getLastMeasurement(measurements).getTimestamp());
             temperatureLabel.setText(Integer.toString(getLastMeasurement(measurements).getTemperature()));
@@ -944,7 +969,9 @@ public class SceneControllerMaintal {
             pm10Label.setText(Integer.toString(getLastMeasurement(measurements).getPm10Level()));
 
         }
-
+    /**
+     *  setting the labels with the measurements by clicking the timestamp on the graph
+     */
         public void setLabelsByClick(String clickedCategory){
             actualDate.setText(clickedCategory);
             temperatureLabel.setText(Integer.toString(getTemperatureValueByClick(clickedCategory)));
@@ -956,7 +983,9 @@ public class SceneControllerMaintal {
             pm2Label.setText(Integer.toString(getPM2ValueByClick(clickedCategory)));
             pm10Label.setText(Integer.toString(getPM10ValueByClick(clickedCategory)));
         }
-
+    /**
+     *  clearing checkboxes
+     */
         public void clearCheckboxes(){
             tempCheckbox.setSelected(false);
             brighCheckbox.setSelected(false);
@@ -975,7 +1004,9 @@ public class SceneControllerMaintal {
             scalePM2Checkbox.setSelected(false);
             scalePM2Checkbox.setDisable(true);
         }
-
+    /**
+     *  showing current time
+     */
         public void initializeTime(ArrayList<Measurement> list){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime currentTime = LocalDateTime.now();
@@ -984,7 +1015,9 @@ public class SceneControllerMaintal {
             setTime(getLastMeasurement(list).getTimestamp());
             datepicker.setValue(this.dateTime.toLocalDate());
         }
-
+    /**
+     *  finding the disabled dates
+     */
         public ArrayList<LocalDate> findDisablesDays(ArrayList<Measurement> list){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             ArrayList<LocalDate> rtr = new ArrayList<>();
@@ -1002,6 +1035,7 @@ public class SceneControllerMaintal {
             List<LocalDate> disabledDates = findDisablesDays(maintal);
             addMeasurementsToChart(filterListByDate(maintal, selectedDay, selectedMonth, selectedYear));
             checkSize();
+            // functionality to pick the date
             datepicker.setOnAction(event -> {
                 resetBoundaries();
                 LocalDate selectedDate = datepicker.getValue();
@@ -1033,7 +1067,7 @@ public class SceneControllerMaintal {
 
             });
 
-            // Add click functionality to the X axis
+            //Add click functionality to the X axis
             CategoryAxis xAxisFromChart = (CategoryAxis) lineChart.getXAxis();
             xAxisFromChart.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1) {

@@ -11,42 +11,31 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import objects.Measurement;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 public class SettingsController {
     private Stage stage;
     private Scene scene;
 
+    /**
+     *   All required FXML GUI Components declaration needed to display all the functionalities
+     */
+
     @FXML
     private Button dbConnectButton;
-
     @FXML
     private TextField textDBName;
-
     @FXML
     private TextField textDBURL;
-
     @FXML
     private PasswordField textPassword;
-
     @FXML
     private TextField textUsername;
-
     @FXML
     private Label localTime;
-
-    @FXML
-    public void initialize(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime currentTime = LocalDateTime.now();
-        String formattedTime = currentTime.format(formatter);
-        localTime.setText("Current Time: \n" + formattedTime);
-    }
+    /**
+     *   creating  the database connection
+     */
 
     @FXML
     public void connectToDatabase(ActionEvent event) throws IOException, SQLException {
@@ -56,6 +45,7 @@ public class SettingsController {
         if (configManager.saveConfig()){
             DBController dbController = new DBController();
             Main.allLocations = dbController.getAllLocations();
+            dbController.loadMeasurements();
             Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
@@ -66,8 +56,9 @@ public class SettingsController {
             stage.setY((mainScreenBounds.getHeight() - stage.getHeight()) / 2);
         }
     }
-
-    private Map<String, Measurement> measurmentMapFrankfurt = new HashMap<>();
+    /**
+     *  switching panels
+     */
 
     public void switchToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));

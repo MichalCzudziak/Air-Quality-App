@@ -9,6 +9,9 @@ public class DBConfigManager {
     private String password;
     private String database;
     private Properties properties = new Properties();
+    /**
+     *   constructor to create the connection to database from the config.properties file
+     */
 
     DBConfigManager(){
         try(InputStream inputStream = new FileInputStream("config.properties")){
@@ -45,6 +48,9 @@ public class DBConfigManager {
     public String getDatabase() {
         return database;
     }
+    /**
+     *   saving the entered parameter into the config file and creating the file
+     */
 
     public boolean saveConfig(){
         properties.setProperty("host", host);
